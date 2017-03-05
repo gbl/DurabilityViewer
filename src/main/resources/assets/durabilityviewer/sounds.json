@@ -1,0 +1,7 @@
+{
+  "tool_breaking": {
+    "category": "player",
+    "subtitle": "durabilityviewer.subtitle.toolBreaking",
+    "sounds": [ "durabilityviewer:tool_breaking" ]
+  }
+}

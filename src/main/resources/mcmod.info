@@ -1,0 +1,16 @@
+[
+{
+  "modid": "durabilityviewer",
+  "name": "Durability Viewer",
+  "description": "Creates a HUD that shows current item durability, arrow count, and inventory slots",
+  "version": "1.1.0",
+  "mcversion": "1.11.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Giselbaer"],
+  "credits": "SixOneThree for his DurabilityShow which inspired this",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
