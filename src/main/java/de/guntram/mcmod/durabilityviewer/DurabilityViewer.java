@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Mod;
         name = "Durability Viewer", 
         version = DurabilityViewer.VERSION,
         clientSideOnly = true, 
-        acceptedMinecraftVersions = "[1.11.2]", 
+        acceptedMinecraftVersions = "[1.12]", 
         guiFactory = "de.guntram.mcmod.durabilityviewer.client.gui.DurabilityViewerGuiFactory", 
         dependencies = "")
 

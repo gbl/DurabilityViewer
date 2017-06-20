@@ -8,12 +8,22 @@ import net.minecraftforge.fml.client.IModGuiFactory;
 public class DurabilityViewerGuiFactory implements IModGuiFactory
 {
     @Override
+    public boolean hasConfigGui() {
+        return true;
+    }
+    
+    @Override
     public void initialize(final Minecraft minecraftInstance) {
     }
     
     @Override
     public Class<? extends GuiScreen> mainConfigGuiClass() {
         return DurabilityViewerGuiConfig.class;
+    }
+    
+    @Override
+    public GuiScreen createConfigGui(GuiScreen parentScreen) {
+        return new DurabilityViewerGuiConfig(parentScreen);
     }
     
     @Override

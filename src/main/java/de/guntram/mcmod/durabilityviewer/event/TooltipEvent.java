@@ -10,7 +10,7 @@ public class TooltipEvent
 {
     @SubscribeEvent
     public void onItemTooltip(final ItemTooltipEvent event) {
-        if (!event.isShowAdvancedItemTooltips() && !event.getItemStack().isEmpty()) {
+        if (!event.getFlags().isAdvanced() && !event.getItemStack().isEmpty()) {
             final ItemStack itemStack = event.getItemStack();
             if (itemStack.isItemDamaged()) {
                 final String toolTip = ConfigurationHandler.getInstance().getTooltipColor() +
