@@ -17,6 +17,7 @@ public class ConfigurationHandler
     
     private int corner=0;
     private int color= 5;
+    private boolean effectDuration;
     
     public static ConfigurationHandler getInstance() {
         if (instance==null)
@@ -43,6 +44,7 @@ public class ConfigurationHandler
     private void loadConfig() {
         corner=config.getInt("HUD Corner", Configuration.CATEGORY_CLIENT, corner, 0, 3, "Corner 0 to 3 - bottom right, bottom left, top right, top left");
         color=config.getInt("Tooltip Color", Configuration.CATEGORY_CLIENT, color, 0, 15, "Minecraft Color 0 .. 15");
+        effectDuration=config.getBoolean("Effect Duration", Configuration.CATEGORY_CLIENT, true, "Show effect durations");
         tooltipColor=TextFormatting.fromColorIndex(color);
         if (config.hasChanged())
             config.save();
@@ -62,5 +64,9 @@ public class ConfigurationHandler
     
     public static String getConfigFileName() {
         return getInstance().configFileName;
+    }
+    
+    public static boolean showEffectDuration() {
+        return getInstance().effectDuration;
     }
 }

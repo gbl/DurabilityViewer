@@ -1,11 +1,13 @@
 package de.guntram.mcmod.durabilityviewer.client.gui;
 
+import com.google.common.collect.Ordering;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import de.guntram.mcmod.durabilityviewer.itemindicator.InventorySlotsIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemCountIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
+import java.util.Collection;
 import net.minecraft.item.ItemBow;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,6 +24,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 
 public class GuiItemDurability extends Gui
 {
@@ -100,7 +104,7 @@ public class GuiItemDurability extends Gui
         if (!visible
         ||  event.isCanceled()
         ||  minecraft.player.capabilities.isCreativeMode
-        ||  event.getType()!=RenderGameOverlayEvent.ElementType.EXPERIENCE)
+        ||  event.getType()!=RenderGameOverlayEvent.ElementType.POTION_ICONS)
             return;
 
         EntityPlayer effectivePlayer = (EntityPlayer) minecraft.player;
@@ -135,7 +139,7 @@ public class GuiItemDurability extends Gui
         
         int totalHeight=(toolsSize.height > armorSize.height ? toolsSize.height : armorSize.height);
         int totalWidth =(toolsSize.width  > armorSize.width  ? toolsSize.width  : armorSize.width);
-        int xposArmor, xposTools, ypos;
+        int xposArmor, xposTools, ypos, xpos;
 
         switch (ConfigurationHandler.getCorner()) {
             case TOP_LEFT:      
@@ -146,7 +150,7 @@ public class GuiItemDurability extends Gui
             case TOP_RIGHT:
                 xposArmor=screensize.getScaledWidth()-5-armorSize.width;
                 xposTools=screensize.getScaledWidth()-5-armorSize.width-toolsSize.width;
-                ypos=30;   // below buff/debuff effects
+                ypos=60;   // below buff/debuff effects
                 break;
             case BOTTOM_LEFT:
                 xposArmor=5;
@@ -170,6 +174,30 @@ public class GuiItemDurability extends Gui
         this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight(), toolsSize.width, invSlots, mainHand, offHand, arrows);
 
         RenderHelper.disableStandardItemLighting();
+        
+        if (ConfigurationHandler.showEffectDuration()) {
+            // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
+            Collection<PotionEffect> collection = minecraft.player.getActivePotionEffects();
+            int posGood=0, posBad=0;
+            for (PotionEffect potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
+                if (potioneffect.doesShowParticles()) {
+                    Potion potion = potioneffect.getPotion();
+                    xpos=screensize.getScaledWidth();
+                    if (potion.isBeneficial()) {
+                        posGood+=25; xpos-=posGood; ypos=15;
+                    } else {
+                        posBad+=25;  xpos-=posBad;  ypos=41;
+                    }
+                    int duration=potioneffect.getDuration();
+                    String show;
+                    if (duration > 1200)
+                        show=(duration/1200)+"m";
+                    else
+                        show=(duration/20)+"s";
+                    fontRenderer.drawString(show, xpos+2, ypos, ItemIndicator.color_yellow);
+                }
+            }
+        }
     }
     
     private RenderSize renderItems(int xpos, int ypos, boolean reallyDraw, boolean numbersLeft, int maxWidth, ItemIndicator... items) {
