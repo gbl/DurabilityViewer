@@ -27,7 +27,7 @@ import org.lwjgl.opengl.Display;
 public class DurabilityViewer
 {
     public static final String MODID = "durabilityviewer";
-    public static final String VERSION = "1.3";
+    public static final String VERSION = "1.4";
 
     @Mod.Instance("durabilityviewer")
     public static DurabilityViewer instance;
@@ -53,16 +53,20 @@ public class DurabilityViewer
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onConnectedToServerEvent(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        if (event.isLocal())
+        if (!ConfigurationHandler.showPlayerServerName())
             return;
         Minecraft mc=Minecraft.getMinecraft();
-        Display.setTitle(mc.getSession().getUsername() + " on "+
-                (mc.getCurrentServerData().serverName == null ? "unknown" : mc.getCurrentServerData().serverName));
+        String serverName = (event.isLocal() ? "local game" : mc.getCurrentServerData().serverName);
+        if (serverName==null)
+            serverName="unknown server";
+        Display.setTitle(mc.getSession().getUsername() + " on "+serverName);
     }
     
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onDisconnectFromServerEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        if (!ConfigurationHandler.showPlayerServerName())
+            return;
         Minecraft mc=Minecraft.getMinecraft();
         Display.setTitle(mc.getSession().getUsername() + " not connected");
     }

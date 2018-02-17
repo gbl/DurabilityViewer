@@ -18,6 +18,10 @@ public class ConfigurationHandler
     private int corner=0;
     private int color= 5;
     private boolean effectDuration;
+    private int minPercent = 10;
+    private int minDurability = 100;
+    private boolean showPlayerServerName;
+    private boolean useCustomSound;
     
     public static ConfigurationHandler getInstance() {
         if (instance==null)
@@ -33,6 +37,10 @@ public class ConfigurationHandler
         }
     }
     
+    public static String getConfigFileName() {
+        return getInstance().configFileName;
+    }
+
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         // System.out.println("OnConfigChanged for "+event.getModID());
@@ -45,6 +53,11 @@ public class ConfigurationHandler
         corner=config.getInt("HUD Corner", Configuration.CATEGORY_CLIENT, corner, 0, 3, "Corner 0 to 3 - bottom right, bottom left, top right, top left");
         color=config.getInt("Tooltip Color", Configuration.CATEGORY_CLIENT, color, 0, 15, "Minecraft Color 0 .. 15");
         effectDuration=config.getBoolean("Effect Duration", Configuration.CATEGORY_CLIENT, true, "Show effect durations");
+        minPercent = config.getInt("Minimum Percent", Configuration.CATEGORY_CLIENT, minPercent, 1, 100, "Play sound when durability below X percent");
+        minDurability = config.getInt("Minimum Durability", Configuration.CATEGORY_CLIENT, minDurability, 1, 1500, "Play sound when durability below X");
+        showPlayerServerName = config.getBoolean("Set window title", Configuration.CATEGORY_CLIENT, false, "Set window title to player and server name (warning - this seems to lock up MC on some windows machines)");
+        // useCustomSound = config.getBoolean("Use custom sound", Configuration.CATEGORY_CLIENT, false, "Use your own warning sound. You need to create your own custom.ogg in the mod folder");
+        
         tooltipColor=TextFormatting.fromColorIndex(color);
         if (config.hasChanged())
             config.save();
@@ -62,11 +75,25 @@ public class ConfigurationHandler
         return getInstance().config;
     }
     
-    public static String getConfigFileName() {
-        return getInstance().configFileName;
-    }
     
     public static boolean showEffectDuration() {
         return getInstance().effectDuration;
+    }
+    
+    public static int getMinPercent() {
+        return getInstance().minPercent;
+    }
+    
+    public static int getMinDurability() {
+        return getInstance().minDurability;
+    }
+    
+    public static boolean showPlayerServerName() {
+        return getInstance().showPlayerServerName;
+    }
+    
+    public static boolean useCustomSound() {
+        // return getInstance().useCustomSound;
+        return false;
     }
 }

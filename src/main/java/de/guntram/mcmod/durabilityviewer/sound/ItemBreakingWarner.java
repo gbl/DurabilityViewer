@@ -6,6 +6,7 @@
 package de.guntram.mcmod.durabilityviewer.sound;
 
 import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
+import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -23,8 +24,11 @@ public class ItemBreakingWarner {
     public ItemBreakingWarner() {
         lastDurability=1000;
         lastStack=null;
+        ResourceLocation location;
+        
         if (sound==null) {
-            sound=new SoundEvent(new ResourceLocation(DurabilityViewer.MODID, "tool_breaking"));
+            location=new ResourceLocation(DurabilityViewer.MODID, "tool_breaking");
+            sound=new SoundEvent(location);
         }
     }
     
@@ -33,7 +37,9 @@ public class ItemBreakingWarner {
         if (stack==null || !stack.isItemStackDamageable())
             return false;
         int newDurability=stack.getMaxDamage()-stack.getItemDamage();
-        if (newDurability < 100 && newDurability < lastDurability && newDurability*10 < stack.getMaxDamage()) {
+        if (newDurability  < lastDurability
+        && newDurability < ConfigurationHandler.getMinDurability()
+        && newDurability * 100 / ConfigurationHandler.getMinPercent() < stack.getMaxDamage()) {
             lastDurability=newDurability;
             return true;
         }
@@ -42,7 +48,7 @@ public class ItemBreakingWarner {
     }
     
     public static void playWarningSound() {
-        System.out.append("playing warning sound");
+        // System.out.append("playing warning sound");
         Minecraft.getMinecraft().player.playSound(sound, 100, 100);
     }
 }
