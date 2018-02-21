@@ -1,6 +1,7 @@
 package de.guntram.mcmod.durabilityviewer.client.gui;
 
 import com.google.common.collect.Ordering;
+import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import de.guntram.mcmod.durabilityviewer.itemindicator.InventorySlotsIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
@@ -26,6 +27,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import org.lwjgl.opengl.Display;
 
 public class GuiItemDurability extends Gui
 {
@@ -100,6 +102,13 @@ public class GuiItemDurability extends Gui
     
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public void onRender(final RenderGameOverlayEvent.Post event) {
+
+        // This needs to be done before everything else to make sure
+        // the title change that occurs when logging off gets through.
+        String newTitle=DurabilityViewer.getAndResetChangedWindowTitle();
+        if (newTitle!=null)
+            Display.setTitle(newTitle);
+
         
         if (!visible
         ||  event.isCanceled()

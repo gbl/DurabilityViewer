@@ -43,7 +43,6 @@ public class ConfigurationHandler
 
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        // System.out.println("OnConfigChanged for "+event.getModID());
         if (event.getModID().equalsIgnoreCase("durabilityviewer")) {
             loadConfig();
         }
@@ -55,7 +54,7 @@ public class ConfigurationHandler
         effectDuration=config.getBoolean("Effect Duration", Configuration.CATEGORY_CLIENT, true, "Show effect durations");
         minPercent = config.getInt("Minimum Percent", Configuration.CATEGORY_CLIENT, minPercent, 1, 100, "Play sound when durability below X percent");
         minDurability = config.getInt("Minimum Durability", Configuration.CATEGORY_CLIENT, minDurability, 1, 1500, "Play sound when durability below X");
-        showPlayerServerName = config.getBoolean("Set window title", Configuration.CATEGORY_CLIENT, false, "Set window title to player and server name (warning - this seems to lock up MC on some windows machines)");
+        showPlayerServerName = config.getBoolean("Set window title", Configuration.CATEGORY_CLIENT, true, "Set window title to player and server name");
         // useCustomSound = config.getBoolean("Use custom sound", Configuration.CATEGORY_CLIENT, false, "Use your own warning sound. You need to create your own custom.ogg in the mod folder");
         
         tooltipColor=TextFormatting.fromColorIndex(color);
@@ -74,7 +73,6 @@ public class ConfigurationHandler
     public static Configuration getConfig() {
         return getInstance().config;
     }
-    
     
     public static boolean showEffectDuration() {
         return getInstance().effectDuration;

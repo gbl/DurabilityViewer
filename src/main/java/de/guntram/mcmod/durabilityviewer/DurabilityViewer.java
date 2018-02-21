@@ -32,6 +32,7 @@ public class DurabilityViewer
     @Mod.Instance("durabilityviewer")
     public static DurabilityViewer instance;
     private static ConfigurationHandler confHandler;
+    private static String changedWindowTitle;
     
     @Mod.EventHandler
     public void preInit(final FMLPreInitializationEvent event) {
@@ -41,6 +42,7 @@ public class DurabilityViewer
     
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
+        changedWindowTitle=null;
         KeyHandler.init();
         System.out.println("on Init, confHandler is "+confHandler);
         MinecraftForge.EVENT_BUS.register(this);
@@ -59,7 +61,7 @@ public class DurabilityViewer
         String serverName = (event.isLocal() ? "local game" : mc.getCurrentServerData().serverName);
         if (serverName==null)
             serverName="unknown server";
-        Display.setTitle(mc.getSession().getUsername() + " on "+serverName);
+        changedWindowTitle=mc.getSession().getUsername() + " on "+serverName;
     }
     
     @SideOnly(Side.CLIENT)
@@ -68,7 +70,18 @@ public class DurabilityViewer
         if (!ConfigurationHandler.showPlayerServerName())
             return;
         Minecraft mc=Minecraft.getMinecraft();
-        Display.setTitle(mc.getSession().getUsername() + " not connected");
+        changedWindowTitle=mc.getSession().getUsername() + " not connected";
     }
     
+    // On windows, Display.setTitle crashes if we call it from 
+    // (Dis)connectFromServerEvent. This is because these run on the netty
+    // thread, set a global lock, send a WM_SETTEXT, and need the main thread
+    // to process that WM_SETTEXT - but the main thread needs the global lock
+    // as well. As a workaround, we just set a global variable here, and retrieve
+    // it from within onRender from GuiItemDurability.
+    public static String getAndResetChangedWindowTitle() {
+        String result=changedWindowTitle;
+        changedWindowTitle=null;
+        return result;
+    }
 }
