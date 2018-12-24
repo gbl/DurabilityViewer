@@ -18,12 +18,10 @@ import net.minecraft.util.SoundEvent;
  */
 public class ItemBreakingWarner {
     private int lastDurability;
-    private ItemStack lastStack;
     private static SoundEvent sound;
     
     public ItemBreakingWarner() {
         lastDurability=1000;
-        lastStack=null;
         ResourceLocation location;
         
         if (sound==null) {
@@ -33,10 +31,9 @@ public class ItemBreakingWarner {
     }
     
     public boolean checkBreaks(ItemStack stack) {
-        lastStack=stack;
-        if (stack==null || !stack.isItemStackDamageable())
+        if (stack==null || !stack.isDamageable())
             return false;
-        int newDurability=stack.getMaxDamage()-stack.getItemDamage();
+        int newDurability=stack.getMaxDamage()-stack.getDamage();
         if (newDurability  < lastDurability
         && newDurability < ConfigurationHandler.getMinDurability()
         && newDurability * 100 / ConfigurationHandler.getMinPercent() < stack.getMaxDamage()) {
@@ -49,6 +46,6 @@ public class ItemBreakingWarner {
     
     public static void playWarningSound() {
         // System.out.append("playing warning sound");
-        Minecraft.getMinecraft().player.playSound(sound, 100, 100);
+        Minecraft.getInstance().player.playSound(sound, 100, 100);
     }
 }

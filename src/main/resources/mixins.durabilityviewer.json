@@ -1,0 +1,13 @@
+{
+    "required": true,
+    "package": "de.guntram.mcmod.durabilityviewer.mixin",
+    "refmap": "mixin.refmap.json",
+    "minVersion": "0.6",
+    "client": [
+        "TooltipMixin",
+        "ConnectMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

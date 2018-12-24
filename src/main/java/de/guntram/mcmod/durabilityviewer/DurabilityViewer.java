@@ -1,78 +1,43 @@
 package de.guntram.mcmod.durabilityviewer;
 
+import de.guntram.mcmod.durabilityviewer.client.gui.GuiConfig;
+import de.guntram.mcmod.durabilityviewer.event.InputHandler;
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
-import de.guntram.mcmod.durabilityviewer.handler.KeyHandler;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import de.guntram.mcmod.durabilityviewer.event.KeyInputEvent;
-import de.guntram.mcmod.durabilityviewer.event.TooltipEvent;
-import net.minecraftforge.common.MinecraftForge;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
+import fi.dy.masa.malilib.config.ConfigManager;
+import fi.dy.masa.malilib.event.InitializationHandler;
+import fi.dy.masa.malilib.event.InputEventHandler;
+import fi.dy.masa.malilib.event.RenderEventHandler;
+import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
+import fi.dy.masa.malilib.hotkeys.IKeybind;
+import fi.dy.masa.malilib.hotkeys.KeyAction;
+import fi.dy.masa.malilib.interfaces.IInitializationHandler;
+import fi.dy.masa.malilib.interfaces.IRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.Display;
+import org.dimdev.riftloader.listener.InitializationListener;
+import org.spongepowered.asm.launch.MixinBootstrap;
+import org.spongepowered.asm.mixin.Mixins;
 
-@Mod(modid = DurabilityViewer.MODID, 
-        name = "Durability Viewer", 
-        version = DurabilityViewer.VERSION,
-        clientSideOnly = true, 
-        acceptedMinecraftVersions = "[1.12]", 
-        guiFactory = "de.guntram.mcmod.durabilityviewer.client.gui.DurabilityViewerGuiFactory", 
-        dependencies = "")
 
-public class DurabilityViewer
+public class DurabilityViewer implements InitializationListener
 {
     public static final String MODID = "durabilityviewer";
-    public static final String VERSION = "1.4";
+    public static final String VERSION = "1.5";
 
-    @Mod.Instance("durabilityviewer")
     public static DurabilityViewer instance;
     private static ConfigurationHandler confHandler;
     private static String changedWindowTitle;
-    
-    @Mod.EventHandler
-    public void preInit(final FMLPreInitializationEvent event) {
+
+    @Override
+    public void onInitialization() {
+        MixinBootstrap.init();
+        Mixins.addConfiguration("mixins.durabilityviewer.json");
+        InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
         confHandler=ConfigurationHandler.getInstance();
-        confHandler.load(event.getSuggestedConfigurationFile());
+        ConfigManager.getInstance().registerConfigHandler("DurabilityViewer", confHandler);
     }
-    
-    @Mod.EventHandler
-    public void init(final FMLInitializationEvent event) {
-        changedWindowTitle=null;
-        KeyHandler.init();
-        System.out.println("on Init, confHandler is "+confHandler);
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(confHandler);
-        MinecraftForge.EVENT_BUS.register(new KeyInputEvent());
-        MinecraftForge.EVENT_BUS.register(new TooltipEvent());
-        MinecraftForge.EVENT_BUS.register(new GuiItemDurability());
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void onConnectedToServerEvent(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        if (!ConfigurationHandler.showPlayerServerName())
-            return;
-        Minecraft mc=Minecraft.getMinecraft();
-        String serverName = (event.isLocal() ? "local game" : mc.getCurrentServerData().serverName);
-        if (serverName==null)
-            serverName="unknown server";
-        changedWindowTitle=mc.getSession().getUsername() + " on "+serverName;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void onDisconnectFromServerEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-        if (!ConfigurationHandler.showPlayerServerName())
-            return;
-        Minecraft mc=Minecraft.getMinecraft();
-        changedWindowTitle=mc.getSession().getUsername() + " not connected";
-    }
-    
+
     // On windows, Display.setTitle crashes if we call it from 
     // (Dis)connectFromServerEvent. This is because these run on the netty
     // thread, set a global lock, send a WM_SETTEXT, and need the main thread
@@ -83,5 +48,28 @@ public class DurabilityViewer
         String result=changedWindowTitle;
         changedWindowTitle=null;
         return result;
+    }
+    
+    public static void setWindowTitle(String s) {
+        changedWindowTitle=s;
+    }
+    
+    private static class InitHandler implements IInitializationHandler {
+        @Override
+        public void registerModHandlers() {
+            IRenderer renderer = new GuiItemDurability();
+            RenderEventHandler.getInstance().registerGameOverlayRenderer(renderer);
+            InputEventHandler.getInstance().registerKeybindProvider(new InputHandler());
+            ConfigurationHandler.getHotkey().setCallback(new KeyInputEvent());
+            ConfigurationHandler.getConfigkey().setCallback(new ConfigOpenGuiCallback());
+        }
+    }
+    
+    private static class ConfigOpenGuiCallback implements IHotkeyCallback {
+        @Override
+        public boolean onKeyAction(KeyAction action, IKeybind ik) {
+            Minecraft.getInstance().displayGuiScreen(new GuiConfig());
+            return true;
+        }
     }
 }

@@ -1,15 +1,15 @@
 package de.guntram.mcmod.durabilityviewer.event;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
-import de.guntram.mcmod.durabilityviewer.handler.KeyHandler;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
+import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
+import fi.dy.masa.malilib.hotkeys.IKeybind;
+import fi.dy.masa.malilib.hotkeys.KeyAction;
 
-public class KeyInputEvent
+public class KeyInputEvent implements IHotkeyCallback
 {
-    @SubscribeEvent
-    public void keyPressed(final InputEvent.KeyInputEvent e) {
-        if (KeyHandler.showHud.isPressed())
-            GuiItemDurability.toggleVisibility();
+    @Override
+    public boolean onKeyAction(KeyAction action, IKeybind ik) {
+        GuiItemDurability.toggleVisibility();
+        return true;
     }
 }

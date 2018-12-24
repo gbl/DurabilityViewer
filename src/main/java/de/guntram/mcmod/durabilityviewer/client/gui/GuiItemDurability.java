@@ -8,33 +8,31 @@ import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemCountIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
+import fi.dy.masa.malilib.interfaces.IRenderer;
 import java.util.Collection;
+import net.minecraft.client.MainWindow;
 import net.minecraft.item.ItemBow;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraft.util.EnumHand;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import org.lwjgl.opengl.Display;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 
-public class GuiItemDurability extends Gui
+
+public class GuiItemDurability implements IRenderer
 {
     private final Minecraft minecraft;
     private static boolean visible;
     private final FontRenderer fontRenderer;
-    private final RenderItem itemRenderer;
+    private final ItemRenderer itemRenderer;
     
     private static final int iconWidth=16;
     private static final int iconHeight=16;
@@ -47,9 +45,9 @@ public class GuiItemDurability extends Gui
     }
     
     public GuiItemDurability() {
-        minecraft = Minecraft.getMinecraft();
+        minecraft = Minecraft.getInstance();
         fontRenderer = minecraft.fontRenderer;
-        itemRenderer = minecraft.getRenderItem();
+        itemRenderer = minecraft.getItemRenderer();
         visible=true;
         
         mainHandWarner=new ItemBreakingWarner();
@@ -90,6 +88,11 @@ public class GuiItemDurability extends Gui
     private boolean isArrow(final ItemStack stack) {
         return !stack.isEmpty() && stack.getItem() instanceof ItemArrow;
     }
+
+    @Override
+    public void onRenderWorldLast(float f) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     private class RenderSize {
         int width;
@@ -99,21 +102,19 @@ public class GuiItemDurability extends Gui
             width=w; height=h;
         }
     }
-    
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void onRender(final RenderGameOverlayEvent.Post event) {
+
+    @Override
+    public void onRenderGameOverlayPost(float partialTicks) {
 
         // This needs to be done before everything else to make sure
         // the title change that occurs when logging off gets through.
         String newTitle=DurabilityViewer.getAndResetChangedWindowTitle();
-        if (newTitle!=null)
-            Display.setTitle(newTitle);
-
+        if (newTitle!=null) {
+            glfwSetWindowTitle(Minecraft.getInstance().mainWindow.getHandle(), newTitle);
+        }
         
         if (!visible
-        ||  event.isCanceled()
-        ||  minecraft.player.capabilities.isCreativeMode
-        ||  event.getType()!=RenderGameOverlayEvent.ElementType.POTION_ICONS)
+        ||  minecraft.player.abilities.isCreativeMode)
             return;
 
         EntityPlayer effectivePlayer = (EntityPlayer) minecraft.player;
@@ -141,7 +142,8 @@ public class GuiItemDurability extends Gui
         if (mainHand.getItemStack().getItem() instanceof ItemBow || offHand.getItemStack().getItem() instanceof ItemBow) {
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
         }
-        ScaledResolution screensize=new ScaledResolution(minecraft);
+
+        MainWindow mainWindow = Minecraft.getInstance().mainWindow;
         
         RenderSize armorSize=this.renderItems(0, 0, false, true, 0, boots, leggings, chestplate, helmet);
         RenderSize toolsSize=this.renderItems(0, 0, false, false, 0, invSlots, mainHand, offHand, arrows);
@@ -157,25 +159,25 @@ public class GuiItemDurability extends Gui
                 ypos=5;
                 break;
             case TOP_RIGHT:
-                xposArmor=screensize.getScaledWidth()-5-armorSize.width;
-                xposTools=screensize.getScaledWidth()-5-armorSize.width-toolsSize.width;
+                xposArmor=mainWindow.getScaledWidth()-5-armorSize.width;
+                xposTools=mainWindow.getScaledWidth()-5-armorSize.width-toolsSize.width;
                 ypos=60;   // below buff/debuff effects
                 break;
             case BOTTOM_LEFT:
                 xposArmor=5;
                 xposTools=5+armorSize.width;
-                ypos=screensize.getScaledHeight()-5-totalHeight;
+                ypos=mainWindow.getScaledHeight()-5-totalHeight;
                 break;
             case BOTTOM_RIGHT:
-                xposArmor=screensize.getScaledWidth()-5-armorSize.width;
-                xposTools=screensize.getScaledWidth()-5-armorSize.width-toolsSize.width;
-                ypos=screensize.getScaledHeight()-5-totalHeight;
+                xposArmor=mainWindow.getScaledWidth()-5-armorSize.width;
+                xposTools=mainWindow.getScaledWidth()-5-armorSize.width-toolsSize.width;
+                ypos=mainWindow.getScaledHeight()-5-totalHeight;
                 break;
             default:
                 return;
         }
 
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
         RenderHelper.enableStandardItemLighting();
         RenderHelper.enableGUIStandardItemLighting();
 
@@ -191,7 +193,7 @@ public class GuiItemDurability extends Gui
             for (PotionEffect potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
                 if (potioneffect.doesShowParticles()) {
                     Potion potion = potioneffect.getPotion();
-                    xpos=screensize.getScaledWidth();
+                    xpos=mainWindow.getScaledWidth();
                     if (potion.isBeneficial()) {
                         posGood+=25; xpos-=posGood; ypos=15;
                     } else {
