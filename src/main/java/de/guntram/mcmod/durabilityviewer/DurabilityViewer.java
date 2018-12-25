@@ -1,5 +1,6 @@
 package de.guntram.mcmod.durabilityviewer;
 
+import com.mojang.brigadier.CommandDispatcher;
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiConfig;
 import de.guntram.mcmod.durabilityviewer.event.InputHandler;
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
@@ -15,12 +16,14 @@ import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.interfaces.IInitializationHandler;
 import fi.dy.masa.malilib.interfaces.IRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.CommandSource;
+import org.dimdev.rift.listener.CommandAdder;
 import org.dimdev.riftloader.listener.InitializationListener;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
 
 
-public class DurabilityViewer implements InitializationListener
+public class DurabilityViewer implements InitializationListener, CommandAdder
 {
     public static final String MODID = "durabilityviewer";
     public static final String VERSION = "1.5";
@@ -35,7 +38,7 @@ public class DurabilityViewer implements InitializationListener
         Mixins.addConfiguration("mixins.durabilityviewer.json");
         InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
         confHandler=ConfigurationHandler.getInstance();
-        ConfigManager.getInstance().registerConfigHandler("DurabilityViewer", confHandler);
+        ConfigManager.getInstance().registerConfigHandler(MODID, confHandler);
     }
 
     // On windows, Display.setTitle crashes if we call it from 
@@ -53,7 +56,12 @@ public class DurabilityViewer implements InitializationListener
     public static void setWindowTitle(String s) {
         changedWindowTitle=s;
     }
-    
+
+    @Override
+    public void registerCommands(CommandDispatcher<CommandSource> cd) {
+        ConfigCommand.register(cd);
+    }
+
     private static class InitHandler implements IInitializationHandler {
         @Override
         public void registerModHandlers() {
