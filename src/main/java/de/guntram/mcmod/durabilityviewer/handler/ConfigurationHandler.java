@@ -41,9 +41,8 @@ public class ConfigurationHandler implements IConfigHandler
     
     public static class Hotkeys {
         public static final ConfigHotkey        HOTKEY = new ConfigHotkey("Toggle Display", "H", KeybindSettings.RELEASE_EXCLUSIVE, "Toggles visibility of the Durability Display");
-        public static final ConfigHotkey        CONFIG = new ConfigHotkey("Open Config", "H,C", "Shows the config screen");
         public static final ImmutableList<ConfigHotkey> HOTKEY_LIST = ImmutableList.of(
-                HOTKEY, CONFIG
+                HOTKEY
         );
     }
     
@@ -80,10 +79,6 @@ public class ConfigurationHandler implements IConfigHandler
     
     public static IKeybind getHotkey() {
         return Hotkeys.HOTKEY.getKeybind();
-    }
-    
-    public static IKeybind getConfigkey() {
-        return Hotkeys.CONFIG.getKeybind();
     }
     
     @Override

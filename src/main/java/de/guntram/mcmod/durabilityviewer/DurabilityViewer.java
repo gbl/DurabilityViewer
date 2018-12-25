@@ -1,7 +1,6 @@
 package de.guntram.mcmod.durabilityviewer;
 
 import com.mojang.brigadier.CommandDispatcher;
-import de.guntram.mcmod.durabilityviewer.client.gui.GuiConfig;
 import de.guntram.mcmod.durabilityviewer.event.InputHandler;
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
 import de.guntram.mcmod.durabilityviewer.event.KeyInputEvent;
@@ -10,12 +9,8 @@ import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.event.InputEventHandler;
 import fi.dy.masa.malilib.event.RenderEventHandler;
-import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
-import fi.dy.masa.malilib.hotkeys.IKeybind;
-import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.interfaces.IInitializationHandler;
 import fi.dy.masa.malilib.interfaces.IRenderer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import org.dimdev.rift.listener.CommandAdder;
 import org.dimdev.riftloader.listener.InitializationListener;
@@ -69,15 +64,6 @@ public class DurabilityViewer implements InitializationListener, CommandAdder
             RenderEventHandler.getInstance().registerGameOverlayRenderer(renderer);
             InputEventHandler.getInstance().registerKeybindProvider(new InputHandler());
             ConfigurationHandler.getHotkey().setCallback(new KeyInputEvent());
-            ConfigurationHandler.getConfigkey().setCallback(new ConfigOpenGuiCallback());
-        }
-    }
-    
-    private static class ConfigOpenGuiCallback implements IHotkeyCallback {
-        @Override
-        public boolean onKeyAction(KeyAction action, IKeybind ik) {
-            Minecraft.getInstance().displayGuiScreen(new GuiConfig());
-            return true;
         }
     }
 }
