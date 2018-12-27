@@ -1,11 +1,12 @@
 {
     "required": true,
     "package": "de.guntram.mcmod.durabilityviewer.mixin",
-    "refmap": "mixin.refmap.json",
+    "refmap": "mixins.durabilityviewer.refmap.json",
     "minVersion": "0.6",
     "client": [
         "TooltipMixin",
-        "ConnectMixin"
+        "ConnectMixin",
+        "MixinKeyBinding"
     ],
     "injectors": {
         "defaultRequire": 1

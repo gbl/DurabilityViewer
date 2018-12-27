@@ -47,4 +47,5 @@ minecraft {
 
 mixin {
 	defaultObfuscationEnv notch
+    add sourceSets.main, 'mixins.durabilityviewer.refmap.json'    
 }
