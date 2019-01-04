@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "org.dimdev.rift.mixin.hook",
+  "refmap": "mixins.durabilityviewer.refmap.json",
+  "minVersion": "0.6",
+  "client": [
+    "client.MixinKeyBinding",
+    "client.MixinGuiChat",
+    "client.MixinLocalCommand"
+  ]
+}

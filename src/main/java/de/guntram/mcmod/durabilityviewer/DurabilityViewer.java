@@ -37,6 +37,7 @@ public class DurabilityViewer implements InitializationListener, LocalCommandAdd
     public void onInitialization() {
         MixinBootstrap.init();
         Mixins.addConfiguration("mixins.durabilityviewer.json");
+        Mixins.addConfiguration("mixins.riftpatch-de-guntram.json");
         InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
         confHandler=ConfigurationHandler.getInstance();
         ConfigManager.getInstance().registerConfigHandler(MODID, confHandler);
@@ -76,7 +77,6 @@ public class DurabilityViewer implements InitializationListener, LocalCommandAdd
 
     @Override
     public void registerLocalCommands(CommandDispatcher<CommandSource> cd) {
-        System.out.println("duraviewer registering");
         ConfigCommand.register(cd);
     }
 
