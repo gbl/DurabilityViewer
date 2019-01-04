@@ -5,8 +5,7 @@
     "minVersion": "0.6",
     "client": [
         "TooltipMixin",
-        "ConnectMixin",
-        "MixinKeyBinding"
+        "ConnectMixin"
     ],
     "injectors": {
         "defaultRequire": 1

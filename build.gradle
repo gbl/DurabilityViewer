@@ -26,16 +26,22 @@ repositories {
 	mavenCentral()
 	maven { url 'https://www.dimdev.org/maven/' }
 	maven { url 'https://www.jitpack.io' }
+    maven { url "file:///home/gbl/SoftwareProjects/MyProjects/MinecraftMods/" }
 	maven { url 'http://repo.strezz.org/artifactory/list/Strezz-Central' }
     maven { url 'https://masa.dy.fi/maven' }
     maven { url "https://libraries.minecraft.net" }
 }
 
 dependencies {
-    // implementation 'fi.dy.masa.malilib:malilib-rift-' + config.minecraft_version_out + ':' + config.malilib_version + ':deobf'
-    implementation 'fi.dy.masa.malilib:malilib-rift-1.13.2:0.9.3:deobf'
-	implementation 'com.github.Chocohead:Rift:jitpack-SNAPSHOT:dev'
     implementation 'com.mojang:brigadier:1.0.15'
+
+    implementation 'fi.dy.masa.malilib:malilib-rift-1.13.2:0.9.3:deobf'
+//  implementation 'patchurl:malilib-rift:1.13.2-0.9.3:deobf'
+
+	implementation 'com.github.Chocohead:Rift:jitpack-SNAPSHOT:dev'
+    implementation 'patchurl:Rift:1.0.4-SNAPSHOT:dev'
+
+    implementation 'org.dimdev:mixin:0.7.11-SNAPSHOT'
 }
 
 minecraft {

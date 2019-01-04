@@ -6,8 +6,6 @@
 package de.guntram.mcmod.durabilityviewer;
 
 import com.mojang.brigadier.CommandDispatcher;
-import de.guntram.mcmod.durabilityviewer.client.gui.GuiConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import static net.minecraft.command.Commands.literal;
 
@@ -21,7 +19,7 @@ class ConfigCommand {
         cd.register(
             literal("configdurabilityviewer")
                 .executes (c -> {
-                    Minecraft.getInstance().displayGuiScreen(new GuiConfig());
+                    DurabilityViewer.queueConfigGuiOpen();
                     return 1;
             })
         );

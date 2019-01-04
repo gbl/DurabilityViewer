@@ -113,6 +113,10 @@ public class GuiItemDurability implements IRenderer
             glfwSetWindowTitle(Minecraft.getInstance().mainWindow.getHandle(), newTitle);
         }
         
+        if (DurabilityViewer.ConfigGuiOpenQueued()) {
+            Minecraft.getInstance().displayGuiScreen(new GuiConfig());
+        }
+        
         if (!visible
         ||  minecraft.player.abilities.isCreativeMode)
             return;

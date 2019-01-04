@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.CommandSource;
-import org.dimdev.rift.listener.CommandAdder;
+import org.dimdev.rift.listener.client.LocalCommandAdder;
 import org.dimdev.rift.listener.client.KeyBindingAdder;
 import org.dimdev.rift.listener.client.KeybindHandler;
 import org.dimdev.riftloader.listener.InitializationListener;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
 
 
-public class DurabilityViewer implements InitializationListener, CommandAdder, KeybindHandler, KeyBindingAdder
+public class DurabilityViewer implements InitializationListener, LocalCommandAdder, KeybindHandler, KeyBindingAdder
 {
     public static final String MODID = "durabilityviewer";
     public static final String VERSION = "1.5";
@@ -30,6 +30,7 @@ public class DurabilityViewer implements InitializationListener, CommandAdder, K
     public static DurabilityViewer instance;
     private static ConfigurationHandler confHandler;
     private static String changedWindowTitle;
+    private static boolean wantGuiOpen;
     private KeyBinding showHide;
 
     @Override
@@ -53,12 +54,29 @@ public class DurabilityViewer implements InitializationListener, CommandAdder, K
         return result;
     }
     
+    // We can't just open the config GUI from the command handler,
+    // because the chat GUI is still open, and MC will close the
+    // (chat) GUI immediately after the command handler, thereby
+    // closing the config GUI. So we just have a flag here and set
+    // it from GuiItemDurability on the next render. Doh!
+
+    public static void queueConfigGuiOpen() {
+        wantGuiOpen=true;
+    }
+    
+    public static boolean ConfigGuiOpenQueued() {
+        boolean temp=wantGuiOpen;
+        wantGuiOpen=false;
+        return temp;
+    }
+
     public static void setWindowTitle(String s) {
         changedWindowTitle=s;
     }
 
     @Override
-    public void registerCommands(CommandDispatcher<CommandSource> cd) {
+    public void registerLocalCommands(CommandDispatcher<CommandSource> cd) {
+        System.out.println("duraviewer registering");
         ConfigCommand.register(cd);
     }
 
