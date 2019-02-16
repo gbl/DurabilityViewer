@@ -1,0 +1,10 @@
+{
+    "id": "durabilityviewer",
+    "name": "Durability Viewer",
+    "authors": [
+        "Giselbaer"
+    ],
+    "listeners": [
+        "de.guntram.mcmod.durabilityviewer.DurabilityViewer"
+    ]
+}

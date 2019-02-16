@@ -1,13 +1,13 @@
 package de.guntram.mcmod.durabilityviewer.handler;
 
 import de.guntram.mcmod.durabilityviewer.client.gui.Corner;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import de.guntram.mcmod.rifttools.ConfigChangedEvent;
+import de.guntram.mcmod.rifttools.Configuration;
+import de.guntram.mcmod.rifttools.ModConfigurationHandler;
 import java.io.File;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.config.Configuration;
 
-public class ConfigurationHandler
+public class ConfigurationHandler implements ModConfigurationHandler
 {
     private static ConfigurationHandler instance;
     
@@ -41,9 +41,9 @@ public class ConfigurationHandler
         return getInstance().configFileName;
     }
 
-    @SubscribeEvent
+    @Override
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equalsIgnoreCase("durabilityviewer")) {
+        if (event.getModID().equals("Durability Viewer")) {
             loadConfig();
         }
     }
@@ -70,7 +70,8 @@ public class ConfigurationHandler
         return Corner.values()[getInstance().corner];
     }
     
-    public static Configuration getConfig() {
+    @Override
+    public Configuration getConfig() {
         return getInstance().config;
     }
     
