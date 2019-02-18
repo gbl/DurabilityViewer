@@ -22,6 +22,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private int minDurability = 100;
     private boolean showPlayerServerName;
     private boolean useCustomSound;
+    private int showDamageOverPercent;
     
     public static ConfigurationHandler getInstance() {
         if (instance==null)
@@ -55,6 +56,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
         minPercent = config.getInt("Minimum Percent", Configuration.CATEGORY_CLIENT, minPercent, 1, 100, "Play sound when durability below X percent");
         minDurability = config.getInt("Minimum Durability", Configuration.CATEGORY_CLIENT, minDurability, 1, 1500, "Play sound when durability below X");
         showPlayerServerName = config.getBoolean("Set window title", Configuration.CATEGORY_CLIENT, true, "Set window title to player and server name");
+        showDamageOverPercent = config.getInt("Percent to show damage", Configuration.CATEGORY_CLIENT, 80, 0, 100, "Show damage instead of durability while the item is still better than this %");
         // useCustomSound = config.getBoolean("Use custom sound", Configuration.CATEGORY_CLIENT, false, "Use your own warning sound. You need to create your own custom.ogg in the mod folder");
         
         tooltipColor=TextFormatting.fromColorIndex(color);
@@ -89,6 +91,10 @@ public class ConfigurationHandler implements ModConfigurationHandler
     
     public static boolean showPlayerServerName() {
         return getInstance().showPlayerServerName;
+    }
+    
+    public static int showDamageOverPercent() {
+        return getInstance().showDamageOverPercent;
     }
     
     public static boolean useCustomSound() {

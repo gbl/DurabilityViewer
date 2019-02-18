@@ -16,7 +16,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
 group 'de.guntram.mcmod.durabilityviewer'
-version '1.13.2-rift1.0.4.77-1.4beta4'
+version '1.13.2-rift1.0.4.77-1.4beta5'
 archivesBaseName = 'DurabilityViewer'
 
 sourceCompatibility = 1.8

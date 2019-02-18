@@ -29,6 +29,7 @@ public class DurabilityViewer implements InitializationListener, KeybindHandler,
     public void onInitialization() {
         MixinBootstrap.init();
         Mixins.addConfiguration("mixins.durabilityviewer.json");
+        Mixins.addConfiguration("mixins.riftpatch-de-guntram.json");
         Mixins.addConfiguration("mixins.rifttools-de-guntram.json");
         confHandler=ConfigurationHandler.getInstance();
         ConfigurationProvider.register("Durability Viewer", confHandler);
