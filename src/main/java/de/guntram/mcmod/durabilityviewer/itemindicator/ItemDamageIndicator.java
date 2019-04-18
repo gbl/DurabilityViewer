@@ -12,8 +12,8 @@ public class ItemDamageIndicator implements ItemIndicator {
 
     @Override
     public String getDisplayValue() {
-        int max=stack.getMaxDamage();
-        int cur=stack.getMaxDamage()-stack.getDamage();
+        int max=stack.getDurability();
+        int cur=stack.getDurability()-stack.getDamage();
         int shown;
         if (cur > max*ConfigurationHandler.showDamageOverPercent()/100) {
             shown=-stack.getDamage();
@@ -25,7 +25,7 @@ public class ItemDamageIndicator implements ItemIndicator {
 
     @Override
     public int getDisplayColor() {
-        int max=stack.getMaxDamage();
+        int max=stack.getDurability();
         int cur=stack.getDamage();
         if (cur < max/5)
             return color_green;
@@ -43,7 +43,7 @@ public class ItemDamageIndicator implements ItemIndicator {
 
     @Override
     public boolean isItemStackDamageable() {
-        return stack.isDamageable();
+        return stack.hasDurability();
     }
 
     @Override

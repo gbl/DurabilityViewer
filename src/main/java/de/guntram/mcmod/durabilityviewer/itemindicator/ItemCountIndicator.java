@@ -19,7 +19,7 @@ public class ItemCountIndicator implements ItemIndicator {
 
     @Override
     public String getDisplayValue() {
-        return stack==null ? "0" : String.valueOf(countOverride==-1 ? stack.getCount() : countOverride);
+        return stack==null ? "0" : String.valueOf(countOverride==-1 ? stack.getAmount(): countOverride);
     }
 
     @Override

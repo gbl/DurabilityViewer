@@ -1,7 +1,7 @@
 {
     "required": true,
     "package": "de.guntram.mcmod.durabilityviewer.mixin",
-    "refmap": "mixins.durabilityviewer.refmap.json",
+    "refmap": "DurabilityViewer-Fabric-refmap.json",
     "minVersion": "0.6",
     "client": [
         "TooltipMixin",

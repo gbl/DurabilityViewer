@@ -2,11 +2,11 @@ package de.guntram.mcmod.durabilityviewer.mixin;
 
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import java.util.List;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.text.TextComponent;
+import net.minecraft.text.TranslatableTextComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,24 +22,24 @@ public abstract class TooltipMixin {
     @Shadow
     public abstract boolean isDamaged();
     @Shadow
-    public abstract int getMaxDamage();
+    public abstract int getDurability();
     @Shadow
     public abstract int getDamage();
     
 //    @Inject(method="getTooltip(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/client/util/ITooltipFlag;)Ljava/util/List",
-    @Inject(method="getTooltip",            
+    @Inject(method="getTooltipText",            
             at=@At("RETURN"), locals=LocalCapture.CAPTURE_FAILHARD, cancellable=true)
-    private void getTooltipdone(EntityPlayer playerIn, ITooltipFlag advanced, 
+    private void getTooltipdone(PlayerEntity playerIn, TooltipContext advanced, 
             CallbackInfoReturnable<List> ci,
-            List<ITextComponent> list) {
+            List<TextComponent> list) {
 
         if (!advanced.isAdvanced() && !this.isEmpty()) {
             if (this.isDamaged()) {
-                ITextComponent toolTip = new TextComponentTranslation("tooltip.durability",
-                        (this.getMaxDamage() - this.getDamage())+
+                TextComponent toolTip = new TranslatableTextComponent("tooltip.durability",
+                        (this.getDurability() - this.getDamage())+
                         " / "+
-                        this.getMaxDamage());
-                toolTip=toolTip.applyTextStyle(ConfigurationHandler.getTooltipColor());
+                        this.getDurability());
+                toolTip=toolTip.applyFormat(ConfigurationHandler.getTooltipColor());
                 if (!list.contains(toolTip)) {
                     list.add(toolTip);
                 }

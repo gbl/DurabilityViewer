@@ -1,0 +1,19 @@
+{
+    "id": "durabilityviewer",
+    "name": "Giselbaers Durability Viewer",
+    "description": "Show Armor and Tool durability, and a bit more",
+    "version": "1.0.0",
+    "side": "client",
+    "authors": [
+        "Giselbaer"
+    ],
+    "initializers": [
+        "de.guntram.mcmod.durabilityviewer.DurabilityViewer"
+    ],
+    "requires": {
+      "fabric": "*"
+    },
+    "mixins": {
+      "client": [ "mixins.durabilityviewer.json", "mixins.de_guntram_mcmod_fabrictools.json" ]
+    }
+}

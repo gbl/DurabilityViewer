@@ -1,0 +1,17 @@
+{
+    "required": true,
+    "package": "de.guntram.mcmod.fabrictools.mixins",
+    "refmap": "DurabilityViewer-Fabric-refmap.json",
+    "minVersion": "0.6",
+    "client": [
+        "MixinGuiChat",
+        "MixinLocalCommand",
+        "MixinProcessKeys"
+    ],
+    "client-disabled": [
+    	"MixinKeyBinding"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

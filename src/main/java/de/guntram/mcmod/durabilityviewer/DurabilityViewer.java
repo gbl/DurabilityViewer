@@ -2,20 +2,17 @@ package de.guntram.mcmod.durabilityviewer;
 
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
-import de.guntram.mcmod.durabilityviewer.mixin.PotionEffectsMixin;
-import de.guntram.mcmod.rifttools.ConfigurationProvider;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import net.minecraft.client.settings.KeyBinding;
-import org.dimdev.rift.listener.client.KeyBindingAdder;
-import org.dimdev.rift.listener.client.KeybindHandler;
-import org.dimdev.riftloader.listener.InitializationListener;
+import de.guntram.mcmod.fabrictools.ConfigurationProvider;
+import de.guntram.mcmod.fabrictools.KeyBindingHandler;
+import de.guntram.mcmod.fabrictools.KeyBindingManager;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
+import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.Mixins;
 
-public class DurabilityViewer implements InitializationListener, KeybindHandler, KeyBindingAdder
+public class DurabilityViewer implements ClientModInitializer, KeyBindingHandler
 {
     public static final String MODID = "durabilityviewer";
     public static final String VERSION = "1.4";
@@ -23,14 +20,15 @@ public class DurabilityViewer implements InitializationListener, KeybindHandler,
     public static DurabilityViewer instance;
     private static ConfigurationHandler confHandler;
     private static String changedWindowTitle;
-    private KeyBinding showHide;
+    private FabricKeyBinding showHide;
     
     @Override
-    public void onInitialization() {
-        MixinBootstrap.init();
-        Mixins.addConfiguration("mixins.durabilityviewer.json");
-        Mixins.addConfiguration("mixins.riftpatch-de-guntram.json");
-        Mixins.addConfiguration("mixins.rifttools-de-guntram.json");
+    public void onInitializeClient() {
+//        MixinBootstrap.init();
+//        Mixins.addConfiguration("mixins.durabilityviewer.json");
+//        Mixins.addConfiguration("mixins.riftpatch-de-guntram.json");
+//        Mixins.addConfiguration("mixins.rifttools-de-guntram.json");
+        setKeyBindings();
         confHandler=ConfigurationHandler.getInstance();
         ConfigurationProvider.register("Durability Viewer", confHandler);
         confHandler.load(ConfigurationProvider.getSuggestedFile(MODID));
@@ -42,20 +40,22 @@ public class DurabilityViewer implements InitializationListener, KeybindHandler,
     }
 
     @Override
-    public void processKeybinds() {
-        if (showHide.isPressed()) {
+    public void processKeyBinds() {
+        if (showHide.wasPressed()) {
             GuiItemDurability.toggleVisibility();
         }
     }
 
-    @Override
-    public Collection<? extends KeyBinding> getKeyBindings() {
-        List<KeyBinding> myBindings=new ArrayList();
-        
-        myBindings.add(showHide = new KeyBinding("key.duraview", GLFW_KEY_H, "key.categories.durabilityviewer"));
-        return myBindings;
+    public void setKeyBindings() {
+        final String category="key.categories.durabilityviewer";
+        KeyBindingRegistry.INSTANCE.addCategory(category);
+        KeyBindingRegistry.INSTANCE.register(
+            showHide = FabricKeyBinding.Builder
+            .create(new Identifier("durabilityviewer.showhide"), InputUtil.Type.KEYSYM, GLFW_KEY_H, category)
+            .build());
+        KeyBindingManager.register(this);
     }    
-    
+
     // On windows, Display.setTitle crashes if we call it from 
     // (Dis)connectFromServerEvent. This is because these run on the netty
     // thread, set a global lock, send a WM_SETTEXT, and need the main thread

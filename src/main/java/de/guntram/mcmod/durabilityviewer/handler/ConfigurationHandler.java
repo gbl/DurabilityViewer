@@ -1,18 +1,18 @@
 package de.guntram.mcmod.durabilityviewer.handler;
 
 import de.guntram.mcmod.durabilityviewer.client.gui.Corner;
-import de.guntram.mcmod.rifttools.ConfigChangedEvent;
-import de.guntram.mcmod.rifttools.Configuration;
-import de.guntram.mcmod.rifttools.ModConfigurationHandler;
+import de.guntram.mcmod.fabrictools.ConfigChangedEvent;
+import de.guntram.mcmod.fabrictools.Configuration;
+import de.guntram.mcmod.fabrictools.ModConfigurationHandler;
 import java.io.File;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.text.TextFormat;
 
 public class ConfigurationHandler implements ModConfigurationHandler
 {
     private static ConfigurationHandler instance;
     
     private Configuration config;
-    private TextFormatting tooltipColor;
+    private TextFormat tooltipColor;
     private String configFileName;
     
     private int corner=0;
@@ -59,12 +59,12 @@ public class ConfigurationHandler implements ModConfigurationHandler
         showDamageOverPercent = config.getInt("Percent to show damage", Configuration.CATEGORY_CLIENT, 80, 0, 100, "Show damage instead of durability while the item is still better than this %");
         // useCustomSound = config.getBoolean("Use custom sound", Configuration.CATEGORY_CLIENT, false, "Use your own warning sound. You need to create your own custom.ogg in the mod folder");
         
-        tooltipColor=TextFormatting.fromColorIndex(color);
+        tooltipColor=TextFormat.byId(color);
         if (config.hasChanged())
             config.save();
     }
     
-    public static TextFormatting getTooltipColor() {
+    public static TextFormat getTooltipColor() {
         return getInstance().tooltipColor;
     }
     

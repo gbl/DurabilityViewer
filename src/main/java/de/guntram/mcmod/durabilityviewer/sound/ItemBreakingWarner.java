@@ -7,10 +7,11 @@ package de.guntram.mcmod.durabilityviewer.sound;
 
 import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
+
 
 /**
  *
@@ -24,22 +25,22 @@ public class ItemBreakingWarner {
     public ItemBreakingWarner() {
         lastDurability=1000;
         lastStack=null;
-        ResourceLocation location;
+        Identifier location;
         
         if (sound==null) {
-            location=new ResourceLocation(DurabilityViewer.MODID, "tool_breaking");
+            location=new Identifier(DurabilityViewer.MODID, "tool_breaking");
             sound=new SoundEvent(location);
         }
     }
     
     public boolean checkBreaks(ItemStack stack) {
         lastStack=stack;
-        if (stack==null || !stack.isDamageable())
+        if (stack==null || !stack.hasDurability())
             return false;
-        int newDurability=stack.getMaxDamage()-stack.getDamage();
+        int newDurability=stack.getDurability()-stack.getDamage();
         if (newDurability  < lastDurability
         && newDurability < ConfigurationHandler.getMinDurability()
-        && newDurability * 100 / ConfigurationHandler.getMinPercent() < stack.getMaxDamage()) {
+        && newDurability * 100 / ConfigurationHandler.getMinPercent() < stack.getDurability()) {
             lastDurability=newDurability;
             return true;
         }
@@ -49,6 +50,6 @@ public class ItemBreakingWarner {
     
     public static void playWarningSound() {
         // System.out.append("playing warning sound");
-        Minecraft.getInstance().player.playSound(sound, 100, 100);
+        MinecraftClient.getInstance().player.playSound(sound, 100, 100);
     }
 }
