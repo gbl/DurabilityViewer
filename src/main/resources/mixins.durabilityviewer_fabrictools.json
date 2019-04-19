@@ -1,12 +1,14 @@
 {
     "required": true,
     "package": "de.guntram.mcmod.fabrictools.mixins",
-    "refmap": "DurabilityViewer-Fabric-refmap.json",
+    "refmap": "DurabilityViewer-refmap.json",
     "minVersion": "0.6",
     "client": [
         "MixinGuiChat",
         "MixinLocalCommand",
-        "MixinProcessKeys"
+        "MixinProcessKeys",
+        "MixinMainMenuScreen",
+        "MixinPauseMenuScreen"
     ],
     "client-disabled": [
     	"MixinKeyBinding"

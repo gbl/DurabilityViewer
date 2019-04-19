@@ -51,7 +51,7 @@ public class DurabilityViewer implements ClientModInitializer, KeyBindingHandler
         KeyBindingRegistry.INSTANCE.addCategory(category);
         KeyBindingRegistry.INSTANCE.register(
             showHide = FabricKeyBinding.Builder
-            .create(new Identifier("durabilityviewer.showhide"), InputUtil.Type.KEYSYM, GLFW_KEY_H, category)
+            .create(new Identifier("durabilityviewer:showhide"), InputUtil.Type.KEYSYM, GLFW_KEY_H, category)
             .build());
         KeyBindingManager.register(this);
     }    

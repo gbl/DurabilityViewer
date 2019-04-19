@@ -1,6 +1,6 @@
 {   
     "key.categories.durabilityviewer":"Durability Viewer",
-    "key.duraview":"Show/hide durability display",
+    "key.durabilityviewer.showhide":"Show/hide durability display",
     "tooltip.durability":"Durability %s",
     "durabilityviewer.subtitle.toolBreaking":"Item about to break"
 }
