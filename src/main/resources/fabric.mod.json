@@ -1,19 +1,26 @@
 {
+    "schemaVersion": 1,
     "id": "durabilityviewer",
-    "name": "Giselbaers Durability Viewer",
-    "description": "Show Armor and Tool durability, and a bit more",
-    "version": "1.0.0",
-    "side": "client",
-    "authors": [
-        "Giselbaer"
+    "version": "1.14pre5-fabric0.4.1-1.4",
+    "environment": "client",
+    "entrypoints": {
+        "client": [ "de.guntram.mcmod.durabilityviewer.DurabilityViewer" ],
+        "modmenu": [ "de.guntram.mcmod.durabilityviewer.handler.MMConfigurationHandler" ]
+    },
+    "custom": {
+        "modmenu:clientsideOnly": true
+    },
+    "mixins": [
+      	"mixins.durabilityviewer.json",
+        "mixins.durabilityviewer_fabrictools.json"
     ],
-    "initializers": [
-        "de.guntram.mcmod.durabilityviewer.DurabilityViewer"
-    ],
-    "requires": {
+    "depends": {
       "fabric": "*"
     },
-    "mixins": {
-      "client": [ "mixins.durabilityviewer.json", "mixins.durabilityviewer_fabrictools.json" ]
-    }
+    "recommends": {
+      "modmenu" : "*"
+    },
+    "name": "Giselbaers Durability Viewer",
+    "description": "Show Armor and Tool durability, and a bit more",
+    "authors": [ "Giselbaer" ]
 }

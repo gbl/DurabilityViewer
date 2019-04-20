@@ -6,6 +6,7 @@ import de.guntram.mcmod.fabrictools.ConfigurationProvider;
 import de.guntram.mcmod.fabrictools.KeyBindingHandler;
 import de.guntram.mcmod.fabrictools.KeyBindingManager;
 import net.fabricmc.api.ClientModInitializer;
+
 import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
 import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
 import net.minecraft.client.util.InputUtil;
@@ -15,6 +16,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;
 public class DurabilityViewer implements ClientModInitializer, KeyBindingHandler
 {
     public static final String MODID = "durabilityviewer";
+    public static final String MODNAME = "Durability Viewer";
     public static final String VERSION = "1.4";
 
     public static DurabilityViewer instance;
@@ -24,13 +26,9 @@ public class DurabilityViewer implements ClientModInitializer, KeyBindingHandler
     
     @Override
     public void onInitializeClient() {
-//        MixinBootstrap.init();
-//        Mixins.addConfiguration("mixins.durabilityviewer.json");
-//        Mixins.addConfiguration("mixins.riftpatch-de-guntram.json");
-//        Mixins.addConfiguration("mixins.rifttools-de-guntram.json");
         setKeyBindings();
         confHandler=ConfigurationHandler.getInstance();
-        ConfigurationProvider.register("Durability Viewer", confHandler);
+        ConfigurationProvider.register(MODNAME, confHandler);
         confHandler.load(ConfigurationProvider.getSuggestedFile(MODID));
         changedWindowTitle=null;
     }

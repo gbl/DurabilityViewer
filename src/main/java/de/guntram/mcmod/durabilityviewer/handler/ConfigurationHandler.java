@@ -1,5 +1,6 @@
 package de.guntram.mcmod.durabilityviewer.handler;
 
+import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.client.gui.Corner;
 import de.guntram.mcmod.fabrictools.ConfigChangedEvent;
 import de.guntram.mcmod.fabrictools.Configuration;
@@ -14,7 +15,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private Configuration config;
     private TextFormat tooltipColor;
     private String configFileName;
-    
+
     private int corner=0;
     private int color= 5;
     private boolean effectDuration;
@@ -44,7 +45,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
 
     @Override
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals("Durability Viewer")) {
+        if (event.getModID().equals(DurabilityViewer.MODNAME)) {
             loadConfig();
         }
     }
