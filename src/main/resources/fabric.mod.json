@@ -11,8 +11,7 @@
         "modmenu:clientsideOnly": true
     },
     "mixins": [
-      	"mixins.durabilityviewer.json",
-        "mixins.durabilityviewer_fabrictools.json"
+      	"mixins.durabilityviewer.json"
     ],
     "depends": {
       "fabric": "*"
