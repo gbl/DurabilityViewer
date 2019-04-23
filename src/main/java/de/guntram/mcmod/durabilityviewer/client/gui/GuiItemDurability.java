@@ -11,7 +11,6 @@ import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
 import java.util.Collection;
 import net.minecraft.client.util.Window;
-import net.minecraft.item.BowItem;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +21,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.item.BaseBowItem;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 
 
@@ -95,6 +95,10 @@ public class GuiItemDurability
             width=w; height=h;
         }
     }
+    
+    private enum RenderPos {
+        left, over, right;
+    }
 
     public void onRenderGameOverlayPost(float partialTicks) {
 
@@ -131,15 +135,15 @@ public class GuiItemDurability
         if (needToWarn)
             ItemBreakingWarner.playWarningSound();
         
-        if (mainHand.getItemStack().getItem() instanceof BowItem || offHand.getItemStack().getItem() instanceof BowItem) {
+        if (mainHand.getItemStack().getItem() instanceof BaseBowItem
+        ||   offHand.getItemStack().getItem() instanceof BaseBowItem) {
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
         }
-        // TODO Crossbows
 
         Window mainWindow = MinecraftClient.getInstance().window;
-        
-        RenderSize armorSize=this.renderItems(0, 0, false, true, 0, boots, leggings, chestplate, helmet);
-        RenderSize toolsSize=this.renderItems(0, 0, false, false, 0, invSlots, mainHand, offHand, arrows);
+        RenderSize armorSize, toolsSize;
+        armorSize=this.renderItems(0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
+        toolsSize=this.renderItems(0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
         
         int totalHeight=(toolsSize.height > armorSize.height ? toolsSize.height : armorSize.height);
         int totalWidth =(toolsSize.width  > armorSize.width  ? toolsSize.width  : armorSize.width);
@@ -174,8 +178,20 @@ public class GuiItemDurability
         GuiLighting.enable();
         GuiLighting.enableForItems();
 
-        this.renderItems(xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft(), armorSize.width, helmet, chestplate, leggings, boots);
-        this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight(), toolsSize.width, invSlots, mainHand, offHand, arrows);
+        if (ConfigurationHandler.getArmorAroundHotbar()) {
+            this.renderItems(mainWindow.getScaledWidth()/2-130, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
+            this.renderItems(mainWindow.getScaledWidth()/2-130, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
+            this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
+            this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
+            if (ConfigurationHandler.getCorner().isRight()) {
+                xposTools += armorSize.width;
+            } else {
+                xposTools -= armorSize.width;
+            }
+        } else {
+            this.renderItems(xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, leggings, boots);
+        }
+        this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
 
         GuiLighting.disable();
         
@@ -204,7 +220,7 @@ public class GuiItemDurability
         }
     }
     
-    private RenderSize renderItems(int xpos, int ypos, boolean reallyDraw, boolean numbersLeft, int maxWidth, ItemIndicator... items) {
+    private RenderSize renderItems(int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
         RenderSize result=new RenderSize(0, 0);
         
         for (ItemIndicator item: items) {
@@ -215,8 +231,8 @@ public class GuiItemDurability
                     result.width=width;
                 if (reallyDraw) {
                     int color=item.getDisplayColor();
-                    itemRenderer.renderGuiItemIcon(item.getItemStack(), numbersLeft ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
-                    fontRenderer.draw(displayString, numbersLeft? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.fontHeight/2, color);
+                    itemRenderer.renderGuiItemIcon(item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
+                    fontRenderer.draw(displayString, numberPos != RenderPos.right ? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.fontHeight/2 + (numberPos==RenderPos.over ? 10  : 0), color);
                 }
                 result.height+=16;
             }
