@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "durabilityviewer",
-    "version": "1.14pre5-fabric0.4.1-1.4",
+    "version": "1.14-fabric0.2.7-1.5",
     "environment": "client",
     "entrypoints": {
         "client": [ "de.guntram.mcmod.durabilityviewer.DurabilityViewer" ],
@@ -20,6 +20,12 @@
       "modmenu" : "*"
     },
     "name": "Giselbaers Durability Viewer",
-    "description": "Show Armor and Tool durability, and a bit more",
-    "authors": [ "Giselbaer" ]
+    "description": "Shows various things about the game:\n- the remaining/missing durability on your armor and tools\n- the amount of arrows in your inventory when you're wielding a bow\n- the number of empty inventory slots\n- timeouts for status effects",
+    "icon": "pack.png",
+    "authors": [ "Giselbaer" ],
+    "contact": {
+        "homepage": "https://minecraft.curseforge.com/projects/giselbaers-durability-viewer",
+        "sources": "https://github.com/gbl/DurabilityViewer",
+        "issues": "https://github.com/gbl/DurabilityViewer/issues"
+    }
 }
