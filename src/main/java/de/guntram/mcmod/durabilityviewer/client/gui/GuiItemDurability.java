@@ -110,8 +110,10 @@ public class GuiItemDurability
         }
         
         if (!visible
-        ||  minecraft.player.abilities.creativeMode)
+        ||  minecraft.player.abilities.creativeMode
+        ||  minecraft.options.debugEnabled) {
             return;
+        }
 
         PlayerEntity player = (PlayerEntity) minecraft.player;
         boolean needToWarn=false;
