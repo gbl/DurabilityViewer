@@ -11,7 +11,6 @@ import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
 import java.util.Collection;
 import net.minecraft.client.util.Window;
-import net.minecraft.client.render.GuiLighting;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArrowItem;
@@ -21,7 +20,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.BaseBowItem;
+import net.minecraft.item.RangedWeaponItem;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 
 
@@ -60,7 +59,7 @@ public class GuiItemDurability
         int arrows = 0;
         for (final ItemStack stack : minecraft.player.inventory.main) {
             if (isArrow(stack)) {
-                arrows += stack.getAmount();
+                arrows += stack.getCount();
             }
         }
         return arrows;
@@ -106,7 +105,7 @@ public class GuiItemDurability
         // the title change that occurs when logging off gets through.
         String newTitle=DurabilityViewer.getAndResetChangedWindowTitle();
         if (newTitle!=null) {
-            glfwSetWindowTitle(MinecraftClient.getInstance().window.getHandle(), newTitle);
+            glfwSetWindowTitle(MinecraftClient.getInstance().getWindow().getHandle(), newTitle);
         }
         
         if (!visible
@@ -119,8 +118,8 @@ public class GuiItemDurability
         boolean needToWarn=false;
 
         // @TODO: remove duplicate code
-        ItemIndicator mainHand = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.HAND_MAIN));
-        ItemIndicator offHand = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.HAND_OFF));
+        ItemIndicator mainHand = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.MAINHAND));
+        ItemIndicator offHand = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.OFFHAND));
         ItemIndicator boots = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.FEET));
         ItemIndicator leggings = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.LEGS));
         ItemIndicator chestplate = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.CHEST));
@@ -128,8 +127,8 @@ public class GuiItemDurability
         ItemIndicator arrows = null;
         ItemIndicator invSlots = new InventorySlotsIndicator(minecraft.player.inventory);
         
-        needToWarn|=mainHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.HAND_MAIN));
-        needToWarn|=offHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.HAND_OFF));
+        needToWarn|=mainHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.MAINHAND));
+        needToWarn|=offHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.OFFHAND));
         needToWarn|=bootsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.FEET));
         needToWarn|=pantsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.LEGS));
         needToWarn|=chestWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.CHEST));
@@ -137,12 +136,12 @@ public class GuiItemDurability
         if (needToWarn)
             ItemBreakingWarner.playWarningSound();
         
-        if (mainHand.getItemStack().getItem() instanceof BaseBowItem
-        ||   offHand.getItemStack().getItem() instanceof BaseBowItem) {
+        if (mainHand.getItemStack().getItem() instanceof RangedWeaponItem
+        ||   offHand.getItemStack().getItem() instanceof RangedWeaponItem) {
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
         }
 
-        Window mainWindow = MinecraftClient.getInstance().window;
+        Window mainWindow = MinecraftClient.getInstance().getWindow();
         RenderSize armorSize, toolsSize;
         armorSize=this.renderItems(0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
         toolsSize=this.renderItems(0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
@@ -177,8 +176,6 @@ public class GuiItemDurability
         }
 
         GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        GuiLighting.enable();
-        GuiLighting.enableForItems();
 
         if (ConfigurationHandler.getArmorAroundHotbar()) {
             this.renderItems(mainWindow.getScaledWidth()/2-130, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
@@ -195,8 +192,6 @@ public class GuiItemDurability
         }
         this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
 
-        GuiLighting.disable();
-        
         if (ConfigurationHandler.showEffectDuration()) {
             // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
             Collection<StatusEffectInstance> collection = minecraft.player.getStatusEffects();

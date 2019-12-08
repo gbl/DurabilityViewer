@@ -6,14 +6,14 @@ import de.guntram.mcmod.fabrictools.ConfigChangedEvent;
 import de.guntram.mcmod.fabrictools.Configuration;
 import de.guntram.mcmod.fabrictools.ModConfigurationHandler;
 import java.io.File;
-import net.minecraft.text.TextFormat;
+import net.minecraft.util.Formatting;
 
 public class ConfigurationHandler implements ModConfigurationHandler
 {
     private static ConfigurationHandler instance;
 
     private Configuration config;
-    private TextFormat tooltipColor;
+    private Formatting tooltipColor;
     private String configFileName;
 
     private int corner=0;
@@ -62,12 +62,12 @@ public class ConfigurationHandler implements ModConfigurationHandler
         showDamageOverPercent = config.getInt("Percent to show damage", Configuration.CATEGORY_CLIENT, 80, 0, 100, "Show damage instead of durability while the item is still better than this %");
         // useCustomSound = config.getBoolean("Use custom sound", Configuration.CATEGORY_CLIENT, false, "Use your own warning sound. You need to create your own custom.ogg in the mod folder");
         
-        tooltipColor=TextFormat.byId(color);
+        tooltipColor=Formatting.byColorIndex(color);
         if (config.hasChanged())
             config.save();
     }
     
-    public static TextFormat getTooltipColor() {
+    public static Formatting getTooltipColor() {
         return getInstance().tooltipColor;
     }
     
