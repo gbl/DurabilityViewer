@@ -181,8 +181,12 @@ public class GuiItemDurability
         GuiLighting.enableForItems();
 
         if (ConfigurationHandler.getArmorAroundHotbar()) {
-            this.renderItems(mainWindow.getScaledWidth()/2-130, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
-            this.renderItems(mainWindow.getScaledWidth()/2-130, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
+            int leftOffset=-130;
+            if (!player.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty()) {
+                leftOffset-=20;
+            }
+            this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
+            this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
             this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
             this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
             if (ConfigurationHandler.getCorner().isRight()) {
