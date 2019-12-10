@@ -182,7 +182,7 @@ public class GuiItemDurability
 
         if (ConfigurationHandler.getArmorAroundHotbar()) {
             int leftOffset=-130;
-            if (!player.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty()) {
+            if (!player.getEquippedStack(EquipmentSlot.HAND_OFF).isEmpty()) {
                 leftOffset-=20;
             }
             this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
