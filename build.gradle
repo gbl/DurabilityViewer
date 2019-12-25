@@ -6,7 +6,7 @@ buildscript {
         maven { url 'http://repo.spongepowered.org/maven' }
 	}
 	dependencies {
-		classpath 'com.github.Chocohead:ForgeGradle:moderniser-SNAPSHOT'
+		classpath 'com.github.Chocohead:ForgeGradle:jitpack-SNAPSHOT'
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
 	}
 }
@@ -16,7 +16,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
 group 'de.guntram.mcmod.durabilityviewer'
-version '1.13.2-rift1.0.4.77-1.4beta5'
+version '1.13.2-rift1.0.4.77-1.5'
 archivesBaseName = 'DurabilityViewer'
 
 sourceCompatibility = 1.8
@@ -26,7 +26,6 @@ repositories {
 	mavenCentral()
 	maven { url 'https://www.dimdev.org/maven/' }
 	maven { url 'https://www.jitpack.io' }
-	maven { url 'http://repo.strezz.org/artifactory/list/Strezz-Central' }
     maven { url "https://libraries.minecraft.net" }
 }
 

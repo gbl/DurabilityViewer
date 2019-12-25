@@ -96,6 +96,10 @@ public class GuiItemDurability
             width=w; height=h;
         }
     }
+    
+    private enum RenderPos {
+        left, over, right;
+    }
 
     public void onRenderGameOverlayPost(float partialTicks) {
 
@@ -137,9 +141,9 @@ public class GuiItemDurability
         }
 
         MainWindow mainWindow = Minecraft.getInstance().mainWindow;
-        
-        RenderSize armorSize=this.renderItems(0, 0, false, true, 0, boots, leggings, chestplate, helmet);
-        RenderSize toolsSize=this.renderItems(0, 0, false, false, 0, invSlots, mainHand, offHand, arrows);
+        RenderSize armorSize, toolsSize;
+        armorSize=this.renderItems(0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
+        toolsSize=this.renderItems(0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
         
         int totalHeight=(toolsSize.height > armorSize.height ? toolsSize.height : armorSize.height);
         int totalWidth =(toolsSize.width  > armorSize.width  ? toolsSize.width  : armorSize.width);
@@ -173,9 +177,21 @@ public class GuiItemDurability
         GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
         RenderHelper.enableStandardItemLighting();
         RenderHelper.enableGUIStandardItemLighting();
-
-        this.renderItems(xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft(), armorSize.width, helmet, chestplate, leggings, boots);
-        this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight(), toolsSize.width, invSlots, mainHand, offHand, arrows);
+		
+        if (ConfigurationHandler.getArmorAroundHotbar()) {
+            this.renderItems(mainWindow.getScaledWidth()/2-130, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
+            this.renderItems(mainWindow.getScaledWidth()/2-130, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
+            this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
+            this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
+            if (ConfigurationHandler.getCorner().isRight()) {
+                xposTools += armorSize.width;
+            } else {
+                xposTools -= armorSize.width;
+            }
+        } else {
+            this.renderItems(xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, leggings, boots);
+        }
+        this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
 
         RenderHelper.disableStandardItemLighting();
         
@@ -204,7 +220,7 @@ public class GuiItemDurability
         }
     }
     
-    private RenderSize renderItems(int xpos, int ypos, boolean reallyDraw, boolean numbersLeft, int maxWidth, ItemIndicator... items) {
+    private RenderSize renderItems(int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
         RenderSize result=new RenderSize(0, 0);
         
         for (ItemIndicator item: items) {
@@ -215,8 +231,8 @@ public class GuiItemDurability
                     result.width=width;
                 if (reallyDraw) {
                     int color=item.getDisplayColor();
-                    itemRenderer.renderItemAndEffectIntoGUI(item.getItemStack(), numbersLeft ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
-                    fontRenderer.drawString(displayString, numbersLeft? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.FONT_HEIGHT/2, color);
+                    itemRenderer.renderItemAndEffectIntoGUI(item.getItemStack(), numberPos == RenderPos.left  ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
+                    fontRenderer.drawString(displayString, numberPos != RenderPos.right ? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.FONT_HEIGHT/2 + (numberPos==RenderPos.over ? 10  : 0), color);
                 }
                 result.height+=16;
             }

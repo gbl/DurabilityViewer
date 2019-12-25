@@ -23,7 +23,8 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private boolean showPlayerServerName;
     private boolean useCustomSound;
     private int showDamageOverPercent;
-    
+    private boolean armorAroundHotbar;
+
     public static ConfigurationHandler getInstance() {
         if (instance==null)
             instance=new ConfigurationHandler();
@@ -51,6 +52,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
     
     private void loadConfig() {
         corner=config.getInt("HUD Corner", Configuration.CATEGORY_CLIENT, corner, 0, 3, "Corner 0 to 3 - bottom right, bottom left, top right, top left");
+        armorAroundHotbar=config.getBoolean("Armor around hotbar", Configuration.CATEGORY_CLIENT, armorAroundHotbar, "Render armor around hotbar (instead of with tools)");
         color=config.getInt("Tooltip Color", Configuration.CATEGORY_CLIENT, color, 0, 15, "Minecraft Color 0 .. 15");
         effectDuration=config.getBoolean("Effect Duration", Configuration.CATEGORY_CLIENT, true, "Show effect durations");
         minPercent = config.getInt("Minimum Percent", Configuration.CATEGORY_CLIENT, minPercent, 1, 100, "Play sound when durability below X percent");
@@ -95,6 +97,10 @@ public class ConfigurationHandler implements ModConfigurationHandler
     
     public static int showDamageOverPercent() {
         return getInstance().showDamageOverPercent;
+    }
+    
+    public static boolean getArmorAroundHotbar() {
+        return getInstance().armorAroundHotbar;
     }
     
     public static boolean useCustomSound() {
