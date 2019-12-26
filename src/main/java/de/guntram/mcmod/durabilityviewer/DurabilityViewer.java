@@ -1,48 +1,44 @@
 package de.guntram.mcmod.durabilityviewer;
 
+import de.guntram.mcmod.GBForgetools.ConfigurationProvider;
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
 import de.guntram.mcmod.durabilityviewer.handler.KeyHandler;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import de.guntram.mcmod.durabilityviewer.event.KeyInputEvent;
 import de.guntram.mcmod.durabilityviewer.event.TooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.Display;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(modid = DurabilityViewer.MODID, 
-        name = "Durability Viewer", 
-        version = DurabilityViewer.VERSION,
-        clientSideOnly = true, 
-        acceptedMinecraftVersions = "[1.12]", 
-        guiFactory = "de.guntram.mcmod.durabilityviewer.client.gui.DurabilityViewerGuiFactory", 
-        dependencies = "")
-
+@Mod("durabilityviewer")
 public class DurabilityViewer
 {
     public static final String MODID = "durabilityviewer";
     public static final String VERSION = "1.4";
 
-    @Mod.Instance("durabilityviewer")
     public static DurabilityViewer instance;
     private static ConfigurationHandler confHandler;
     private static String changedWindowTitle;
-    
-    @Mod.EventHandler
-    public void preInit(final FMLPreInitializationEvent event) {
-        confHandler=ConfigurationHandler.getInstance();
-        confHandler.load(event.getSuggestedConfigurationFile());
+
+    public DurabilityViewer() {
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        bus.addListener(this::init);
+        // bus.addListener(this::onConnectedToServerEvent);
+        // bus.addListener(this::onDisconnectedFromServerEvent);
     }
+
+//    public void preInit(final FMLPreInitializationEvent event) {
+//        confHandler=ConfigurationHandler.getInstance();
+//        confHandler.load(event.getSuggestedConfigurationFile());
+//    }
     
-    @Mod.EventHandler
-    public void init(final FMLInitializationEvent event) {
+    public void init(final FMLCommonSetupEvent event) {
         changedWindowTitle=null;
+        confHandler=ConfigurationHandler.getInstance();
+        confHandler.load(ConfigurationProvider.getSuggestedFile(MODID));
         KeyHandler.init();
         System.out.println("on Init, confHandler is "+confHandler);
         MinecraftForge.EVENT_BUS.register(this);
@@ -51,28 +47,26 @@ public class DurabilityViewer
         MinecraftForge.EVENT_BUS.register(new TooltipEvent());
         MinecraftForge.EVENT_BUS.register(new GuiItemDurability());
     }
-    
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void onConnectedToServerEvent(FMLNetworkEvent.ClientConnectedToServerEvent event) {
+
+    /* Seems like this event doesn't exist any more
+    public void onConnectedToServerEvent(ClientConnectedToServerEvent event) {
         if (!ConfigurationHandler.showPlayerServerName())
             return;
-        Minecraft mc=Minecraft.getMinecraft();
+        Minecraft mc=Minecraft.getInstance();
         String serverName = (event.isLocal() ? "local game" : mc.getCurrentServerData().serverName);
         if (serverName==null)
             serverName="unknown server";
         changedWindowTitle=mc.getSession().getUsername() + " on "+serverName;
     }
-    
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void onDisconnectFromServerEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+
+    public void onDisconnectFromServerEvent(ClientDisconnectionFromServerEvent event) {
         if (!ConfigurationHandler.showPlayerServerName())
             return;
-        Minecraft mc=Minecraft.getMinecraft();
+        Minecraft mc=Minecraft.getInstance();
         changedWindowTitle=mc.getSession().getUsername() + " not connected";
     }
-    
+    */
+
     // On windows, Display.setTitle crashes if we call it from 
     // (Dis)connectFromServerEvent. This is because these run on the netty
     // thread, set a global lock, send a WM_SETTEXT, and need the main thread

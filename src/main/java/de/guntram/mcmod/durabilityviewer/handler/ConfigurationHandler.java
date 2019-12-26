@@ -1,11 +1,11 @@
 package de.guntram.mcmod.durabilityviewer.handler;
 
+import de.guntram.mcmod.GBForgetools.Configuration;
 import de.guntram.mcmod.durabilityviewer.client.gui.Corner;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import java.io.File;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 
 public class ConfigurationHandler
 {

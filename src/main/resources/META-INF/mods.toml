@@ -1,0 +1,28 @@
+modLoader="javafml" #mandatory
+loaderVersion="[28,)" #mandatory (28 is current forge version)
+issueTrackerURL="https://github.com/gbl/DurabilityViewer/issues"
+[[mods]]
+modId="durabilityviewer"
+version="${file.jarVersion}"
+displayName="Giselbaers Durability Viewer"
+displayURL="https://github.com/gbl/DurabilityViewer"
+logoFile="logo.png"
+credits="SixOneThree for his DurabilityShow which inspired this"
+authors="Giselbaer"
+description='''
+Help to know when your armor and items are going to break
+'''
+
+[[dependencies.durabilityviewer]] #optional
+    modId="forge"
+    mandatory=true
+    versionRange="[28,)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.durabilityviewer]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.14.4]"
+    ordering="NONE"
+    side="CLIENT"
