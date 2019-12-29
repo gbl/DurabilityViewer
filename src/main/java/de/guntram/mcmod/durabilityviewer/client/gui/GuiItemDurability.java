@@ -125,7 +125,7 @@ public class GuiItemDurability
         ItemIndicator chestplate = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.CHEST));
         ItemIndicator helmet = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.HEAD));
         ItemIndicator arrows = null;
-        ItemIndicator invSlots = new InventorySlotsIndicator(minecraft.player.inventory);
+        ItemIndicator invSlots = (ConfigurationHandler.getShowChestIcon() ? new InventorySlotsIndicator(minecraft.player.inventory) : null);
         
         needToWarn|=mainHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.MAINHAND));
         needToWarn|=offHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.OFFHAND));
