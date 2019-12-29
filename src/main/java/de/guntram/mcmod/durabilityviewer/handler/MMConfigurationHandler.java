@@ -6,7 +6,7 @@ import de.guntram.mcmod.fabrictools.GuiModOptions;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import java.util.Optional;
 import java.util.function.Supplier;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 
 public class MMConfigurationHandler implements ModMenuApi
 {

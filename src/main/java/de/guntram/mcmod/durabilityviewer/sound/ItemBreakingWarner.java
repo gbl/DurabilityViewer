@@ -35,12 +35,12 @@ public class ItemBreakingWarner {
     
     public boolean checkBreaks(ItemStack stack) {
         lastStack=stack;
-        if (stack==null || !stack.hasDurability())
+        if (stack==null || !stack.isDamageable())
             return false;
-        int newDurability=stack.getDurability()-stack.getDamage();
+        int newDurability=stack.getMaxDamage()-stack.getDamage();
         if (newDurability  < lastDurability
         && newDurability < ConfigurationHandler.getMinDurability()
-        && newDurability * 100 / ConfigurationHandler.getMinPercent() < stack.getDurability()) {
+        && newDurability * 100 / ConfigurationHandler.getMinPercent() < stack.getMaxDamage()) {
             lastDurability=newDurability;
             return true;
         }

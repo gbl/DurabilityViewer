@@ -6,14 +6,14 @@ import de.guntram.mcmod.fabrictools.ConfigChangedEvent;
 import de.guntram.mcmod.fabrictools.Configuration;
 import de.guntram.mcmod.fabrictools.ModConfigurationHandler;
 import java.io.File;
-import net.minecraft.text.TextFormat;
+import net.minecraft.util.Formatting;
 
 public class ConfigurationHandler implements ModConfigurationHandler
 {
     private static ConfigurationHandler instance;
 
     private Configuration config;
-    private TextFormat tooltipColor;
+    private Formatting tooltipColor;
     private String configFileName;
 
     private int corner=0;
@@ -25,6 +25,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private boolean useCustomSound;
     private int showDamageOverPercent;
     private boolean armorAroundHotbar;
+    private boolean showChestIcon;
 
     public static ConfigurationHandler getInstance() {
         if (instance==null)
@@ -61,13 +62,13 @@ public class ConfigurationHandler implements ModConfigurationHandler
         showPlayerServerName = config.getBoolean("Set window title", Configuration.CATEGORY_CLIENT, true, "Set window title to player and server name");
         showDamageOverPercent = config.getInt("Percent to show damage", Configuration.CATEGORY_CLIENT, 80, 0, 100, "Show damage instead of durability while the item is still better than this %");
         // useCustomSound = config.getBoolean("Use custom sound", Configuration.CATEGORY_CLIENT, false, "Use your own warning sound. You need to create your own custom.ogg in the mod folder");
-        
-        tooltipColor=TextFormat.byId(color);
+        showChestIcon = config.getBoolean("Show chest icon", Configuration.CATEGORY_CLIENT, true, "Show chest icon with number of free inventory slots");
+        tooltipColor=Formatting.byColorIndex(color);
         if (config.hasChanged())
             config.save();
     }
     
-    public static TextFormat getTooltipColor() {
+    public static Formatting getTooltipColor() {
         return getInstance().tooltipColor;
     }
     
@@ -99,11 +100,11 @@ public class ConfigurationHandler implements ModConfigurationHandler
     public static int showDamageOverPercent() {
         return getInstance().showDamageOverPercent;
     }
-    
-    public static boolean getArmorAroundHotbar() {
-        return getInstance().armorAroundHotbar;
-    }
-    
+
+    public static boolean getArmorAroundHotbar() { return getInstance().armorAroundHotbar; }
+
+    public static boolean getShowChestIcon() { return getInstance().showChestIcon; }
+
     public static boolean useCustomSound() {
         // return getInstance().useCustomSound;
         return false;

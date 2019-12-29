@@ -21,7 +21,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.BaseBowItem;
+import net.minecraft.item.RangedWeaponItem;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 
 
@@ -60,7 +60,7 @@ public class GuiItemDurability
         int arrows = 0;
         for (final ItemStack stack : minecraft.player.inventory.main) {
             if (isArrow(stack)) {
-                arrows += stack.getAmount();
+                arrows += stack.getCount();
             }
         }
         return arrows;
@@ -119,17 +119,17 @@ public class GuiItemDurability
         boolean needToWarn=false;
 
         // @TODO: remove duplicate code
-        ItemIndicator mainHand = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.HAND_MAIN));
-        ItemIndicator offHand = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.HAND_OFF));
+        ItemIndicator mainHand = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.MAINHAND));
+        ItemIndicator offHand = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.OFFHAND));
         ItemIndicator boots = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.FEET));
         ItemIndicator leggings = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.LEGS));
         ItemIndicator chestplate = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.CHEST));
         ItemIndicator helmet = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.HEAD));
         ItemIndicator arrows = null;
-        ItemIndicator invSlots = new InventorySlotsIndicator(minecraft.player.inventory);
+        ItemIndicator invSlots = ConfigurationHandler.getShowChestIcon() ? new InventorySlotsIndicator(minecraft.player.inventory) : null;
         
-        needToWarn|=mainHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.HAND_MAIN));
-        needToWarn|=offHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.HAND_OFF));
+        needToWarn|=mainHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.MAINHAND));
+        needToWarn|=offHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.OFFHAND));
         needToWarn|=bootsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.FEET));
         needToWarn|=pantsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.LEGS));
         needToWarn|=chestWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.CHEST));
@@ -137,8 +137,8 @@ public class GuiItemDurability
         if (needToWarn)
             ItemBreakingWarner.playWarningSound();
         
-        if (mainHand.getItemStack().getItem() instanceof BaseBowItem
-        ||   offHand.getItemStack().getItem() instanceof BaseBowItem) {
+        if (mainHand.getItemStack().getItem() instanceof RangedWeaponItem
+        ||   offHand.getItemStack().getItem() instanceof RangedWeaponItem) {
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
         }
 
@@ -182,7 +182,7 @@ public class GuiItemDurability
 
         if (ConfigurationHandler.getArmorAroundHotbar()) {
             int leftOffset=-130;
-            if (!player.getEquippedStack(EquipmentSlot.HAND_OFF).isEmpty()) {
+            if (!player.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty()) {
                 leftOffset-=20;
             }
             this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
