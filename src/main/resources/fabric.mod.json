@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "durabilityviewer",
-    "version": "1.14-fabric0.2.7-1.5",
+    "version": "1.15-fabric0.4.23-1.5",
     "environment": "client",
     "entrypoints": {
         "client": [ "de.guntram.mcmod.durabilityviewer.DurabilityViewer" ],
