@@ -1,5 +1,6 @@
 package de.guntram.mcmod.durabilityviewer.itemindicator;
 
+import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import net.minecraft.item.ItemStack;
 
 public class ItemDamageIndicator implements ItemIndicator {
@@ -12,12 +13,12 @@ public class ItemDamageIndicator implements ItemIndicator {
     @Override
     public String getDisplayValue() {
         int max=stack.getMaxDamage();
-        int cur=stack.getDamage();
+        int cur=stack.getMaxDamage() - stack.getDamage();
         int shown;
-        if (cur < max/5) {
-            shown=-cur;
+        if (cur > max*ConfigurationHandler.showDamageOverPercent()/100) {
+            shown=-stack.getDamage();
         } else {
-            shown=max-cur;
+            shown=cur;
         }
         return String.valueOf(shown);
     }
