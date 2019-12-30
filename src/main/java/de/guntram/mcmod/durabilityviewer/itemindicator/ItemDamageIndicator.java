@@ -6,12 +6,22 @@ import net.minecraft.item.ItemStack;
 public class ItemDamageIndicator implements ItemIndicator {
 
     final ItemStack stack;
+    boolean alwaysAssumeDamageable;
+
     public ItemDamageIndicator(ItemStack stack) {
-        this.stack=stack;
+        this(stack, false);
+    }
+
+    public ItemDamageIndicator(ItemStack stack, boolean alwaysDamageable) {
+        this.stack = stack;
+        this.alwaysAssumeDamageable = alwaysDamageable;
     }
 
     @Override
     public String getDisplayValue() {
+        if (!(stack.isDamageable())) {
+            return "";
+        }
         int max=stack.getMaxDamage();
         int cur=stack.getMaxDamage()-stack.getDamage();
         int shown;
@@ -43,7 +53,7 @@ public class ItemDamageIndicator implements ItemIndicator {
 
     @Override
     public boolean isItemStackDamageable() {
-        return stack.isDamageable();
+        return alwaysAssumeDamageable || stack.isDamageable();
     }
 
     @Override
