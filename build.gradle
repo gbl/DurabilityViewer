@@ -9,13 +9,21 @@ repositories {
 	maven {
 		url = "https://minecraft.guntram.de/maven/"
 	}
+    
+    maven {
+		url = "https://jitpack.io"
+	}
+	maven {
+		name = "NerdHubMC"
+		url = "https://maven.abusedmaster.xyz/"
+	}
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "durabilityviewer"
-version = "1.14.4-fabric0.4.2-1.6"
+version = "1.14.4-fabric0.4.2-1.6.1"
 
 minecraft {
 }
@@ -28,6 +36,8 @@ dependencies {
 	modCompile "io.github.prospector.modmenu:ModMenu:1.4.0-72"
 	modCompile "de.guntram.mcmod:GBfabrictools:1.0.1"
 	include    "de.guntram.mcmod:GBfabrictools:1.0.1"
+
+	modImplementation "com.github.emilyploszaj:trinkets:v2.4.1"
 }
 
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task

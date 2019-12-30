@@ -26,6 +26,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private int showDamageOverPercent;
     private boolean armorAroundHotbar;
     private boolean showChestIcon;
+    private boolean showAllTrinkets;
 
     public static ConfigurationHandler getInstance() {
         if (instance==null)
@@ -63,6 +64,8 @@ public class ConfigurationHandler implements ModConfigurationHandler
         showDamageOverPercent = config.getInt("Percent to show damage", Configuration.CATEGORY_CLIENT, 80, 0, 100, "Show damage instead of durability while the item is still better than this %");
         // useCustomSound = config.getBoolean("Use custom sound", Configuration.CATEGORY_CLIENT, false, "Use your own warning sound. You need to create your own custom.ogg in the mod folder");
         showChestIcon = config.getBoolean("Show chest icon", Configuration.CATEGORY_CLIENT, true, "Show chest icon with number of free inventory slots");
+        showAllTrinkets = config.getBoolean("Show all trinkets", Configuration.CATEGORY_CLIENT, true, "If you have the trinkets mod, show all trinkets even when they don't have durability/damage");
+
         tooltipColor=Formatting.byColorIndex(color);
         if (config.hasChanged())
             config.save();
@@ -104,6 +107,8 @@ public class ConfigurationHandler implements ModConfigurationHandler
     public static boolean getArmorAroundHotbar() { return getInstance().armorAroundHotbar; }
 
     public static boolean getShowChestIcon() { return getInstance().showChestIcon; }
+    
+    public static boolean getShowAllTrinkets() { return getInstance().showAllTrinkets; }
 
     public static boolean useCustomSound() {
         // return getInstance().useCustomSound;
