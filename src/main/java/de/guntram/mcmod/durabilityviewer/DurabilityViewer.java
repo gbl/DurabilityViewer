@@ -27,7 +27,7 @@ import org.lwjgl.opengl.Display;
 public class DurabilityViewer
 {
     public static final String MODID = "durabilityviewer";
-    public static final String VERSION = "1.4";
+    public static final String VERSION = "1.6";
 
     @Mod.Instance("durabilityviewer")
     public static DurabilityViewer instance;
