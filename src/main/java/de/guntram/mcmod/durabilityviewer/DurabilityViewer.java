@@ -17,7 +17,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class DurabilityViewer
 {
     public static final String MODID = "durabilityviewer";
-    public static final String VERSION = "1.4";
+    public static final String VERSION = "1.6";
 
     public static DurabilityViewer instance;
     private static ConfigurationHandler confHandler;

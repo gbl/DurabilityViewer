@@ -10,6 +10,7 @@ import de.guntram.mcmod.durabilityviewer.itemindicator.ItemCountIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
 import java.util.Collection;
+import net.minecraft.client.MainWindow;
 
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.IngameGui;
@@ -103,6 +104,10 @@ public class GuiItemDurability extends IngameGui
         }
     }
     
+    private enum RenderPos {
+        left, over, right;
+    }
+    
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public void onRender(final RenderGameOverlayEvent.Post event) {
 
@@ -131,7 +136,7 @@ public class GuiItemDurability extends IngameGui
         ItemIndicator chestplate = new ItemDamageIndicator(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.CHEST));
         ItemIndicator helmet = new ItemDamageIndicator(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.HEAD));
         ItemIndicator arrows = null;
-        ItemIndicator invSlots = new InventorySlotsIndicator(minecraft.player.inventory);
+        ItemIndicator invSlots = ConfigurationHandler.getShowChestIcon() ? new InventorySlotsIndicator(minecraft.player.inventory) : null;
         
         needToWarn|=mainHandWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.MAINHAND));
         needToWarn|=offHandWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.OFFHAND));
@@ -145,9 +150,11 @@ public class GuiItemDurability extends IngameGui
         if (mainHand.getItemStack().getItem() instanceof BowItem || offHand.getItemStack().getItem() instanceof BowItem) {
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
         }
-
-        RenderSize armorSize=this.renderItems(0, 0, false, true, 0, boots, leggings, chestplate, helmet);
-        RenderSize toolsSize=this.renderItems(0, 0, false, false, 0, invSlots, mainHand, offHand, arrows);
+        MainWindow mainWindow=Minecraft.getInstance().mainWindow;
+        
+        RenderSize armorSize, toolsSize;
+        armorSize=this.renderItems(0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
+        toolsSize=this.renderItems(0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
         
         int totalHeight=(toolsSize.height > armorSize.height ? toolsSize.height : armorSize.height);
         int totalWidth =(toolsSize.width  > armorSize.width  ? toolsSize.width  : armorSize.width);
@@ -160,19 +167,19 @@ public class GuiItemDurability extends IngameGui
                 ypos=5;
                 break;
             case TOP_RIGHT:
-                xposArmor=minecraft.mainWindow.getScaledWidth()-5-armorSize.width;
-                xposTools=minecraft.mainWindow.getScaledWidth()-5-armorSize.width-toolsSize.width;
+                xposArmor=mainWindow.getScaledWidth()-5-armorSize.width;
+                xposTools=mainWindow.getScaledWidth()-5-armorSize.width-toolsSize.width;
                 ypos=60;   // below buff/debuff effects
                 break;
             case BOTTOM_LEFT:
                 xposArmor=5;
                 xposTools=5+armorSize.width;
-                ypos=minecraft.mainWindow.getScaledHeight()-5-totalHeight;
+                ypos=mainWindow.getScaledHeight()-5-totalHeight;
                 break;
             case BOTTOM_RIGHT:
-                xposArmor=minecraft.mainWindow.getScaledWidth()-5-armorSize.width;
-                xposTools=minecraft.mainWindow.getScaledWidth()-5-armorSize.width-toolsSize.width;
-                ypos=minecraft.mainWindow.getScaledHeight()-5-totalHeight;
+                xposArmor=mainWindow.getScaledWidth()-5-armorSize.width;
+                xposTools=mainWindow.getScaledWidth()-5-armorSize.width-toolsSize.width;
+                ypos=mainWindow.getScaledHeight()-5-totalHeight;
                 break;
             default:
                 return;
@@ -182,8 +189,24 @@ public class GuiItemDurability extends IngameGui
         RenderHelper.enableStandardItemLighting();
         RenderHelper.enableGUIStandardItemLighting();
 
-        this.renderItems(xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft(), armorSize.width, helmet, chestplate, leggings, boots);
-        this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight(), toolsSize.width, invSlots, mainHand, offHand, arrows);
+        if (ConfigurationHandler.getArmorAroundHotbar()) {
+            int leftOffset = -130;
+            if (!effectivePlayer.getItemStackFromSlot(EquipmentSlotType.OFFHAND).isEmpty()) {
+                leftOffset -= 20;
+            }
+            this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
+            this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
+            this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
+            this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
+            if (ConfigurationHandler.getCorner().isRight()) {
+                xposTools += armorSize.width;
+            } else {
+                xposTools -= armorSize.width;
+            }
+        } else {
+            this.renderItems(xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, leggings, boots);
+        }
+        this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
 
         RenderHelper.disableStandardItemLighting();
         
@@ -212,7 +235,7 @@ public class GuiItemDurability extends IngameGui
         }
     }
     
-    private RenderSize renderItems(int xpos, int ypos, boolean reallyDraw, boolean numbersLeft, int maxWidth, ItemIndicator... items) {
+    private RenderSize renderItems(int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
         RenderSize result=new RenderSize(0, 0);
         
         for (ItemIndicator item: items) {
@@ -223,8 +246,8 @@ public class GuiItemDurability extends IngameGui
                     result.width=width;
                 if (reallyDraw) {
                     int color=item.getDisplayColor();
-                    itemRenderer.renderItemAndEffectIntoGUI(item.getItemStack(), numbersLeft ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
-                    fontRenderer.drawString(displayString, numbersLeft? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.FONT_HEIGHT/2, color);
+                    itemRenderer.renderItemAndEffectIntoGUI(item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
+                    fontRenderer.drawString(displayString, numberPos != RenderPos.right? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.FONT_HEIGHT/2 + (numberPos==RenderPos.over ? 10  : 0), color);
                 }
                 result.height+=16;
             }

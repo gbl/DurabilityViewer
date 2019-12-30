@@ -23,6 +23,8 @@ public class ConfigurationHandler
     private boolean showPlayerServerName;
     private boolean useCustomSound;
     private int showDamageOverPercent;
+    private boolean armorAroundHotbar;
+    private boolean showChestIcon;
     
     public static ConfigurationHandler getInstance() {
         if (instance==null)
@@ -51,6 +53,7 @@ public class ConfigurationHandler
     
     private void loadConfig() {
         corner=config.getInt("HUD Corner", Configuration.CATEGORY_CLIENT, corner, 0, 3, "Corner 0 to 3 - bottom right, bottom left, top right, top left");
+        armorAroundHotbar=config.getBoolean("Armor around hotbar", Configuration.CATEGORY_CLIENT, armorAroundHotbar, "Render armor around hotbar (instead of with tools)");
         color=config.getInt("Tooltip Color", Configuration.CATEGORY_CLIENT, color, 0, 15, "Minecraft Color 0 .. 15");
         effectDuration=config.getBoolean("Effect Duration", Configuration.CATEGORY_CLIENT, true, "Show effect durations");
         minPercent = config.getInt("Minimum Percent", Configuration.CATEGORY_CLIENT, minPercent, 1, 100, "Play sound when durability below X percent");
@@ -58,6 +61,7 @@ public class ConfigurationHandler
         showPlayerServerName = config.getBoolean("Set window title", Configuration.CATEGORY_CLIENT, true, "Set window title to player and server name");
         showDamageOverPercent = config.getInt("Percent to show damage", Configuration.CATEGORY_CLIENT, 80, 0, 100, "Show damage instead of durability while the item is still better than this %");
         // useCustomSound = config.getBoolean("Use custom sound", Configuration.CATEGORY_CLIENT, false, "Use your own warning sound. You need to create your own custom.ogg in the mod folder");
+        showChestIcon = config.getBoolean("Show chest icon", Configuration.CATEGORY_CLIENT, true, "Show chest icon with number of free inventory slots");
         
         tooltipColor=TextFormatting.fromColorIndex(color);
         if (config.hasChanged())
@@ -89,6 +93,10 @@ public class ConfigurationHandler
     public static boolean showPlayerServerName() { return getInstance().showPlayerServerName; }
 
     public static int showDamageOverPercent() { return getInstance().showDamageOverPercent; }
+    
+    public static boolean getArmorAroundHotbar() { return getInstance().armorAroundHotbar; }
+    
+    public static boolean getShowChestIcon() { return getInstance().showChestIcon; }
 
     public static boolean useCustomSound() {
         // return getInstance().useCustomSound;
