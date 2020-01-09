@@ -5,7 +5,6 @@
  */
 package de.guntram.mcmod.GBForgetools;
 
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 
 /**
  *

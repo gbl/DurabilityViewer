@@ -1,11 +1,10 @@
 package de.guntram.mcmod.durabilityviewer.handler;
 
 import de.guntram.mcmod.GBForgetools.Configuration;
+import de.guntram.mcmod.GBForgetools.ConfigChangedEvent;
 import de.guntram.mcmod.durabilityviewer.client.gui.Corner;
 import java.io.File;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 
 public class ConfigurationHandler
 {
@@ -44,7 +43,6 @@ public class ConfigurationHandler
         return getInstance().configFileName;
     }
 
-    @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equalsIgnoreCase("durabilityviewer")) {
             loadConfig();
