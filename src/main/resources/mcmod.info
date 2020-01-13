@@ -9,7 +9,7 @@
   "updateUrl": "",
   "authorList": ["Giselbaer"],
   "credits": "SixOneThree for his DurabilityShow which inspired this",
-  "logoFile": "",
+  "logoFile": "pack.png",
   "screenshots": [],
   "dependencies": []
 }

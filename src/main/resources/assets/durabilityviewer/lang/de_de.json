@@ -1,0 +1,6 @@
+{
+    "key.categories.durabilityviewer" : "Haltbarkeitsansicht",
+    "key.durabilityviewer.showhide"   : "Haltbarkeit zeigen/verstecken",
+    "tooltip.durability"              : "Haltbarkeit %s",
+    "durabilityviewer.subtitle.toolBreaking" : "Gegenstand knirscht"
+}

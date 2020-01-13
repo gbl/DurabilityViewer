@@ -8,6 +8,6 @@ public class KeyHandler
     public static KeyBinding showHud;
     
     public static void init() {
-        ClientRegistry.registerKeyBinding(KeyHandler.showHud = new KeyBinding("key.duraview", 35, "key.categories.durabilityviewer"));
+        ClientRegistry.registerKeyBinding(KeyHandler.showHud = new KeyBinding("key.durabilityviewer.showhide", 'H', "key.categories.durabilityviewer"));
     }
 }

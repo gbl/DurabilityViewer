@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.HandSide;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -191,13 +192,18 @@ public class GuiItemDurability extends IngameGui
 
         if (ConfigurationHandler.getArmorAroundHotbar()) {
             int leftOffset = -130;
+            int rightOffset = 100;
             if (!effectivePlayer.getItemStackFromSlot(EquipmentSlotType.OFFHAND).isEmpty()) {
-                leftOffset -= 20;
+                if (minecraft.gameSettings.mainHand == HandSide.RIGHT) {
+                    leftOffset -= 20;
+                } else {
+                    rightOffset += 20;
+                }
             }
             this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
             this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
-            this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
-            this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
+            this.renderItems(mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
+            this.renderItems(mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
             if (ConfigurationHandler.getCorner().isRight()) {
                 xposTools += armorSize.width;
             } else {
