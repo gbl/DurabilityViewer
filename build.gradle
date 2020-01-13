@@ -23,7 +23,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "durabilityviewer"
-version = "1.15-fabric0.4.23-1.6.1"
+version = "1.15-fabric0.4.23-1.7"
 
 minecraft {
 }

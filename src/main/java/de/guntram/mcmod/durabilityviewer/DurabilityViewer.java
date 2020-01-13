@@ -16,7 +16,7 @@ public class DurabilityViewer implements ClientModInitializer
 {
     public static final String MODID = "durabilityviewer";
     public static final String MODNAME = "Durability Viewer";
-    public static final String VERSION = "1.15-fabric0.4.23-1.6.1";
+    public static final String VERSION = "1.15-fabric0.4.23-1.7";
 
     public static DurabilityViewer instance;
     private static ConfigurationHandler confHandler;
