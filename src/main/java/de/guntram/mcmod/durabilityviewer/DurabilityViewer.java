@@ -17,7 +17,7 @@ public class DurabilityViewer implements ClientModInitializer, KeyBindingHandler
 {
     public static final String MODID = "durabilityviewer";
     public static final String MODNAME = "Durability Viewer";
-    public static final String VERSION = "1.14.4-fabric0.4.2-1.6.1";
+    public static final String VERSION = "1.14.4-fabric0.4.2-1.7";
 
     public static DurabilityViewer instance;
     private static ConfigurationHandler confHandler;
