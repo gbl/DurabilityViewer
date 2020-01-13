@@ -23,6 +23,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.RangedWeaponItem;
+import net.minecraft.util.Arm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
@@ -229,14 +230,19 @@ public class GuiItemDurability
         GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         if (ConfigurationHandler.getArmorAroundHotbar()) {
-            int leftOffset=-130;
+            int leftOffset = -130;
+            int rightOffset = 100;
             if (!player.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty()) {
-                leftOffset-=20;
+                if (minecraft.options.mainArm == Arm.RIGHT) {
+                    leftOffset -= 20;
+                } else {
+                    rightOffset += 20;
+                }
             }
             this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
             this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
-            this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
-            this.renderItems(mainWindow.getScaledWidth()/2+100, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
+            this.renderItems(mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
+            this.renderItems(mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
             if (ConfigurationHandler.getCorner().isRight()) {
                 xposTools += armorSize.width;
             } else {
