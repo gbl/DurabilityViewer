@@ -6,7 +6,8 @@
     "client": [
         "TooltipMixin",
         "ConnectMixin",
-        "PotionEffectsMixin"
+        "PotionEffectsMixin",
+        "WindowTitleMixin"
     ],
     "injectors": {
         "defaultRequire": 1

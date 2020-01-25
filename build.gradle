@@ -23,14 +23,15 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "durabilityviewer"
-version = "1.15-fabric0.4.23-1.7"
+version = "1.15.2-fabric0.4.23-1.7"
 
 minecraft {
+    refmapName = "DurabilityViewer-refmap.json";
 }
 
 dependencies {
-    minecraft  "com.mojang:minecraft:1.15"
-    mappings   "net.fabricmc:yarn:1.15+build.2:v2"
+    minecraft  "com.mojang:minecraft:1.15.2"
+    mappings   "net.fabricmc:yarn:1.15.2+build.7:v2"
     modCompile "net.fabricmc:fabric-loader:0.7.2+build.174"
     modCompile "net.fabricmc.fabric-api:fabric-api:0.4.23+build.276-1.15"
     modCompile "io.github.prospector.modmenu:ModMenu:1.6.3-95"

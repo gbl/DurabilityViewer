@@ -124,13 +124,6 @@ public class GuiItemDurability
 
     public void onRenderGameOverlayPost(float partialTicks) {
 
-        // This needs to be done before everything else to make sure
-        // the title change that occurs when logging off gets through.
-        String newTitle=DurabilityViewer.getAndResetChangedWindowTitle();
-        if (newTitle!=null) {
-            glfwSetWindowTitle(MinecraftClient.getInstance().getWindow().getHandle(), newTitle);
-        }
-        
         if (!visible
         ||  minecraft.player.abilities.creativeMode
         ||  minecraft.options.debugEnabled) {
@@ -262,7 +255,7 @@ public class GuiItemDurability
                 if (potioneffect.shouldShowIcon()) {
                     StatusEffect potion = potioneffect.getEffectType();
                     xpos=mainWindow.getScaledWidth();
-                    if (potion.method_5573()) {     // isBeneficial
+                    if (potion.isBeneficial()) {     // isBeneficial
                         posGood+=25; xpos-=posGood; ypos=15;
                     } else {
                         posBad+=25;  xpos-=posBad;  ypos=41;

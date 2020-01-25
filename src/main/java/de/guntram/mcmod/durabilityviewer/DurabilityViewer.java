@@ -16,7 +16,7 @@ public class DurabilityViewer implements ClientModInitializer
 {
     public static final String MODID = "durabilityviewer";
     public static final String MODNAME = "Durability Viewer";
-    public static final String VERSION = "1.15-fabric0.4.23-1.7";
+    public static final String VERSION = "1.15.2-fabric0.4.23-1.7";
 
     public static DurabilityViewer instance;
     private static ConfigurationHandler confHandler;
@@ -35,6 +35,10 @@ public class DurabilityViewer implements ClientModInitializer
     public static void setWindowTitle(String s) {
         changedWindowTitle=s;
     }
+    
+    public static String getWindowTitle() {
+        return changedWindowTitle;
+    }
 
     public void processKeyBinds() {
         if (showHide.wasPressed()) {
@@ -51,16 +55,4 @@ public class DurabilityViewer implements ClientModInitializer
             .build());
         ClientTickCallback.EVENT.register(e->processKeyBinds());
     }    
-
-    // On windows, Display.setTitle crashes if we call it from 
-    // (Dis)connectFromServerEvent. This is because these run on the netty
-    // thread, set a global lock, send a WM_SETTEXT, and need the main thread
-    // to process that WM_SETTEXT - but the main thread needs the global lock
-    // as well. As a workaround, we just set a global variable here, and retrieve
-    // it from within onRender from GuiItemDurability.
-    public static String getAndResetChangedWindowTitle() {
-        String result=changedWindowTitle;
-        changedWindowTitle=null;
-        return result;
-    }
 }
