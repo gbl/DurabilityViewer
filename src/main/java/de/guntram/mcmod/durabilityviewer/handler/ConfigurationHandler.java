@@ -53,6 +53,17 @@ public class ConfigurationHandler implements ModConfigurationHandler
         }
     }
     
+    @Override
+    public void onConfigChanging(ConfigChangedEvent.OnConfigChangingEvent event) {
+        if (event.getModID().equals(DurabilityViewer.MODNAME)) {
+            switch (event.getItem()) {
+                case "HUD Corner": corner=(int)(Integer)(event.getNewValue()); break;
+                case "Armor around hotbar": armorAroundHotbar=(boolean)(Boolean)(event.getNewValue()); break;
+                case "Show chest icon": showChestIcon=(boolean)(Boolean)(event.getNewValue()); break;
+            }
+        }
+    }
+    
     private void loadConfig() {
         corner=config.getInt("HUD Corner", Configuration.CATEGORY_CLIENT, corner, 0, 3, "Corner 0 to 3 - bottom right, bottom left, top right, top left");
         armorAroundHotbar=config.getBoolean("Armor around hotbar", Configuration.CATEGORY_CLIENT, armorAroundHotbar, "Render armor around hotbar (instead of with tools)");
