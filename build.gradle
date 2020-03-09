@@ -4,7 +4,7 @@ plugins {
 
 repositories {
 	maven {
-		url = "https://maven.fabricmc.net/io/github/prospector/modmenu/ModMenu/"
+		url = "https://maven.fabricmc.net/"
 	}
 	maven {
 		url = "https://minecraft.guntram.de/maven/"
@@ -24,21 +24,38 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+ext.Versions = new Properties()
+Versions.load(file("../mcversion-20w10a.properties").newReader())
+
 archivesBaseName = "durabilityviewer"
-version = "1.16-20w10a-fabric0.5.1-1.7"
+ext.projectVersion = "1.1"
+
+version = "${Versions['minecraft_version']}-fabric${Versions['fabric_versiononly']}-${project.projectVersion}"
 
 minecraft {
     refmapName = "DurabilityViewer-refmap.json";
 }
 
+processResources {
+	inputs.property "version", project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+		include "fabric.mod.json"
+		expand "version": project.version
+	}
+	from(sourceSets.main.resources.srcDirs) {
+		exclude "fabric.mod.json"
+	}
+}
+
 dependencies {
-    minecraft  "com.mojang:minecraft:20w10a"
-    mappings   "net.fabricmc:yarn:20w10a+build.10:v2"
-    modCompile "net.fabricmc:fabric-loader:0.7.8+build.186"
-    modCompile "net.fabricmc.fabric-api:fabric-api:0.5.1+build.305-1.16"
-    modCompile "io.github.prospector.modmenu:ModMenu:1.6.3-95"
-    modCompile "de.guntram.mcmod:GBfabrictools:1.2.0.20w10a"
-    include    "de.guntram.mcmod:GBfabrictools:1.2.0.20w10a"
+    minecraft  "com.mojang:minecraft:${Versions['minecraft_version']}"
+    mappings   "net.fabricmc:yarn:${Versions['yarn_mappings']}:v2"
+    modCompile "net.fabricmc:fabric-loader:${Versions['loader_version']}"
+    modCompile "net.fabricmc.fabric-api:fabric-api:${Versions['fabric_version']}"
+    modCompile "io.github.prospector:modmenu:${Versions['modmenu_version']}"
+    modCompile "de.guntram.mcmod:GBfabrictools:1.2.0.${Versions['minecraft_version']}"
+    include    "de.guntram.mcmod:GBfabrictools:1.2.0.${Versions['minecraft_version']}"
     
 	modImplementation "com.github.emilyploszaj:trinkets:v2.4.1"
 }

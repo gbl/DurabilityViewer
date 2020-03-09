@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "durabilityviewer",
-    "version": "1.16-20w10a-fabric0.5.1-1.7",
+    "version": "${version}",
     "environment": "client",
     "entrypoints": {
         "client": [ "de.guntram.mcmod.durabilityviewer.DurabilityViewer" ],
@@ -24,7 +24,7 @@
     "icon": "pack.png",
     "authors": [ "Giselbaer" ],
     "contact": {
-        "homepage": "https://minecraft.curseforge.com/projects/giselbaers-durability-viewer",
+        "homepage": "https://www.curseforge.com/minecraft/mc-mods/giselbaers-durability-viewer",
         "sources": "https://github.com/gbl/DurabilityViewer",
         "issues": "https://github.com/gbl/DurabilityViewer/issues"
     }
