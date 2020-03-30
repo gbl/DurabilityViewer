@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "1.14.4-forge28.1.109-1.7"
+version = "1.15.2-forge31.1.30-1.7"
 group = "de.guntram.mcmod.DurabilityViewer" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "DurabilityViewer"
 
@@ -27,7 +27,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.0'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.1.30'
 
 }
 
@@ -40,7 +40,7 @@ processResources {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':"1.6", 'mcversion':"1.14.4-28.1.0"
+        expand 'version':"1.7", 'mcversion':"1.15.2-31.1.30"
     }
         
     // copy everything else except the mcmod.info

@@ -1,36 +1,33 @@
 package de.guntram.mcmod.durabilityviewer.client.gui;
 
 import com.google.common.collect.Ordering;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import de.guntram.mcmod.durabilityviewer.itemindicator.InventorySlotsIndicator;
-import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemCountIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
+import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
 import java.util.Collection;
 import net.minecraft.client.MainWindow;
-
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BowItem;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArrowItem;
+import net.minecraft.item.BowItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraft.util.Hand;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.HandSide;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 
 public class GuiItemDurability extends IngameGui
@@ -116,7 +113,7 @@ public class GuiItemDurability extends IngameGui
         // the title change that occurs when logging off gets through.
         String newTitle=DurabilityViewer.getAndResetChangedWindowTitle();
         if (newTitle!=null) {
-            glfwSetWindowTitle(minecraft.mainWindow.getHandle(), newTitle);
+            glfwSetWindowTitle(minecraft.func_228018_at_().getHandle(), newTitle);
         }
 
         
@@ -151,7 +148,7 @@ public class GuiItemDurability extends IngameGui
         if (mainHand.getItemStack().getItem() instanceof BowItem || offHand.getItemStack().getItem() instanceof BowItem) {
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
         }
-        MainWindow mainWindow=Minecraft.getInstance().mainWindow;
+        MainWindow mainWindow=Minecraft.getInstance().func_228018_at_();
         
         RenderSize armorSize, toolsSize;
         armorSize=this.renderItems(0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
@@ -186,9 +183,7 @@ public class GuiItemDurability extends IngameGui
                 return;
         }
 
-        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderHelper.enableStandardItemLighting();
-        RenderHelper.enableGUIStandardItemLighting();
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         if (ConfigurationHandler.getArmorAroundHotbar()) {
             int leftOffset = -130;
@@ -223,7 +218,7 @@ public class GuiItemDurability extends IngameGui
             for (EffectInstance potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
                 if (potioneffect.doesShowParticles()) {
                     Effect potion = potioneffect.getPotion();
-                    xpos=minecraft.mainWindow.getScaledWidth();
+                    xpos=mainWindow.getScaledWidth();
                     if (potion.isBeneficial()) {
                         posGood+=25; xpos-=posGood; ypos=15;
                     } else {

@@ -1,6 +1,6 @@
 package de.guntram.mcmod.GBForgetools;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -203,7 +203,7 @@ public class GuiModOptions extends Screen implements Supplier<Screen> {
                     updateValue(this.sliderValue);
                 }
                 mc.getTextureManager().bindTexture(WIDGETS_LOCATION);
-                GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+                RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                 this.blit(this.x + (int)(this.sliderValue * (double)(this.width - 8)), this.y, 0, 66, 4, 20);
                 this.blit(this.x + (int)(this.sliderValue * (double)(this.width - 8)) + 4, this.y, 196, 66, 4, 20);
             }
