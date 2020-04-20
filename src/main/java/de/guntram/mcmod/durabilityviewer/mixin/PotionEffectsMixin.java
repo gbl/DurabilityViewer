@@ -12,9 +12,8 @@ public abstract class PotionEffectsMixin {
     
     private static GuiItemDurability gui;
     
-    @Inject(method="renderStatusEffectOverlay", at=@At("RETURN"))
-    
-    private void onRenderPotionEffects(CallbackInfo ci) {
+    @Inject(method="render", at=@At("RETURN"))
+    private void onRender(CallbackInfo ci) {
         if (gui==null)
             gui=new GuiItemDurability();
         gui.onRenderGameOverlayPost(0);
