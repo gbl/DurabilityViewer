@@ -220,7 +220,7 @@ public class GuiItemDurability
                         show=(duration/1200)+"m";
                     else
                         show=(duration/20)+"s";
-                    fontRenderer.draw(show, xpos+2, ypos, ItemIndicator.color_yellow);
+                    fontRenderer.drawWithShadow(show, xpos+2, ypos, ItemIndicator.color_yellow);
                 }
             }
         }
@@ -238,7 +238,7 @@ public class GuiItemDurability
                 if (reallyDraw) {
                     int color=item.getDisplayColor();
                     itemRenderer.renderGuiItemIcon(item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
-                    fontRenderer.draw(displayString, numberPos != RenderPos.right ? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.fontHeight/2 + (numberPos==RenderPos.over ? 10  : 0), color);
+                    fontRenderer.drawWithShadow(displayString, numberPos != RenderPos.right ? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.fontHeight/2 + (numberPos==RenderPos.over ? 10  : 0), color);
                 }
                 result.height+=16;
             }
