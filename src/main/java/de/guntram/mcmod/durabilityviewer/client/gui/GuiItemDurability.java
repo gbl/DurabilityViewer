@@ -200,7 +200,9 @@ public class GuiItemDurability
         this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
 
         GuiLighting.disable();
-        
+    }
+
+    public void onRenderPotionEffectsPost(float partialTicks) {
         if (ConfigurationHandler.showEffectDuration()) {
             // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
             Collection<StatusEffectInstance> collection = minecraft.player.getStatusEffects();

@@ -6,7 +6,7 @@
     "client": [
         "TooltipMixin",
         "ConnectMixin",
-        "PotionEffectsMixin"
+        "InGameHudMixin"
     ],
     "injectors": {
         "defaultRequire": 1

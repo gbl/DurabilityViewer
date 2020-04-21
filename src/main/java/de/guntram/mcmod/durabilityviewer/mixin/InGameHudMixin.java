@@ -18,4 +18,11 @@ public abstract class PotionEffectsMixin {
             gui=new GuiItemDurability();
         gui.onRenderGameOverlayPost(0);
     }
+
+    @Inject(method="renderPotionEffects", at=@At("RETURN"))
+    private void onRenderPotionEffects(CallbackInfo ci) {
+        if (gui==null)
+            gui=new GuiItemDurability();
+        gui.onRenderPotionEffectsPost(0);
+    }
 }
