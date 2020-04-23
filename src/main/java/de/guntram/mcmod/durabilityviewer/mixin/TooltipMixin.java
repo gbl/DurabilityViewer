@@ -1,6 +1,5 @@
 package de.guntram.mcmod.durabilityviewer.mixin;
 
-import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import java.util.List;
 import java.util.TreeSet;
 import net.minecraft.client.gui.screen.Screen;
@@ -42,7 +41,7 @@ public abstract class TooltipMixin {
                         (this.getMaxDamage()- this.getDamage())+
                         " / "+
                         this.getMaxDamage()));
-                toolTip=toolTip.formatted(ConfigurationHandler.getTooltipColor());
+                // toolTip=toolTip.formatted(ConfigurationHandler.getTooltipColor());
                 if (!list.contains(toolTip)) {
                     list.add(toolTip);
                 }

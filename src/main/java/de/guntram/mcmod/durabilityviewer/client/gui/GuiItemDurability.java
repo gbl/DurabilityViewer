@@ -2,31 +2,30 @@ package de.guntram.mcmod.durabilityviewer.client.gui;
 
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import de.guntram.mcmod.durabilityviewer.itemindicator.InventorySlotsIndicator;
-import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemCountIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
+import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
 import dev.emi.trinkets.api.TrinketsApi;
 import java.util.Collection;
-import net.minecraft.client.util.Window;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ArrowItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.util.Arm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 
 
 public class GuiItemDurability
@@ -68,7 +67,7 @@ public class GuiItemDurability
             Class.forName("dev.emi.trinkets.api.TrinketsApi");
             LOGGER.info("Using trinkets in DurabilityViewer");
             haveTrinketsApi = true;
-            trinketWarners = new ItemBreakingWarner[TrinketsApi.getTrinketsInventory(minecraft.player).getInvSize()];
+            trinketWarners = new ItemBreakingWarner[TrinketsApi.getTrinketsInventory(minecraft.player).size()];
             for (int i=0; i<trinketWarners.length; i++) {
                 trinketWarners[i]=new ItemBreakingWarner();
             }
@@ -95,9 +94,9 @@ public class GuiItemDurability
         if (isArrow(minecraft.player.getMainHandStack())) {
             return minecraft.player.getMainHandStack();
         }
-        int size=minecraft.player.inventory.getInvSize();
+        int size=minecraft.player.inventory.size();
         for (int i = 0; i < size; ++i) {
-            final ItemStack itemstack = minecraft.player.inventory.getInvStack(i);
+            final ItemStack itemstack = minecraft.player.inventory.getStack(i);
             if (this.isArrow(itemstack)) {
                 return itemstack;
             }
@@ -122,7 +121,7 @@ public class GuiItemDurability
         left, over, right;
     }
 
-    public void onRenderGameOverlayPost(float partialTicks) {
+    public void onRenderGameOverlayPost(MatrixStack stack, float partialTicks) {
 
         if (!visible
         ||  minecraft.player.abilities.creativeMode
@@ -146,11 +145,11 @@ public class GuiItemDurability
         ItemIndicator[] trinkets = null;
         if (haveTrinketsApi) {
             Inventory inventory = TrinketsApi.getTrinketsInventory(player);
-            int itemCount = inventory.getInvSize();
+            int itemCount = inventory.size();
             trinkets = new ItemIndicator[itemCount];
             for (int i=0; i<itemCount; i++) {
-                trinkets[i]=new ItemDamageIndicator(inventory.getInvStack(i), ConfigurationHandler.getShowAllTrinkets());
-                LOGGER.debug("trinket position "+i+" has item "+inventory.getInvStack(i).getItem().toString());
+                trinkets[i]=new ItemDamageIndicator(inventory.getStack(i), ConfigurationHandler.getShowAllTrinkets());
+                LOGGER.debug("trinket position "+i+" has item "+inventory.getStack(i).getItem().toString());
             }
         } else {
             trinkets = new ItemIndicator[0];
@@ -164,9 +163,9 @@ public class GuiItemDurability
         needToWarn|=helmetWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.HEAD));
         if (haveTrinketsApi) {
             Inventory inventory = TrinketsApi.getTrinketsInventory(player);
-            LOGGER.debug("know about "+trinkets.length+" trinkets, invSize is "+inventory.getInvSize()+", have "+trinketWarners.length+" warners");
+            LOGGER.debug("know about "+trinkets.length+" trinkets, invSize is "+inventory.size()+", have "+trinketWarners.length+" warners");
             for (int i=0; i<trinkets.length; i++) {
-                needToWarn |= trinketWarners[i].checkBreaks(inventory.getInvStack(i));      // TODO Bug here
+                needToWarn |= trinketWarners[i].checkBreaks(inventory.getStack(i));
             }
         }
         if (needToWarn)
@@ -182,10 +181,10 @@ public class GuiItemDurability
         if (ConfigurationHandler.getArmorAroundHotbar()) {
             armorSize = new RenderSize(0, 0);
         } else {
-            armorSize=this.renderItems(0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
+            armorSize=this.renderItems(stack, 0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
         }
-        toolsSize=this.renderItems(0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
-        trinketsSize = this.renderItems(0, 0, false, RenderPos.left, 0, trinkets);
+        toolsSize=this.renderItems(stack, 0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
+        trinketsSize = this.renderItems(stack, 0, 0, false, RenderPos.left, 0, trinkets);
         
         int totalHeight=(toolsSize.height > armorSize.height ? toolsSize.height : armorSize.height);
         if (trinketsSize.height > totalHeight) { totalHeight = trinketsSize.height; }
@@ -232,20 +231,20 @@ public class GuiItemDurability
                     rightOffset += 20;
                 }
             }
-            this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
-            this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
-            this.renderItems(mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
-            this.renderItems(mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
             if (ConfigurationHandler.getCorner().isRight()) {
                 xposTools += armorSize.width;
             } else {
                 xposTools -= armorSize.width;
             }
         } else {
-            this.renderItems(xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, leggings, boots);
+            this.renderItems(stack, xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, leggings, boots);
         }
-        this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
-        this.renderItems(xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);
+        this.renderItems(stack, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
+        this.renderItems(stack, xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);
 
         if (ConfigurationHandler.showEffectDuration()) {
             // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
@@ -266,13 +265,13 @@ public class GuiItemDurability
                         show=(duration/1200)+"m";
                     else
                         show=(duration/20)+"s";
-                    fontRenderer.draw(show, xpos+2, ypos, ItemIndicator.color_yellow);
+                    fontRenderer.draw(stack, show, xpos+2, ypos, ItemIndicator.color_yellow);
                 }
             }
         }
     }
     
-    private RenderSize renderItems(int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
+    private RenderSize renderItems(MatrixStack stack, int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
         RenderSize result=new RenderSize(0, 0);
         
         for (ItemIndicator item: items) {
@@ -284,7 +283,7 @@ public class GuiItemDurability
                 if (reallyDraw) {
                     int color=item.getDisplayColor();
                     itemRenderer.renderGuiItemIcon(item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
-                    fontRenderer.draw(displayString, numberPos != RenderPos.right ? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.fontHeight/2 + (numberPos==RenderPos.over ? 10  : 0), color);
+                    fontRenderer.draw(stack, displayString, numberPos != RenderPos.right ? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.fontHeight/2 + (numberPos==RenderPos.over ? 10  : 0), color);
                 }
                 result.height+=16;
             }
