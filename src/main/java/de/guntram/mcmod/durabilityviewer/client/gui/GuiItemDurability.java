@@ -245,15 +245,19 @@ public class GuiItemDurability
         }
         this.renderItems(stack, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
         this.renderItems(stack, xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);
-
+    }
+    
+    public void afterRenderStatusEffects(MatrixStack stack, float partialTicks) {
         if (ConfigurationHandler.showEffectDuration()) {
             // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
+            Window mainWindow = MinecraftClient.getInstance().getWindow();
             Collection<StatusEffectInstance> collection = minecraft.player.getStatusEffects();
             int posGood=0, posBad=0;
             for (StatusEffectInstance potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
                 if (potioneffect.shouldShowIcon()) {
                     StatusEffect potion = potioneffect.getEffectType();
-                    xpos=mainWindow.getScaledWidth();
+                    int xpos = mainWindow.getScaledWidth();
+                    int ypos;
                     if (potion.isBeneficial()) {     // isBeneficial
                         posGood+=25; xpos-=posGood; ypos=15;
                     } else {
