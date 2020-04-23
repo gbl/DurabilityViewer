@@ -2,31 +2,29 @@ package de.guntram.mcmod.durabilityviewer.client.gui;
 
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import de.guntram.mcmod.durabilityviewer.itemindicator.InventorySlotsIndicator;
-import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemCountIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
+import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
 import dev.emi.trinkets.api.TrinketsApi;
 import java.util.Collection;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.Window;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ArrowItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.util.Arm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 
 
 public class GuiItemDurability
@@ -246,15 +244,19 @@ public class GuiItemDurability
         }
         this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
         this.renderItems(xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);
-
+    }
+    
+    public void afterRenderStatusEffects(float partialTicks) {
         if (ConfigurationHandler.showEffectDuration()) {
             // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
+            Window mainWindow = MinecraftClient.getInstance().getWindow();
             Collection<StatusEffectInstance> collection = minecraft.player.getStatusEffects();
             int posGood=0, posBad=0;
             for (StatusEffectInstance potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
                 if (potioneffect.shouldShowIcon()) {
                     StatusEffect potion = potioneffect.getEffectType();
-                    xpos=mainWindow.getScaledWidth();
+                    int xpos = mainWindow.getScaledWidth();
+                    int ypos;
                     if (potion.isBeneficial()) {     // isBeneficial
                         posGood+=25; xpos-=posGood; ypos=15;
                     } else {
