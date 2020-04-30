@@ -52,27 +52,29 @@ public abstract class TooltipMixin {
         if (Screen.hasAltDown()) {
             CompoundTag tag=this.getTag();
             if (tag != null) {
-                addCompoundTag("", list, tag);
+                addTag("", list, tag, "");
             }
         }
     }
     
-    private void addCompoundTag(String prefix, List<Text>list, CompoundTag tag) {
-        TreeSet<String> sortedKeys = new TreeSet(tag.getKeys());
-        for (String key: sortedKeys) {
-            Tag elem=tag.get(key);
-            switch(elem.getType()) {
-                case 2: list.add(new LiteralText(prefix+key+": §2"+tag.getShort(key))); break;
-                case 3: list.add(new LiteralText(prefix+key+": §3"+tag.getInt(key))); break;
-                case 8: list.add(new LiteralText(prefix+key+": §8"+tag.getString(key))); break;
-                case 9: list.add(new LiteralText(prefix+key+": §9List, "+((ListTag)elem).size()+" items")); break;
-                case 10:list.add(new LiteralText(prefix+key+": §aCompound"));
-                        if (Screen.hasShiftDown()) {
-                            addCompoundTag(prefix+"    ", list, (CompoundTag)elem);
-                        }
-                        break;
-                default:list.add(new LiteralText(prefix+key+": Type "+elem.getType())); break;
+    private void addTag(String prefix, List<Text>list, Tag tag, String tagName) {
+        if (tag instanceof CompoundTag) {
+            list.add(new LiteralText(prefix+tagName+": §aCompound"));
+            if (prefix.isEmpty() || Screen.hasShiftDown()) {
+                TreeSet<String> sortedKeys = new TreeSet(((CompoundTag)tag).getKeys());
+                for (String key: sortedKeys) {
+                    addTag(prefix+"   ", list, ((CompoundTag) tag).get(key), key);
+                }
             }
+        } else if (tag instanceof ListTag) {
+            if (prefix.isEmpty() || Screen.hasShiftDown()) {
+                list.add(new LiteralText(prefix+tagName+": §9List"+((ListTag)tag).size()+" items"));
+                for (int i=0; i<((ListTag) tag).size(); i++) {
+                    addTag(prefix+"   ", list, ((ListTag) tag).get(i), Integer.toString(i));
+                }
+            }
+        } else {
+            list.add(new LiteralText(prefix).append(tagName).append(": ").append(tag.toText()));
         }
     }
 }
