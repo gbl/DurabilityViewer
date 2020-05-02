@@ -1,7 +1,7 @@
 package de.guntram.mcmod.durabilityviewer.itemindicator;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class InventorySlotsIndicator implements ItemIndicator {
@@ -10,7 +10,7 @@ public class InventorySlotsIndicator implements ItemIndicator {
     final int emptySlots;
     
     public InventorySlotsIndicator(PlayerInventory inventory) {
-        stack=new ItemStack(Item.getItemById(54));
+        stack=new ItemStack(Blocks.CHEST);
         int slots = 0;
         for (final ItemStack invitems : inventory.mainInventory) {
             if (invitems.isEmpty()) {
