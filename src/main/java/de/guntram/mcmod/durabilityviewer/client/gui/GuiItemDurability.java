@@ -281,7 +281,7 @@ public class GuiItemDurability
         for (ItemIndicator item: items) {
             if (item != null && !item.isEmpty() && item.isItemStackDamageable()) {
                 String displayString=item.getDisplayValue();
-                int width=fontRenderer.getStringWidth(displayString);
+                int width=fontRenderer.getWidth(displayString);
                 if (width>result.width)
                     result.width=width;
                 if (reallyDraw) {
