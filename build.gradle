@@ -25,7 +25,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext.Versions = new Properties()
-Versions.load(file("Versionfiles/mcversion-20w22a.properties").newReader())
+Versions.load(file("Versionfiles/mcversion-1.16-pre2.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
 ext.projectVersion = "1.7.1"
