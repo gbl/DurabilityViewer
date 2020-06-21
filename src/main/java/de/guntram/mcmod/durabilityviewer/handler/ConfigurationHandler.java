@@ -66,16 +66,16 @@ public class ConfigurationHandler implements ModConfigurationHandler
     
     private void loadConfig() {
         
-        config.forget("HUD Corner");
-        config.forget("Effect Duration");
-        config.forget("Percent to show damage");
-        config.forget("Tooltip Color");
-        config.forget("Minimum Percent");
-        config.forget("Minimum Durability");
-        config.forget("Set window title");
-        config.forget("Show all trinkets");
-        config.forget("Armor around hotbar");
-        config.forget("Show chest icon");
+        config.migrate("HUD Corner", "durabilityviewer.config.corner");
+        config.migrate("Effect Duration", "durabilityviewer.config.effectduration");
+        config.migrate("Percent to show damage", "durabilityviewer.config.showdamagepercent");
+        config.migrate("Tooltip Color", "durabilityviewer.config.tooltipcolor");
+        config.migrate("Minimum Percent", "durabilityviewer.config.minpercent");
+        config.migrate("Minimum Durability", "durabilityviewer.config.mindurability");
+        config.migrate("Set window title", "durabilityviewer.config.setwindowtitle");
+        config.migrate("Show all trinkets", "durabilityviewer.config.showalltrinkets");
+        config.migrate("Armor around hotbar", "durabilityviewer.config.armorhotbar");
+        config.migrate("Show chest icon", "durabilityviewer.config.showfreeslots");
         
         corner=config.getSelection("durabilityviewer.config.corner", Configuration.CATEGORY_CLIENT, corner,
                 new String[] {
