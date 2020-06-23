@@ -31,6 +31,7 @@ archivesBaseName = "durabilityviewer"
 ext.projectVersion = "1.7.1"
 
 version = "${Versions['minecraft_version']}-fabric${Versions['fabric_versiononly']}-${project.projectVersion}"
+Versions['gbfabrictools_version']="1.2.2+${Versions['minecraft_version']}"
 
 minecraft {
     refmapName = "DurabilityViewer-refmap.json";
@@ -66,4 +67,8 @@ dependencies {
 task sourcesJar(type: Jar, dependsOn: classes) {
 	classifier = 'sources'
 	from sourceSets.main.allSource
+}
+
+jar {
+	from "LICENSE"
 }
