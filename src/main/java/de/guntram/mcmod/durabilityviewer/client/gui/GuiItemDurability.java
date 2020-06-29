@@ -124,7 +124,7 @@ public class GuiItemDurability
     public void onRenderGameOverlayPost(MatrixStack stack, float partialTicks) {
 
         if (!visible
-        ||  minecraft.player.abilities.creativeMode
+        // ||  minecraft.player.abilities.creativeMode
         ||  minecraft.options.debugEnabled) {
             return;
         }
