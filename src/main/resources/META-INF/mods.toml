@@ -16,13 +16,13 @@ Help to know when your armor and items are going to break
 [[dependencies.durabilityviewer]] #optional
     modId="forge"
     mandatory=true
-    versionRange="[31,)"
+    versionRange="[32,)"
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.durabilityviewer]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.1,)"
     ordering="NONE"
     side="CLIENT"

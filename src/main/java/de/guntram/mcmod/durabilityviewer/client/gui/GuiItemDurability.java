@@ -1,6 +1,7 @@
 package de.guntram.mcmod.durabilityviewer.client.gui;
 
 import com.google.common.collect.Ordering;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
@@ -113,13 +114,13 @@ public class GuiItemDurability extends IngameGui
         // the title change that occurs when logging off gets through.
         String newTitle=DurabilityViewer.getAndResetChangedWindowTitle();
         if (newTitle!=null) {
-            glfwSetWindowTitle(minecraft.func_228018_at_().getHandle(), newTitle);
+            glfwSetWindowTitle(minecraft.getMainWindow().getHandle(), newTitle);
         }
 
         
         if (!visible
         ||  event.isCanceled()
-        ||  minecraft.player.abilities.isCreativeMode
+        // ||  minecraft.player.abilities.isCreativeMode
         ||  event.getType()!=RenderGameOverlayEvent.ElementType.POTION_ICONS)
             return;
 
@@ -148,11 +149,12 @@ public class GuiItemDurability extends IngameGui
         if (mainHand.getItemStack().getItem() instanceof BowItem || offHand.getItemStack().getItem() instanceof BowItem) {
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
         }
-        MainWindow mainWindow=Minecraft.getInstance().func_228018_at_();
+        MainWindow mainWindow=Minecraft.getInstance().getMainWindow();
+        MatrixStack stack = event.getMatrixStack();
         
         RenderSize armorSize, toolsSize;
-        armorSize=this.renderItems(0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
-        toolsSize=this.renderItems(0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
+        armorSize=this.renderItems(stack, 0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
+        toolsSize=this.renderItems(stack, 0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
         
         int totalHeight=(toolsSize.height > armorSize.height ? toolsSize.height : armorSize.height);
         int totalWidth =(toolsSize.width  > armorSize.width  ? toolsSize.width  : armorSize.width);
@@ -195,19 +197,19 @@ public class GuiItemDurability extends IngameGui
                     rightOffset += 20;
                 }
             }
-            this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
-            this.renderItems(mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
-            this.renderItems(mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
-            this.renderItems(mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
             if (ConfigurationHandler.getCorner().isRight()) {
                 xposTools += armorSize.width;
             } else {
                 xposTools -= armorSize.width;
             }
         } else {
-            this.renderItems(xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, leggings, boots);
+            this.renderItems(stack, xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, leggings, boots);
         }
-        this.renderItems(xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
+        this.renderItems(stack, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
 
         RenderHelper.disableStandardItemLighting();
         
@@ -230,13 +232,13 @@ public class GuiItemDurability extends IngameGui
                         show=(duration/1200)+"m";
                     else
                         show=(duration/20)+"s";
-                    fontRenderer.drawString(show, xpos+2, ypos, ItemIndicator.color_yellow);
+                    fontRenderer.func_238421_b_(event.getMatrixStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
                 }
             }
         }
     }
     
-    private RenderSize renderItems(int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
+    private RenderSize renderItems(MatrixStack stack, int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
         RenderSize result=new RenderSize(0, 0);
         
         for (ItemIndicator item: items) {
@@ -248,7 +250,7 @@ public class GuiItemDurability extends IngameGui
                 if (reallyDraw) {
                     int color=item.getDisplayColor();
                     itemRenderer.renderItemAndEffectIntoGUI(item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
-                    fontRenderer.drawString(displayString, numberPos != RenderPos.right? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.FONT_HEIGHT/2 + (numberPos==RenderPos.over ? 10  : 0), color);
+                    fontRenderer.func_238421_b_(stack, displayString, numberPos != RenderPos.right? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.FONT_HEIGHT/2 + (numberPos==RenderPos.over ? 10  : 0), color);
                 }
                 result.height+=16;
             }

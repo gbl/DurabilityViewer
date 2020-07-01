@@ -1,11 +1,11 @@
 package de.guntram.mcmod.durabilityviewer.event;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.client.resources.I18n;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import java.util.List;
 import java.util.TreeSet;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
@@ -33,7 +33,7 @@ public class TooltipEvent
             }
         }
         
-        if (Screen.hasAltDown()) {
+        if (Screen.func_231174_t_()) {      // hasAltDown
             CompoundNBT tag=event.getItemStack().getTag();
             if (tag != null) {
                 addCompoundTag("", event.getToolTip(), tag);
@@ -51,7 +51,7 @@ public class TooltipEvent
                 case 8: list.add(new StringTextComponent(prefix+key+": §8"+tag.getString(key))); break;
                 case 9: list.add(new StringTextComponent(prefix+key+": §9List, "+((ListNBT)elem).size()+" items")); break;
                 case 10:list.add(new StringTextComponent(prefix+key+": §aCompound"));
-                        if (Screen.hasShiftDown()) {
+                        if (Screen.func_231173_s_()) {      // hasShiftDown
                             addCompoundTag(prefix+"    ", list, (CompoundNBT)elem);
                         }
                         break;

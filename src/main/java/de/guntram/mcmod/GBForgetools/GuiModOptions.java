@@ -1,19 +1,14 @@
 package de.guntram.mcmod.GBForgetools;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
 
+ 
 public class GuiModOptions extends Screen implements Supplier<Screen> {
-    
+
+
     private final Screen parent;
     private final String modName;
     private final ModConfigurationHandler handler;
@@ -30,7 +25,8 @@ public class GuiModOptions extends Screen implements Supplier<Screen> {
         this.screenTitle=modName+" Configuration";
         this.options=handler.getConfig().getKeys();
     }
-    
+
+/*        
     @Override
     protected void init() {
         this.addButton(new Widget(this.width / 2 - 100, this.height - 27, I18n.format("gui.done")) {
@@ -129,11 +125,13 @@ public class GuiModOptions extends Screen implements Supplier<Screen> {
         }
     }
 
+    */
     @Override
     public Screen get() {
         return this;
     }
     
+    /*
     private enum Type {INT, FLOAT, DOUBLE;}
     
     private class GuiSlider extends Widget {
@@ -211,7 +209,7 @@ public class GuiModOptions extends Screen implements Supplier<Screen> {
 
         /**
          * Called when the left mouse button is pressed over this button. This method is specific to AbstractButtonWidget.
-         */
+         */ /*
         @Override
         public final void onClick(double mouseX, double mouseY)
         {
@@ -223,7 +221,7 @@ public class GuiModOptions extends Screen implements Supplier<Screen> {
 
         /**
          * Called when the left mouse button is released. This method is specific to AbstractButtonWidget.
-         */
+         */ /*
         @Override
         public void onRelease(double mouseX, double mouseY)
         {
@@ -247,4 +245,5 @@ public class GuiModOptions extends Screen implements Supplier<Screen> {
             super.onFocusedChanged(b);
         }
     }
+*/
 }
