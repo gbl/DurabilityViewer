@@ -1,0 +1,33 @@
+{   
+    "key.categories.durabilityviewer":"Durability Viewer",
+    "key.durabilityviewer.showhide":"Pokaż/ukryj widok wytrzymałości",
+    "tooltip.durability":"Wytrzymałość %s",
+    "durabilityviewer.subtitle.toolBreaking":"Przedmiot bliski zniszczenia",
+    
+    "durabilityviewer.config.bottom_right": "Dolny prawy",
+    "durabilityviewer.config.bottom_left": "Dolny lewy",
+    "durabilityviewer.config.top_right": "Górny prawy",
+    "durabilityviewer.config.top_left": "Górny lewy",
+    
+    "durabilityviewer.config.corner": "Róg HUD",
+    "durabilityviewer.config.armorhotbar": "Zbroja dookoła paska szybkiego wyboru",
+    "durabilityviewer.config.tooltipcolor": "Kolor podpowiedzi",
+    "durabilityviewer.config.effectduration": "Długość trwania efektu",
+    "durabilityviewer.config.minpercent": "Dźwięk poniżej procent",
+    "durabilityviewer.config.mindurability": "Dźwięk poniżej wytrzymałości",
+    "durabilityviewer.config.setwindowtitle": "Ustaw nazwę okna",
+    "durabilityviewer.config.showdamagepercent": "Procent do pokazania zniszczenia",
+    "durabilityviewer.config.showfreeslots": "Pokaż wolne miejsca ekwipunku",
+    "durabilityviewer.config.showalltrinkets": "Pokazuj wszystkie drobiazgi",
+    
+    "durabilityviewer.config.tt.corner": "Róg od 0 do 3 - dolny prawy, dolny lewy, górny prawy, górny lewy",
+    "durabilityviewer.config.tt.armorhotbar": "Pokazuj zbroję dookoła paska szybkiego wyboru (zamiast z narzędziami)",
+    "durabilityviewer.config.tt.tooltipcolor": "Kolor Minecrafta 0 .. 15",
+    "durabilityviewer.config.tt.effectduration": "Pokazuj długości efektów",
+    "durabilityviewer.config.tt.minpercent": "Odtwórz dźwięk, gdy wytrzymałość jest poniżej X procent",
+    "durabilityviewer.config.tt.mindurability": "Odtwórz dźwięk, gdy wytrzymałość jest poniżej X",
+    "durabilityviewer.config.tt.setwindowtitle": "Ustaw nazwę okna na gracza i nazwę serwera",
+    "durabilityviewer.config.tt.showdamagepercent": "Pokaż zniszczenie zamiast wytrzymałości, gdy przedmiot jest wciąż lepszy niż dany %",
+    "durabilityviewer.config.tt.showfreeslots": "Pokazuj ikonę skrzyni z liczbą wolnych miejsc w ekwipunku",
+    "durabilityviewer.config.tt.showalltrinkets": "Jeśli masz modyfikację na drobiazgi, pokazuj wszystkie drobiazgi nawet jeśli nie mają wytrzymałości/zniszczeń"    
+}
