@@ -22,11 +22,11 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private int minPercent = 10;
     private int minDurability = 100;
     private boolean showPlayerServerName;
-    private boolean useCustomSound;
     private int showDamageOverPercent;
     private boolean armorAroundHotbar;
     private boolean showChestIcon;
     private boolean showAllTrinkets;
+    private boolean showPercentValues;
 
     public static ConfigurationHandler getInstance() {
         if (instance==null)
@@ -94,6 +94,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
         showDamageOverPercent = config.getInt("durabilityviewer.config.showdamagepercent", Configuration.CATEGORY_CLIENT, 80, 0, 100, "durabilityviewer.config.tt.showdamagepercent");
         showChestIcon = config.getBoolean("durabilityviewer.config.showfreeslots", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showfreeslots");
         showAllTrinkets = config.getBoolean("durabilityviewer.config.showalltrinkets", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showalltrinkets");
+        showPercentValues = config.getBoolean("durabilityviewer.config.percentvalues", Configuration.CATEGORY_CLIENT, false, "durabilityviewer.config.tt.percentvalues");
 
         tooltipColor=Formatting.byColorIndex(color);
         if (config.hasChanged())
@@ -140,9 +141,6 @@ public class ConfigurationHandler implements ModConfigurationHandler
     public static boolean getShowChestIcon() { return getInstance().showChestIcon; }
     
     public static boolean getShowAllTrinkets() { return getInstance().showAllTrinkets; }
-
-    public static boolean useCustomSound() {
-        // return getInstance().useCustomSound;
-        return false;
-    }
+    
+    public static boolean getShowPercentValues() { return getInstance().showPercentValues; }
 }

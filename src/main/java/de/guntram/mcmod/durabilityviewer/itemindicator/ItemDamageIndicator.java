@@ -30,6 +30,9 @@ public class ItemDamageIndicator implements ItemIndicator {
         } else {
             shown=cur;
         }
+        if (ConfigurationHandler.getShowPercentValues()) {
+            return String.format("%.1f%%", shown * 100.0 / stack.getMaxDamage());
+        }
         return String.valueOf(shown);
     }
 
