@@ -8,7 +8,6 @@
         "modmenu": [ "de.guntram.mcmod.durabilityviewer.handler.MMConfigurationHandler" ]
     },
     "custom": {
-        "modmenu:clientsideOnly": true,
         "modupdater": {
             "strategy": "json",
             "url": "https://raw.githubusercontent.com/gbl/ModVersionInfo/master/DurabilityViewer.json"
