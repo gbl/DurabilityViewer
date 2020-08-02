@@ -188,6 +188,9 @@ public class GuiItemDurability
         
         int totalHeight=(toolsSize.height > armorSize.height ? toolsSize.height : armorSize.height);
         if (trinketsSize.height > totalHeight) { totalHeight = trinketsSize.height; }
+        if (trinketsSize.width == 0 && trinkets.length > 0 && ConfigurationHandler.getShowAllTrinkets()) {
+            trinketsSize.width = iconWidth+spacing * 2;
+        }
         int xposArmor, xposTools, xposTrinkets, ypos, xpos;
 
         switch (ConfigurationHandler.getCorner()) {
