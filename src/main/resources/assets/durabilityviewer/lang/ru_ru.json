@@ -1,14 +1,8 @@
-{   
-    "key.categories.durabilityviewer":"Durability Viewer",
-    "key.durabilityviewer.showhide":"Показать/Скрыть прочность",
-    "tooltip.durability":"Прочность %s",
-    "durabilityviewer.subtitle.toolBreaking":"Item about to break",
-    
+{
     "durabilityviewer.config.bottom_right": "Нижний правый",
     "durabilityviewer.config.bottom_left": "Нижний левый",
     "durabilityviewer.config.top_right": "Верхний правый",
     "durabilityviewer.config.top_left": "Верхний левый",
-    
     "durabilityviewer.config.corner": "Угол для отображения",
     "durabilityviewer.config.armorhotbar": "Броня рядом с хотбаром",
     "durabilityviewer.config.tooltipcolor": "Tooltip Color",
@@ -19,7 +13,7 @@
     "durabilityviewer.config.showdamagepercent": "Процент до отображения урона",
     "durabilityviewer.config.showfreeslots": "Показывать пустые ячейки",
     "durabilityviewer.config.showalltrinkets": "Show all trinkets",
-    
+    "durabilityviewer.config.percentvalues": "Percentages",
     "durabilityviewer.config.tt.corner": "Угол от 0 до 3 - нижний правый, нижний левый, верхний правый, верхний левый",
     "durabilityviewer.config.tt.armorhotbar": "Показывать прочность брони рядом с хотбаром (заместо рядом с инструментами)",
     "durabilityviewer.config.tt.tooltipcolor": "Minecraft Color 0 .. 15",
@@ -29,5 +23,10 @@
     "durabilityviewer.config.tt.setwindowtitle": "Установить заголовок окна как 'игрок и имя сервера'",
     "durabilityviewer.config.tt.showdamagepercent": "Показывать ущерб вместо прочности, пока предмет еще целее, чем этот %",
     "durabilityviewer.config.tt.showfreeslots": "Показывать значок сундука с количеством пустых ячеек инвентаря",
-    "durabilityviewer.config.tt.showalltrinkets": "If you have the trinkets mod, show all trinkets even when they don't have durability/damage"    
+    "durabilityviewer.config.tt.showalltrinkets": "If you have the trinkets mod, show all trinkets even when they don't have durability/damage",
+    "durabilityviewer.config.tt.percentvalues": "Show percentages instead of absolute values",
+    "key.categories.durabilityviewer": "Durability Viewer",
+    "key.durabilityviewer.showhide": "Показать/Скрыть прочность",
+    "tooltip.durability": "Прочность %s",
+    "durabilityviewer.subtitle.toolBreaking": "Item about to break"
 }
