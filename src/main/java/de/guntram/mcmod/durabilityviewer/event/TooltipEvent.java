@@ -48,6 +48,7 @@ public class TooltipEvent
             switch(elem.getId()) {
                 case 2: list.add(new StringTextComponent(prefix+key+": §2"+tag.getShort(key))); break;
                 case 3: list.add(new StringTextComponent(prefix+key+": §3"+tag.getInt(key))); break;
+                case 6: list.add(new StringTextComponent(prefix+key+": §6"+tag.getDouble(key))); break;
                 case 8: list.add(new StringTextComponent(prefix+key+": §8"+tag.getString(key))); break;
                 case 9: list.add(new StringTextComponent(prefix+key+": §9List, "+((ListNBT)elem).size()+" items")); break;
                 case 10:list.add(new StringTextComponent(prefix+key+": §aCompound"));

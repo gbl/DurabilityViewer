@@ -1,7 +1,7 @@
 package de.guntram.mcmod.durabilityviewer.handler;
 
-import de.guntram.mcmod.GBForgetools.Configuration;
 import de.guntram.mcmod.GBForgetools.ConfigChangedEvent;
+import de.guntram.mcmod.GBForgetools.Configuration;
 import de.guntram.mcmod.durabilityviewer.client.gui.Corner;
 import java.io.File;
 import net.minecraft.util.text.TextFormatting;
@@ -20,10 +20,10 @@ public class ConfigurationHandler
     private int minPercent = 10;
     private int minDurability = 100;
     private boolean showPlayerServerName;
-    private boolean useCustomSound;
     private int showDamageOverPercent;
     private boolean armorAroundHotbar;
     private boolean showChestIcon;
+    private boolean showPercentValues;
     
     public static ConfigurationHandler getInstance() {
         if (instance==null)
@@ -58,8 +58,8 @@ public class ConfigurationHandler
         minDurability = config.getInt("Minimum Durability", Configuration.CATEGORY_CLIENT, minDurability, 1, 1500, "Play sound when durability below X");
         showPlayerServerName = config.getBoolean("Set window title", Configuration.CATEGORY_CLIENT, true, "Set window title to player and server name");
         showDamageOverPercent = config.getInt("Percent to show damage", Configuration.CATEGORY_CLIENT, 80, 0, 100, "Show damage instead of durability while the item is still better than this %");
-        // useCustomSound = config.getBoolean("Use custom sound", Configuration.CATEGORY_CLIENT, false, "Use your own warning sound. You need to create your own custom.ogg in the mod folder");
         showChestIcon = config.getBoolean("Show chest icon", Configuration.CATEGORY_CLIENT, true, "Show chest icon with number of free inventory slots");
+        showPercentValues = config.getBoolean("durabilityviewer.config.percentvalues", Configuration.CATEGORY_CLIENT, false, "durabilityviewer.config.tt.percentvalues");
         
         tooltipColor=TextFormatting.fromColorIndex(color);
         if (config.hasChanged())
@@ -96,8 +96,5 @@ public class ConfigurationHandler
     
     public static boolean getShowChestIcon() { return getInstance().showChestIcon; }
 
-    public static boolean useCustomSound() {
-        // return getInstance().useCustomSound;
-        return false;
-    }
+    public static boolean getShowPercentValues() { return getInstance().showPercentValues; }
 }

@@ -12,13 +12,19 @@ public class ItemDamageIndicator implements ItemIndicator {
 
     @Override
     public String getDisplayValue() {
+        if (!(stack.isDamageable())) {
+            return "";
+        }
         int max=stack.getMaxDamage();
-        int cur=stack.getMaxDamage() - stack.getDamage();
+        int cur=stack.getMaxDamage()-stack.getDamage();
         int shown;
         if (cur > max*ConfigurationHandler.showDamageOverPercent()/100) {
             shown=-stack.getDamage();
         } else {
             shown=cur;
+        }
+        if (ConfigurationHandler.getShowPercentValues()) {
+            return String.format("%.1f%%", shown * 100.0 / stack.getMaxDamage());
         }
         return String.valueOf(shown);
     }
