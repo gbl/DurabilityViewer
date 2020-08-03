@@ -1,14 +1,8 @@
 {
-    "key.categories.durabilityviewer" : "Haltbarkeitsansicht",
-    "key.durabilityviewer.showhide"   : "Haltbarkeit zeigen/verstecken",
-    "tooltip.durability"              : "Haltbarkeit %s",
-    "durabilityviewer.subtitle.toolBreaking" : "Gegenstand knirscht",
-    
     "durabilityviewer.config.bottom_right": "Rechts unten",
     "durabilityviewer.config.bottom_left": "Links unten",
     "durabilityviewer.config.top_right": "Rechts oben",
     "durabilityviewer.config.top_left": "Links oben",
-    
     "durabilityviewer.config.corner": "Ecke",
     "durabilityviewer.config.armorhotbar": "Rüstung um Hotbar",
     "durabilityviewer.config.tooltipcolor": "Tooltip Farbe",
@@ -19,7 +13,7 @@
     "durabilityviewer.config.showdamagepercent": "Prozent für Schadensanzeige",
     "durabilityviewer.config.showfreeslots": "freie Inventarslots zeigen",
     "durabilityviewer.config.showalltrinkets": "Alle Trinkets zeigen",
-    
+    "durabilityviewer.config.percentvalues": "Prozentwerte",
     "durabilityviewer.config.tt.corner": "Ecke in der angezeigt wird",
     "durabilityviewer.config.tt.armorhotbar": "Rüstung im Hotbar herum zeigen anstatt in der Ecke",
     "durabilityviewer.config.tt.tooltipcolor": "Minecraft Farbe 0..15",
@@ -29,5 +23,10 @@
     "durabilityviewer.config.tt.setwindowtitle": "Fenstertitel auf Spieler und Server setzen",
     "durabilityviewer.config.tt.showdamagepercent": "Solange Gegenstände über soviel % sind, wird Schaden angezeigt, nicht Haltbarkeit",
     "durabilityviewer.config.tt.showfreeslots": "Kiste mit Anzahl der freien Inventarslots anzeigen",
-    "durabilityviewer.config.tt.showalltrinkets": "Wenn das Trinkets Mod installiert ist, auch Trinkets ohne Haltbarkeit/Schaden anzeigen"
+    "durabilityviewer.config.tt.showalltrinkets": "Wenn das Trinkets Mod installiert ist, auch Trinkets ohne Haltbarkeit/Schaden anzeigen",
+    "durabilityviewer.config.tt.percentvalues": "Prozentwerte anstelle von absoluten Werten anzeigen",
+    "key.categories.durabilityviewer": "Haltbarkeitsansicht",
+    "key.durabilityviewer.showhide": "Haltbarkeit zeigen/verstecken",
+    "tooltip.durability": "Haltbarkeit %s",
+    "durabilityviewer.subtitle.toolBreaking": "Gegenstand knirscht"
 }
