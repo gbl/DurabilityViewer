@@ -7,6 +7,7 @@ package de.guntram.mcmod.GBForgetools;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import java.io.File;
@@ -19,7 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import net.minecraft.client.resources.I18n;
 /**
  *
  * @author gbl
@@ -44,6 +45,9 @@ public class Configuration {
             // do nothing, probably first time starting
         } catch (IOException ex) {
             System.err.println("Trying to load config file "+configFile.getAbsolutePath()+":");
+            ex.printStackTrace(System.err);
+        } catch (JsonSyntaxException ex) {
+            System.err.println("Syntax error in config file "+configFile.getAbsolutePath()+" - using defaults");
             ex.printStackTrace(System.err);
         }
         wasChanged=false;
@@ -89,6 +93,22 @@ public class Configuration {
         return getValue(description, category, defVal, null, null, toolTip, clazz);
     }
     
+    public int getSelection(String description, int category, int defVal, String[] options, String toolTip) {
+        ConfigurationItem item=items.get(description);
+        if (item==null) {
+            items.put(description, new ConfigurationSelectList(description, toolTip, options, defVal, defVal));
+            wasChanged=true;
+            return defVal;
+        }
+        else if (!(item instanceof ConfigurationSelectList)) {
+            // e.g. we changed the definition from int to list
+            // replace the item with a select list but use the item value
+            ConfigurationSelectList list = new ConfigurationSelectList(description, toolTip, options, item.value, defVal);
+            items.put(description, list);
+        }
+        return (int) getValue(description, category, defVal, 0, options.length-1, toolTip, Integer.class);
+    }
+    
     public Object getValue(String description, int category, Object defVal, Object minVal, Object maxVal, String toolTip, Class clazz) {
         ConfigurationItem item=items.get(description);
         if (item==null) {
@@ -98,7 +118,7 @@ public class Configuration {
         }
         
         // Always let code given meta info override config file values
-        item.key=description;
+        item.key=I18n.format(description);
         item.minValue=minVal;
         item.maxValue=maxVal;
         item.toolTip=toolTip;
@@ -140,6 +160,33 @@ public class Configuration {
     
     public String getTooltip(String description) {
         return items.get(description).toolTip;
+    }
+    
+    public boolean isSelectList(String description) {
+        return items.get(description) instanceof ConfigurationSelectList;
+    }
+    
+    public String[] getListOptions(String description) {
+        return ((ConfigurationSelectList) items.get(description)).options;
+    }
+    
+    /**
+     * Forgets about a config parameter that was, for example, present in older versions.
+     * @param item
+     */
+    public void forget(String item) {
+        items.remove(item);
+        wasChanged = true;
+    }
+    
+    public void migrate(String oldKey, String newKey) {
+        ConfigurationItem oldItem = items.get(oldKey);
+        items.remove(oldKey);
+        if (oldItem != null) {
+            oldItem.key = newKey;
+            items.put(newKey, oldItem);
+        }
+        wasChanged = true;
     }
 
     public boolean setValue(String description, Object value) {

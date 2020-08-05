@@ -20,4 +20,27 @@ public class ConfigChangedEvent {
             return mod;
         };
     }
+    
+    public static class OnConfigChangingEvent extends ConfigChangedEvent {
+        String mod, item;
+        Object newValue;
+
+        public OnConfigChangingEvent(String mod, String item, Object newValue) {
+            this.mod = mod;
+            this.item = item;
+            this.newValue = newValue;
+        }
+        
+        public String getModID() {
+            return mod;
+        }
+        
+        public String getItem() {
+            return item;
+        }
+        
+        public Object getNewValue() {
+            return newValue;
+        }
+    }
 }

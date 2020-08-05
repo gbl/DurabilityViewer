@@ -2,11 +2,13 @@ package de.guntram.mcmod.durabilityviewer.handler;
 
 import de.guntram.mcmod.GBForgetools.ConfigChangedEvent;
 import de.guntram.mcmod.GBForgetools.Configuration;
+import de.guntram.mcmod.GBForgetools.ModConfigurationHandler;
+import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.client.gui.Corner;
 import java.io.File;
 import net.minecraft.util.text.TextFormatting;
 
-public class ConfigurationHandler
+public class ConfigurationHandler implements ModConfigurationHandler
 {
     private static ConfigurationHandler instance;
     
@@ -44,21 +46,52 @@ public class ConfigurationHandler
     }
 
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equalsIgnoreCase("durabilityviewer")) {
+        if (event.getModID().equals(DurabilityViewer.MODNAME)) {
             loadConfig();
         }
     }
     
+    @Override
+    public void onConfigChanging(ConfigChangedEvent.OnConfigChangingEvent event) {
+        if (event.getModID().equals(DurabilityViewer.MODNAME)) {
+            switch (event.getItem()) {
+                case "durabilityviewer.config.corner": corner=(int)(Integer)(event.getNewValue()); break;
+                case "durabilityviewer.config.armorhotbar": armorAroundHotbar=(boolean)(Boolean)(event.getNewValue()); break;
+                case "durabilityviewer.config.showfreeslots": showChestIcon=(boolean)(Boolean)(event.getNewValue()); break;
+            }
+        }
+    }
+    
     private void loadConfig() {
-        corner=config.getInt("HUD Corner", Configuration.CATEGORY_CLIENT, corner, 0, 3, "Corner 0 to 3 - bottom right, bottom left, top right, top left");
-        armorAroundHotbar=config.getBoolean("Armor around hotbar", Configuration.CATEGORY_CLIENT, armorAroundHotbar, "Render armor around hotbar (instead of with tools)");
-        color=config.getInt("Tooltip Color", Configuration.CATEGORY_CLIENT, color, 0, 15, "Minecraft Color 0 .. 15");
-        effectDuration=config.getBoolean("Effect Duration", Configuration.CATEGORY_CLIENT, true, "Show effect durations");
-        minPercent = config.getInt("Minimum Percent", Configuration.CATEGORY_CLIENT, minPercent, 1, 100, "Play sound when durability below X percent");
-        minDurability = config.getInt("Minimum Durability", Configuration.CATEGORY_CLIENT, minDurability, 1, 1500, "Play sound when durability below X");
-        showPlayerServerName = config.getBoolean("Set window title", Configuration.CATEGORY_CLIENT, true, "Set window title to player and server name");
-        showDamageOverPercent = config.getInt("Percent to show damage", Configuration.CATEGORY_CLIENT, 80, 0, 100, "Show damage instead of durability while the item is still better than this %");
-        showChestIcon = config.getBoolean("Show chest icon", Configuration.CATEGORY_CLIENT, true, "Show chest icon with number of free inventory slots");
+        
+        config.migrate("HUD Corner", "durabilityviewer.config.corner");
+        config.migrate("Effect Duration", "durabilityviewer.config.effectduration");
+        config.migrate("Percent to show damage", "durabilityviewer.config.showdamagepercent");
+        config.migrate("Tooltip Color", "durabilityviewer.config.tooltipcolor");
+        config.migrate("Minimum Percent", "durabilityviewer.config.minpercent");
+        config.migrate("Minimum Durability", "durabilityviewer.config.mindurability");
+        config.migrate("Set window title", "durabilityviewer.config.setwindowtitle");
+        config.migrate("Show all trinkets", "durabilityviewer.config.showalltrinkets");
+        config.migrate("Armor around hotbar", "durabilityviewer.config.armorhotbar");
+        config.migrate("Show chest icon", "durabilityviewer.config.showfreeslots");
+        
+        corner=config.getSelection("durabilityviewer.config.corner", Configuration.CATEGORY_CLIENT, corner,
+                new String[] {
+                    "durabilityviewer.config.bottom_right",
+                    "durabilityviewer.config.bottom_left",
+                    "durabilityviewer.config.top_right",
+                    "durabilityviewer.config.top_left",
+                }, 
+                "durabilityviewer.config.tt.corner");
+        armorAroundHotbar=config.getBoolean("durabilityviewer.config.armorhotbar", Configuration.CATEGORY_CLIENT, armorAroundHotbar, "durabilityviewer.config.tt.armorhotbar");
+        color=config.getInt("durabilityviewer.config.tooltipcolor", Configuration.CATEGORY_CLIENT, color, 0, 15, "durabilityviewer.config.tt.tooltipcolor");
+        effectDuration=config.getBoolean("durabilityviewer.config.effectduration", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.effectduration");
+        minPercent = config.getInt("durabilityviewer.config.minpercent", Configuration.CATEGORY_CLIENT, minPercent, 1, 100, "durabilityviewer.config.tt.minpercent");
+        minDurability = config.getInt("durabilityviewer.config.mindurability", Configuration.CATEGORY_CLIENT, minDurability, 1, 1500, "durabilityviewer.config.tt.mindurability");
+        showPlayerServerName = config.getBoolean("durabilityviewer.config.setwindowtitle", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.setwindowtitle");
+        showDamageOverPercent = config.getInt("durabilityviewer.config.showdamagepercent", Configuration.CATEGORY_CLIENT, 80, 0, 100, "durabilityviewer.config.tt.showdamagepercent");
+        showChestIcon = config.getBoolean("durabilityviewer.config.showfreeslots", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showfreeslots");
+        // showAllTrinkets = config.getBoolean("durabilityviewer.config.showalltrinkets", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showalltrinkets");
         showPercentValues = config.getBoolean("durabilityviewer.config.percentvalues", Configuration.CATEGORY_CLIENT, false, "durabilityviewer.config.tt.percentvalues");
         
         tooltipColor=TextFormatting.fromColorIndex(color);
@@ -74,7 +107,7 @@ public class ConfigurationHandler
         return Corner.values()[getInstance().corner];
     }
     
-    public static Configuration getConfig() {
+    public Configuration getConfig() {
         return getInstance().config;
     }
     

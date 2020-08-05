@@ -1,5 +1,6 @@
 package de.guntram.mcmod.durabilityviewer.event;
 
+import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
 import de.guntram.mcmod.durabilityviewer.handler.KeyHandler;
 import net.minecraftforge.client.event.InputEvent;
@@ -9,7 +10,12 @@ public class KeyInputEvent
 {
     @SubscribeEvent
     public void keyPressed(final InputEvent.KeyInputEvent e) {
-        if (KeyHandler.showHud.isPressed())
-            GuiItemDurability.toggleVisibility();
+        if (KeyHandler.showHud.isPressed()) {
+            if (e.getModifiers() == 0) {
+                GuiItemDurability.toggleVisibility();
+            } else {
+                DurabilityViewer.openConfigScreen();
+            }
+        }
     }
 }

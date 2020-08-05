@@ -1,12 +1,14 @@
 package de.guntram.mcmod.durabilityviewer;
 
 import de.guntram.mcmod.GBForgetools.ConfigurationProvider;
+import de.guntram.mcmod.GBForgetools.GuiModOptions;
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
-import de.guntram.mcmod.durabilityviewer.handler.KeyHandler;
 import de.guntram.mcmod.durabilityviewer.event.KeyInputEvent;
 import de.guntram.mcmod.durabilityviewer.event.TooltipEvent;
-import net.minecraftforge.common.MinecraftForge;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
+import de.guntram.mcmod.durabilityviewer.handler.KeyHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -16,6 +18,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class DurabilityViewer
 {
     public static final String MODID = "durabilityviewer";
+    public static final String MODNAME = "durabilityviewer";
     public static final String VERSION = "1.6";
 
     public static DurabilityViewer instance;
@@ -45,6 +48,10 @@ public class DurabilityViewer
         MinecraftForge.EVENT_BUS.register(new KeyInputEvent());
         MinecraftForge.EVENT_BUS.register(new TooltipEvent());
         MinecraftForge.EVENT_BUS.register(new GuiItemDurability());
+    }
+    
+    public static void openConfigScreen() {
+        Minecraft.getInstance().displayGuiScreen(new GuiModOptions(null, MODNAME, confHandler));
     }
 
     /* Seems like this event doesn't exist any more
