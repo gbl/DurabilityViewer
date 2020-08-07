@@ -15,7 +15,7 @@ apply plugin: 'maven-publish'
 
 version = "1.16.1-forge32.0.38-1.8.3"
 group = "de.guntram.mcmod.DurabilityViewer" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "durabilityViewer"
+archivesBaseName = "durabilityviewer"
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
