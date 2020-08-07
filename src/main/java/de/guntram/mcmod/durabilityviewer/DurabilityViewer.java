@@ -8,11 +8,18 @@ import de.guntram.mcmod.durabilityviewer.event.TooltipEvent;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import de.guntram.mcmod.durabilityviewer.handler.KeyHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
+import org.apache.commons.lang3.tuple.Pair;
 
 @Mod("durabilityviewer")
 public class DurabilityViewer
@@ -26,30 +33,31 @@ public class DurabilityViewer
     private static String changedWindowTitle;
 
     public DurabilityViewer() {
+        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::init);
         // bus.addListener(this::onConnectedToServerEvent);
         // bus.addListener(this::onDisconnectedFromServerEvent);
     }
-
-//    public void preInit(final FMLPreInitializationEvent event) {
-//        confHandler=ConfigurationHandler.getInstance();
-//        confHandler.load(event.getSuggestedConfigurationFile());
-//    }
     
     public void init(final FMLCommonSetupEvent event) {
-        changedWindowTitle=null;
-        confHandler=ConfigurationHandler.getInstance();
-        confHandler.load(ConfigurationProvider.getSuggestedFile(MODID));
-        KeyHandler.init();
-        System.out.println("on Init, confHandler is "+confHandler);
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(confHandler);
-        MinecraftForge.EVENT_BUS.register(new KeyInputEvent());
-        MinecraftForge.EVENT_BUS.register(new TooltipEvent());
-        MinecraftForge.EVENT_BUS.register(new GuiItemDurability());
+        if (FMLEnvironment.dist.isClient()) {
+            changedWindowTitle=null;
+            confHandler=ConfigurationHandler.getInstance();
+            confHandler.load(ConfigurationProvider.getSuggestedFile(MODID));
+            KeyHandler.init();
+            System.out.println("on Init, confHandler is "+confHandler);
+            MinecraftForge.EVENT_BUS.register(this);
+            MinecraftForge.EVENT_BUS.register(confHandler);
+            MinecraftForge.EVENT_BUS.register(new KeyInputEvent());
+            MinecraftForge.EVENT_BUS.register(new TooltipEvent());
+            MinecraftForge.EVENT_BUS.register(new GuiItemDurability());
+        } else {
+            System.err.println(MODNAME+" detected a dedicated server. Not doing anything.");
+        }
     }
     
+    @OnlyIn(Dist.CLIENT)
     public static void openConfigScreen() {
         Minecraft.getInstance().displayGuiScreen(new GuiModOptions(null, MODNAME, confHandler));
     }
