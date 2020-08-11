@@ -63,6 +63,7 @@ public abstract class TooltipMixin {
             switch(elem.getType()) {
                 case 2: list.add(new LiteralText(prefix+key+": §2"+tag.getShort(key))); break;
                 case 3: list.add(new LiteralText(prefix+key+": §3"+tag.getInt(key))); break;
+                case 6: list.add(new LiteralText(prefix+key+": §6"+tag.getDouble(key))); break;
                 case 8: list.add(new LiteralText(prefix+key+": §8"+tag.getString(key))); break;
                 case 9: list.add(new LiteralText(prefix+key+": §9List, "+((ListTag)elem).size()+" items")); break;
                 case 10:list.add(new LiteralText(prefix+key+": §aCompound"));

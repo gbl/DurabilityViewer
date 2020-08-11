@@ -9,10 +9,10 @@ repositories {
 	maven {
 		url = "https://minecraft.guntram.de/maven/"
 	}
-    maven {
-        url = "file:///tmp/mymavenrepo/"
-    }
-    maven {
+	maven {
+		url = "file:///tmp/mymavenrepo/"
+	}
+	maven {
 		url = "https://jitpack.io"
 	}
 	maven {
@@ -25,10 +25,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext.Versions = new Properties()
-Versions.load(file("Versionfiles/mcversion-1.16.2-pre1.properties").newReader())
+Versions.load(file("Versionfiles/mcversion-1.16.2.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
-ext.projectVersion = "1.7.3"
+ext.projectVersion = "1.8.5"
 
 version = "${Versions['minecraft_version']}-fabric${Versions['fabric_versiononly']}-${project.projectVersion}"
 
@@ -53,6 +53,7 @@ dependencies {
     mappings   "net.fabricmc:yarn:${Versions['yarn_mappings']}:v2"
     modCompile "net.fabricmc:fabric-loader:${Versions['loader_version']}"
     modCompile "net.fabricmc.fabric-api:fabric-api:${Versions['fabric_version']}"
+    modCompile "TechReborn:TechReborn-1.16:3.4.5+build.95"
     modCompile "io.github.prospector:modmenu:${Versions['modmenu_version']}"
     modCompile "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     include    "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"

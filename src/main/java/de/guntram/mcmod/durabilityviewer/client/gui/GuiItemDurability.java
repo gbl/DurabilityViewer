@@ -7,6 +7,7 @@ import de.guntram.mcmod.durabilityviewer.itemindicator.InventorySlotsIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemCountIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
+import de.guntram.mcmod.durabilityviewer.itemindicator.TREnergyIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
 import dev.emi.trinkets.api.TrinketsApi;
 import java.util.Collection;
@@ -26,6 +27,7 @@ import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.util.Arm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import team.reborn.energy.EnergyHolder;
 
 
 public class GuiItemDurability
@@ -42,6 +44,7 @@ public class GuiItemDurability
     private static final int spacing=2;
     
     private static boolean haveTrinketsApi = false;
+    private static boolean haveTRCore = false;
     
     private ItemBreakingWarner mainHandWarner, offHandWarner, helmetWarner, chestWarner, pantsWarner, bootsWarner;
     private ItemBreakingWarner trinketWarners[];
@@ -74,6 +77,12 @@ public class GuiItemDurability
         } catch (ClassNotFoundException ex) {
             LOGGER.info("DurabilityViewer did not find Trinkets API");
             trinketWarners = new ItemBreakingWarner[0];
+        }
+        try {
+            Class.forName("team.reborn.energy.EnergyHolder");
+            haveTRCore = true;
+        } catch (ClassNotFoundException ex) {
+            LOGGER.info("DurabilityViewer did not find Tech Reborn");
         }
     }
     
@@ -133,8 +142,9 @@ public class GuiItemDurability
         boolean needToWarn=false;
 
         // @TODO: remove duplicate code
-        ItemIndicator mainHand = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.MAINHAND));
-        ItemIndicator offHand = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.OFFHAND));
+        ItemIndicator mainHand, offHand;
+        mainHand = damageOrEnergy(player, EquipmentSlot.MAINHAND);
+        offHand  = damageOrEnergy(player, EquipmentSlot.OFFHAND);
         ItemIndicator boots = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.FEET));
         ItemIndicator leggings = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.LEGS));
         ItemIndicator chestplate = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.CHEST));
@@ -188,6 +198,9 @@ public class GuiItemDurability
         
         int totalHeight=(toolsSize.height > armorSize.height ? toolsSize.height : armorSize.height);
         if (trinketsSize.height > totalHeight) { totalHeight = trinketsSize.height; }
+        if (trinketsSize.width == 0 && trinkets.length > 0 && ConfigurationHandler.getShowAllTrinkets()) {
+            trinketsSize.width = iconWidth+spacing * 2;
+        }
         int xposArmor, xposTools, xposTrinkets, ypos, xpos;
 
         switch (ConfigurationHandler.getCorner()) {
@@ -245,6 +258,18 @@ public class GuiItemDurability
         }
         this.renderItems(stack, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
         this.renderItems(stack, xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);
+    }
+    
+    private ItemIndicator damageOrEnergy(PlayerEntity player, EquipmentSlot slot) {
+        ItemStack stack = player.getEquippedStack(slot);
+        if (stack.isDamageable()) {
+            return new ItemDamageIndicator(stack);
+        } else if (haveTRCore) {
+            if (stack.getItem() instanceof EnergyHolder && stack.getTag()!=null && stack.getTag().contains("energy", 6)) {
+                return new TREnergyIndicator(stack);
+            }
+        }
+        return new ItemDamageIndicator(stack);
     }
     
     public void afterRenderStatusEffects(MatrixStack stack, float partialTicks) {
