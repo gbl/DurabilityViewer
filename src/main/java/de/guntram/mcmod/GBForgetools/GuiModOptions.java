@@ -8,9 +8,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -164,7 +164,7 @@ public class GuiModOptions extends Screen {
         
         int y=50;
         for (String text: options) {
-            field_230712_o_.func_238422_b_(stack, new TranslationTextComponent(text), this.field_230708_k_ / 2 -155, y+2, 0xffffff);
+            field_230712_o_.func_238422_b_(stack, new TranslationTextComponent(text).func_241878_f(), this.field_230708_k_ / 2 -155, y+2, 0xffffff);
             y+=LINEHEIGHT;
         }
 
@@ -175,7 +175,7 @@ public class GuiModOptions extends Screen {
                 if (field_230712_o_.func_238414_a_(tooltip)<=250) {
                     func_238652_a_(stack, tooltip, mouseX, mouseY);
                 } else {
-                    List<ITextProperties> lines = field_230712_o_.func_238425_b_(tooltip, 250);
+                    List<IReorderingProcessor> lines = field_230712_o_.func_238425_b_(tooltip, 250);
                     func_238654_b_(stack, lines, mouseX, mouseY);
                 }
             }
