@@ -235,7 +235,7 @@ public class GuiItemDurability
         GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         if (ConfigurationHandler.getArmorAroundHotbar()) {
-            int leftOffset = -130;
+            int leftOffset = -120;
             int rightOffset = 100;
             if (!player.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty()) {
                 if (minecraft.options.mainArm == Arm.RIGHT) {
@@ -244,8 +244,10 @@ public class GuiItemDurability
                     rightOffset += 20;
                 }
             }
-            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, armorSize.width, helmet);
-            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, armorSize.width, chestplate);
+            int helmetTextWidth = fontRenderer.getWidth(helmet.getDisplayValue());
+            int chestTextWidth = fontRenderer.getWidth(chestplate.getDisplayValue());
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - helmetTextWidth, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, helmetTextWidth+iconWidth+spacing, helmet);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, chestTextWidth+iconWidth+spacing, chestplate);
             this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
             this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
             if (ConfigurationHandler.getCorner().isRight()) {
