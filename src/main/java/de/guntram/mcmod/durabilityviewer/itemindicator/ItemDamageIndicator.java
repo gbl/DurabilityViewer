@@ -22,16 +22,20 @@ public class ItemDamageIndicator implements ItemIndicator {
         if (!(stack.isDamageable())) {
             return "";
         }
-        int max=stack.getMaxDamage();
-        int cur=stack.getMaxDamage()-stack.getDamage();
+        return calculateDisplayValue(stack.getMaxDamage(), stack.getDamage());
+    }
+    
+    public static String calculateDisplayValue(int max, int dam) {
+        int cur=max-dam;
+
         int shown;
         if (cur > max*ConfigurationHandler.showDamageOverPercent()/100) {
-            shown=-stack.getDamage();
+            shown=-dam;
         } else {
             shown=cur;
         }
         if (ConfigurationHandler.getShowPercentValues()) {
-            return String.format("%.1f%%", shown * 100.0 / stack.getMaxDamage());
+            return String.format("%.1f%%", shown * 100.0 / max);
         }
         return String.valueOf(shown);
     }
@@ -40,6 +44,10 @@ public class ItemDamageIndicator implements ItemIndicator {
     public int getDisplayColor() {
         int max=stack.getMaxDamage();
         int cur=stack.getDamage();
+        return calculateDisplayColor(max, cur);
+    }
+    
+    public static int calculateDisplayColor(int max, int cur) {
         if (cur < max/5)
             return color_green;
         if (cur > max*9/10 && cur>max-100)
@@ -63,5 +71,4 @@ public class ItemDamageIndicator implements ItemIndicator {
     public ItemStack getItemStack() {
         return stack;
     }
-    
 }

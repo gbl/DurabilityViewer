@@ -3,11 +3,13 @@ package de.guntram.mcmod.durabilityviewer.client.gui;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
+import de.guntram.mcmod.durabilityviewer.itemindicator.ColytraDamageIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.InventorySlotsIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemCountIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.TREnergyIndicator;
+import de.guntram.mcmod.durabilityviewer.sound.ColytraBreakingWarner;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
 import dev.emi.trinkets.api.TrinketsApi;
 import java.util.Collection;
@@ -47,6 +49,7 @@ public class GuiItemDurability
     private static boolean haveTRCore = false;
     
     private ItemBreakingWarner mainHandWarner, offHandWarner, helmetWarner, chestWarner, pantsWarner, bootsWarner;
+    private ItemBreakingWarner colytraWarner;
     private ItemBreakingWarner trinketWarners[];
     
     public static void toggleVisibility() {
@@ -65,6 +68,7 @@ public class GuiItemDurability
         chestWarner=new ItemBreakingWarner();
         pantsWarner=new ItemBreakingWarner();
         bootsWarner=new ItemBreakingWarner();
+        colytraWarner=new ColytraBreakingWarner();
         
         try {
             Class.forName("dev.emi.trinkets.api.TrinketsApi");
@@ -141,13 +145,20 @@ public class GuiItemDurability
         PlayerEntity player = (PlayerEntity) minecraft.player;
         boolean needToWarn=false;
 
-        // @TODO: remove duplicate code
+        
         ItemIndicator mainHand, offHand;
         mainHand = damageOrEnergy(player, EquipmentSlot.MAINHAND);
         offHand  = damageOrEnergy(player, EquipmentSlot.OFFHAND);
+        
+        ItemStack chestItem = player.getEquippedStack(EquipmentSlot.CHEST);
+        ItemIndicator colytra = null;
+        if (chestItem != null && chestItem.getTag()!= null && chestItem.getTag().contains("colytra:ElytraUpgrade")) {
+            colytra = new ColytraDamageIndicator(chestItem);
+        }
+        
         ItemIndicator boots = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.FEET));
         ItemIndicator leggings = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.LEGS));
-        ItemIndicator chestplate = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.CHEST));
+        ItemIndicator chestplate = new ItemDamageIndicator(chestItem);
         ItemIndicator helmet = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.HEAD));
         ItemIndicator arrows = null;
         ItemIndicator invSlots = (ConfigurationHandler.getShowChestIcon() ? new InventorySlotsIndicator(minecraft.player.inventory) : null);
@@ -169,8 +180,9 @@ public class GuiItemDurability
         needToWarn|=offHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.OFFHAND));
         needToWarn|=bootsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.FEET));
         needToWarn|=pantsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.LEGS));
-        needToWarn|=chestWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.CHEST));
+        needToWarn|=chestWarner.checkBreaks(chestItem);
         needToWarn|=helmetWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.HEAD));
+        needToWarn|=colytraWarner.checkBreaks(chestItem);
         if (haveTrinketsApi) {
             Inventory inventory = TrinketsApi.getTrinketsInventory(player);
             LOGGER.debug("know about "+trinkets.length+" trinkets, invSize is "+inventory.size()+", have "+trinketWarners.length+" warners");
@@ -191,7 +203,7 @@ public class GuiItemDurability
         if (ConfigurationHandler.getArmorAroundHotbar()) {
             armorSize = new RenderSize(0, 0);
         } else {
-            armorSize=this.renderItems(stack, 0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
+            armorSize=this.renderItems(stack, 0, 0, false, RenderPos.left, 0, boots, leggings, colytra, chestplate, helmet);
         }
         toolsSize=this.renderItems(stack, 0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
         trinketsSize = this.renderItems(stack, 0, 0, false, RenderPos.left, 0, trinkets);
@@ -248,6 +260,10 @@ public class GuiItemDurability
             int chestTextWidth = fontRenderer.getWidth(chestplate.getDisplayValue());
             this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - helmetTextWidth, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, helmetTextWidth+iconWidth+spacing, helmet);
             this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, chestTextWidth+iconWidth+spacing, chestplate);
+            if (colytra != null) {
+                int colytraTextWidth = fontRenderer.getWidth(colytra.getDisplayValue());
+                this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth - colytraTextWidth - iconWidth, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, colytraTextWidth+iconWidth+spacing, colytra);
+            }
             this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
             this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
             if (ConfigurationHandler.getCorner().isRight()) {
@@ -256,7 +272,7 @@ public class GuiItemDurability
                 xposTools -= armorSize.width;
             }
         } else {
-            this.renderItems(stack, xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, leggings, boots);
+            this.renderItems(stack, xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, colytra, leggings, boots);
         }
         this.renderItems(stack, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
         this.renderItems(stack, xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);

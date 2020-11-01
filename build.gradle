@@ -1,6 +1,20 @@
+buildscript {
+    dependencies {
+        classpath 'de.guntram.mcmod:crowdin-translate:1.2'
+    }
+    repositories {
+	maven {
+        name = 'CrowdinTranslate source'
+		url = "https://minecraft.guntram.de/maven/"
+	}
+    }
+}
 plugins {
 	id 'fabric-loom' version '0.4-SNAPSHOT'
 }
+apply plugin: 'de.guntram.mcmod.crowdin-translate'
+crowdintranslate.crowdinProjectName = 'durabilityviewer'
+crowdintranslate.verbose = false
 
 repositories {
 	maven {
@@ -28,7 +42,7 @@ ext.Versions = new Properties()
 Versions.load(file("Versionfiles/mcversion-1.16.2.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
-ext.projectVersion = "1.8.7"
+ext.projectVersion = "1.9"
 
 version = "${Versions['minecraft_version']}-fabric${Versions['fabric_versiononly']}-${project.projectVersion}"
 
@@ -55,8 +69,8 @@ dependencies {
     modCompile "net.fabricmc.fabric-api:fabric-api:${Versions['fabric_version']}"
     modCompile "TechReborn:TechReborn-1.16:3.4.5+build.95"
     modCompile "io.github.prospector:modmenu:${Versions['modmenu_version']}"
-//    modImplementation "de.guntram.mcmod:crowdin-translate:1.0"
-//    include    "de.guntram.mcmod:crowdin-translate:1.0"
+    modImplementation "de.guntram.mcmod:crowdin-translate:1.2"
+    include    "de.guntram.mcmod:crowdin-translate:1.2"
     
     modCompile "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     include    "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
@@ -74,4 +88,8 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
 	from "LICENSE"
+}
+
+build {
+	dependsOn downloadTranslations
 }
