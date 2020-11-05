@@ -39,7 +39,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext.Versions = new Properties()
-Versions.load(file("Versionfiles/mcversion-1.16.2.properties").newReader())
+Versions.load(file("Versionfiles/mcversion-1.16.4.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
 ext.projectVersion = "1.9"
@@ -65,14 +65,14 @@ processResources {
 dependencies {
     minecraft  "com.mojang:minecraft:${Versions['minecraft_version']}"
     mappings   "net.fabricmc:yarn:${Versions['yarn_mappings']}:v2"
-    modCompile "net.fabricmc:fabric-loader:${Versions['loader_version']}"
-    modCompile "net.fabricmc.fabric-api:fabric-api:${Versions['fabric_version']}"
-    modCompile "TechReborn:TechReborn-1.16:3.4.5+build.95"
-    modCompile "io.github.prospector:modmenu:${Versions['modmenu_version']}"
+    modImplementation "net.fabricmc:fabric-loader:${Versions['loader_version']}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${Versions['fabric_version']}"
+    modImplementation "TechReborn:TechReborn-1.16:3.4.5+build.95"
+    modImplementation "io.github.prospector:modmenu:${Versions['modmenu_version']}"
     modImplementation "de.guntram.mcmod:crowdin-translate:1.2"
     include    "de.guntram.mcmod:crowdin-translate:1.2"
     
-    modCompile "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
+    modImplementation "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     include    "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     
 	modImplementation "com.github.emilyploszaj:trinkets:v2.4.1"

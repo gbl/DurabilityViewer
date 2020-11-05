@@ -24,7 +24,7 @@ public class DurabilityViewer implements ClientModInitializer
     
     @Override
     public void onInitializeClient() {
-        CrowdinTranslate.downloadTranslations(MODID, MODID, true);
+        CrowdinTranslate.downloadTranslations(MODID);
         setKeyBindings();
         confHandler=ConfigurationHandler.getInstance();
         ConfigurationProvider.register(MODNAME, confHandler);
