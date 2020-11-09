@@ -1,4 +1,5 @@
 {
     "de.guntram.mcmod.fabrictools.true": "oui",
-    "de.guntram.mcmod.fabrictools.false": "non"
+    "de.guntram.mcmod.fabrictools.false": "non",
+    "de.guntram.mcmod.fabrictools.color": "Couleur"
 }
