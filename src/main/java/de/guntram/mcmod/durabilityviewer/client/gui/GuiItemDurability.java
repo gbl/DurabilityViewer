@@ -234,7 +234,7 @@ public class GuiItemDurability extends IngameGui
                         show=(duration/1200)+"m";
                     else
                         show=(duration/20)+"s";
-                    fontRenderer.func_238421_b_(event.getMatrixStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
+                    fontRenderer.drawString(event.getMatrixStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
                 }
             }
         }
@@ -252,7 +252,7 @@ public class GuiItemDurability extends IngameGui
                 if (reallyDraw) {
                     int color=item.getDisplayColor();
                     itemRenderer.renderItemAndEffectIntoGUI(item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
-                    fontRenderer.func_238421_b_(stack, displayString, numberPos != RenderPos.right? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.FONT_HEIGHT/2 + (numberPos==RenderPos.over ? 10  : 0), color);
+                    fontRenderer.drawString(stack, displayString, numberPos != RenderPos.right? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.FONT_HEIGHT/2 + (numberPos==RenderPos.over ? 10  : 0), color);
                 }
                 result.height+=16;
             }

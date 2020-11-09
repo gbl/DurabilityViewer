@@ -33,7 +33,7 @@ public class TooltipEvent
             }
         }
         
-        if (Screen.func_231174_t_()) {      // hasAltDown
+        if (Screen.hasAltDown()) {      // hasAltDown
             CompoundNBT tag=event.getItemStack().getTag();
             if (tag != null) {
                 addCompoundTag("", event.getToolTip(), tag);
@@ -52,7 +52,7 @@ public class TooltipEvent
                 case 8: list.add(new StringTextComponent(prefix+key+": §8"+tag.getString(key))); break;
                 case 9: list.add(new StringTextComponent(prefix+key+": §9List, "+((ListNBT)elem).size()+" items")); break;
                 case 10:list.add(new StringTextComponent(prefix+key+": §aCompound"));
-                        if (Screen.func_231173_s_()) {      // hasShiftDown
+                        if (Screen.hasShiftDown()) {      // hasShiftDown
                             addCompoundTag(prefix+"    ", list, (CompoundNBT)elem);
                         }
                         break;
