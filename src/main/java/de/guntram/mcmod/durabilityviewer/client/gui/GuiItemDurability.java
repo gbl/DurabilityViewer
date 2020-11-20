@@ -92,7 +92,7 @@ public class GuiItemDurability
     
     private int getInventoryArrowCount() {
         int arrows = 0;
-        for (final ItemStack stack : minecraft.player.inventory.main) {
+        for (final ItemStack stack : minecraft.player.getInventory().main) {
             if (isArrow(stack)) {
                 arrows += stack.getCount();
             }
@@ -107,9 +107,9 @@ public class GuiItemDurability
         if (isArrow(minecraft.player.getMainHandStack())) {
             return minecraft.player.getMainHandStack();
         }
-        int size=minecraft.player.inventory.size();
+        int size=minecraft.player.getInventory().size();
         for (int i = 0; i < size; ++i) {
-            final ItemStack itemstack = minecraft.player.inventory.getStack(i);
+            final ItemStack itemstack = minecraft.player.getInventory().getStack(i);
             if (this.isArrow(itemstack)) {
                 return itemstack;
             }
@@ -161,7 +161,7 @@ public class GuiItemDurability
         ItemIndicator chestplate = new ItemDamageIndicator(chestItem);
         ItemIndicator helmet = new ItemDamageIndicator(player.getEquippedStack(EquipmentSlot.HEAD));
         ItemIndicator arrows = null;
-        ItemIndicator invSlots = (ConfigurationHandler.getShowChestIcon() ? new InventorySlotsIndicator(minecraft.player.inventory) : null);
+        ItemIndicator invSlots = (ConfigurationHandler.getShowChestIcon() ? new InventorySlotsIndicator(minecraft.player.getInventory()) : null);
 
         ItemIndicator[] trinkets = null;
         if (haveTrinketsApi) {
