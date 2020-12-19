@@ -14,6 +14,7 @@
     "durabilityviewer.config.showfreeslots": "사용 가능한 인벤토리 슬롯 표시",
     "durabilityviewer.config.showalltrinkets": "모든 장신구 표시",
     "durabilityviewer.config.percentvalues": "백분율",
+    "durabilityviewer.config.warnmode": "Warning mode",
     "durabilityviewer.config.tt.corner": "코너 0 ~ 3 - 오른쪽 하단, 왼쪽 하단, 오른쪽 상단, 왼쪽 상단",
     "durabilityviewer.config.tt.armorhotbar": "핫바 주위에 갑옷 렌더링(공구 대신)",
     "durabilityviewer.config.tt.tooltipcolor": "마인크래프트 컬러 0 .. 15",
@@ -25,8 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "사용 가능한 인벤토리 슬릇 수가 포함된 상자 아이콘 표시",
     "durabilityviewer.config.tt.showalltrinkets": "장신구 모드의 경우 장신구가 내구성/손상이 없는 경우에도 모든 장신구를 표시하십시오.",
     "durabilityviewer.config.tt.percentvalues": "절대값 대신 백분율 표시",
+    "durabilityviewer.config.tt.warnmode": "How to warn when an item is about to break",
     "key.categories.durabilityviewer": "내구성 뷰어",
     "key.durabilityviewer.showhide": "내구성 표시 표시/숨기기",
     "tooltip.durability": "Durability %s",
-    "durabilityviewer.subtitle.toolBreaking": "곧 부서질 것 같은 아이템"
+    "durabilityviewer.subtitle.toolBreaking": "곧 부서질 것 같은 아이템",
+    "durabilityviewer.config.warnmode.none": "None",
+    "durabilityviewer.config.warnmode.sound": "Sound only",
+    "durabilityviewer.config.warnmode.visual": "Visual only",
+    "durabilityviewer.config.warnmode.both": "Sound and visual"
 }

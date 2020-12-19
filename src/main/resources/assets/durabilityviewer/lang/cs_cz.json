@@ -14,6 +14,7 @@
     "durabilityviewer.config.showfreeslots": "Zobrazit prázdné sloty inventáře",
     "durabilityviewer.config.showalltrinkets": "Zobrazit všechny widgety",
     "durabilityviewer.config.percentvalues": "Procenta",
+    "durabilityviewer.config.warnmode": "Warning mode",
     "durabilityviewer.config.tt.corner": "Roh 0 až 3 - vpravo dole, vlevo dole, vpravo nahoře, vlevo nahoře",
     "durabilityviewer.config.tt.armorhotbar": "Vykreslit brnění kolem hotbaru (místo pomocí nástrojů)",
     "durabilityviewer.config.tt.tooltipcolor": "Minecraft Barva 0 .. 15",
@@ -25,8 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "Zobrazit ikonu truhly s počtem volných míst",
     "durabilityviewer.config.tt.showalltrinkets": "Pokud máte Trinkets mod, zobrazit všechny trinkety i v případě, že nemají životnost/poškození",
     "durabilityviewer.config.tt.percentvalues": "Zobrazit procenta namísto absolutních hodnot",
+    "durabilityviewer.config.tt.warnmode": "How to warn when an item is about to break",
     "key.categories.durabilityviewer": "Prohlížeč Životnosti",
     "key.durabilityviewer.showhide": "Zobrazit/skrýt zobrazení životnosti",
     "tooltip.durability": "Životnost %s",
-    "durabilityviewer.subtitle.toolBreaking": "Nástroj těsně před rozbitím"
+    "durabilityviewer.subtitle.toolBreaking": "Nástroj těsně před rozbitím",
+    "durabilityviewer.config.warnmode.none": "None",
+    "durabilityviewer.config.warnmode.sound": "Sound only",
+    "durabilityviewer.config.warnmode.visual": "Visual only",
+    "durabilityviewer.config.warnmode.both": "Sound and visual"
 }

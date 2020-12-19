@@ -14,6 +14,7 @@
     "durabilityviewer.config.showfreeslots": "空きインベントリスロット数を表示",
     "durabilityviewer.config.showalltrinkets": "すべての装身具を表示",
     "durabilityviewer.config.percentvalues": "パーセント",
+    "durabilityviewer.config.warnmode": "Warning mode",
     "durabilityviewer.config.tt.corner": "0 から 3 までのコーナーの右下、左下、右上、左",
     "durabilityviewer.config.tt.armorhotbar": "ホットバー周辺に防具をレンダリングする (ツールではなく)",
     "durabilityviewer.config.tt.tooltipcolor": "Minecraft の色 0 .. 15",
@@ -25,8 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "チェストアイコンと空きインベントリスロット数を表示する",
     "durabilityviewer.config.tt.showalltrinkets": "Trinkets modをお持ちの場合、耐久性/ダメージがない場合でもすべての装身具を表示する",
     "durabilityviewer.config.tt.percentvalues": "絶対値の代わりにパーセンテージを表示",
+    "durabilityviewer.config.tt.warnmode": "How to warn when an item is about to break",
     "key.categories.durabilityviewer": "耐久値ビューアー",
     "key.durabilityviewer.showhide": "耐久値表示の表示/非表示",
     "tooltip.durability": "耐久値 %s",
-    "durabilityviewer.subtitle.toolBreaking": "アイテムが壊れそうです"
+    "durabilityviewer.subtitle.toolBreaking": "アイテムが壊れそうです",
+    "durabilityviewer.config.warnmode.none": "None",
+    "durabilityviewer.config.warnmode.sound": "Sound only",
+    "durabilityviewer.config.warnmode.visual": "Visual only",
+    "durabilityviewer.config.warnmode.both": "Sound and visual"
 }

@@ -14,6 +14,7 @@
     "durabilityviewer.config.showfreeslots": "Boş Envanter Bölümünü Göster",
     "durabilityviewer.config.showalltrinkets": "Tüm Gereksiz Eşyaları Göster",
     "durabilityviewer.config.percentvalues": "Yüzdeler",
+    "durabilityviewer.config.warnmode": "Warning mode",
     "durabilityviewer.config.tt.corner": "Köse 0 dan 3 - Sağ Alt, Sol Alt, Sağ Üst, Sol Üst",
     "durabilityviewer.config.tt.armorhotbar": "(Zırhları Eşyalarla Beraber Göstermek Yerine) Hotbar'ının Etrafında Göster",
     "durabilityviewer.config.tt.tooltipcolor": "Minecraft Renk 0 .. 15",
@@ -25,8 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "Boş Envanter Bölümlerinin Sayısı Kadar Sandık İkonu Göster",
     "durabilityviewer.config.tt.showalltrinkets": "Gereksiz Eşyalar Eklentisi Var ise, Tüm Boş Eşyaları Dayanıklılık Ve Hasarı Olsa Bile Göster",
     "durabilityviewer.config.tt.percentvalues": "Kesin Değerler Yerine Yüzdelik Değerler Göster",
+    "durabilityviewer.config.tt.warnmode": "How to warn when an item is about to break",
     "key.categories.durabilityviewer": "Dayanıklılık Gösterici",
     "key.durabilityviewer.showhide": "Dayanıklılık göstericiyi gizle/göster",
     "tooltip.durability": "Dayanıklılık: %s",
-    "durabilityviewer.subtitle.toolBreaking": "Eşya kırılmak üzere"
+    "durabilityviewer.subtitle.toolBreaking": "Eşya kırılmak üzere",
+    "durabilityviewer.config.warnmode.none": "None",
+    "durabilityviewer.config.warnmode.sound": "Sound only",
+    "durabilityviewer.config.warnmode.visual": "Visual only",
+    "durabilityviewer.config.warnmode.both": "Sound and visual"
 }
