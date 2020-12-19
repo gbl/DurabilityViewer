@@ -2,6 +2,7 @@ package de.guntram.mcmod.durabilityviewer.client.gui;
 
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
@@ -14,6 +15,7 @@ import java.util.Collection;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -37,6 +39,9 @@ public class GuiItemDurability extends IngameGui
     private static boolean visible;
     private final FontRenderer fontRenderer;
     private final ItemRenderer itemRenderer;
+    
+    private long lastWarningTime;
+    private ItemStack lastWarningItem;
     
     private static final int iconWidth=16;
     private static final int iconHeight=16;
@@ -125,7 +130,7 @@ public class GuiItemDurability extends IngameGui
             return;
 
         ClientPlayerEntity effectivePlayer = (ClientPlayerEntity) minecraft.player;
-        boolean needToWarn=false;
+        ItemStack needToWarn=null;
 
         // @TODO: remove duplicate code
         ItemIndicator mainHand = new ItemDamageIndicator(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.MAINHAND));
@@ -137,14 +142,19 @@ public class GuiItemDurability extends IngameGui
         ItemIndicator arrows = null;
         ItemIndicator invSlots = ConfigurationHandler.getShowChestIcon() ? new InventorySlotsIndicator(minecraft.player.inventory) : null;
         
-        needToWarn|=mainHandWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.MAINHAND));
-        needToWarn|=offHandWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.OFFHAND));
-        needToWarn|=bootsWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.FEET));
-        needToWarn|=pantsWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.LEGS));
-        needToWarn|=chestWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.CHEST));
-        needToWarn|=helmetWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.HEAD));
-        if (needToWarn)
-            ItemBreakingWarner.playWarningSound();
+        if (needToWarn == null && mainHandWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.MAINHAND))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+        if (needToWarn == null && offHandWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.OFFHAND))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.OFFHAND);
+        if (needToWarn == null && bootsWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.FEET))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.FEET);
+        if (needToWarn == null && pantsWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.LEGS))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.LEGS);
+        if (needToWarn == null && chestWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.CHEST))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.CHEST);
+        if (needToWarn == null && helmetWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.HEAD))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.HEAD);
+        if (needToWarn!= null) {
+            if ((ConfigurationHandler.getWarnMode() & 1) == 1) {
+                ItemBreakingWarner.playWarningSound();
+            }
+            lastWarningTime = System.currentTimeMillis();
+            lastWarningItem = needToWarn;
+        }
         
         if (mainHand.getItemStack().getItem() instanceof BowItem || offHand.getItemStack().getItem() instanceof BowItem) {
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
@@ -212,6 +222,10 @@ public class GuiItemDurability extends IngameGui
             this.renderItems(stack, xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, leggings, boots);
         }
         this.renderItems(stack, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
+        long timeSinceLastWarning = System.currentTimeMillis() - lastWarningTime;
+        if (timeSinceLastWarning < 1000 && (ConfigurationHandler.getWarnMode() & 2) == 2) {
+            renderItemBreakingOverlay(stack, lastWarningItem, timeSinceLastWarning);
+        }
 
         RenderHelper.disableStandardItemLighting();
         
@@ -239,6 +253,24 @@ public class GuiItemDurability extends IngameGui
             }
         }
     }
+    
+    private void renderItemBreakingOverlay(MatrixStack matrices, ItemStack itemStack, long timeDelta) {
+        MainWindow mainWindow=Minecraft.getInstance().getMainWindow();
+        float alpha = 1.0f-((float)timeDelta/1000.0f);
+        float xWarn = mainWindow.getScaledWidth()/2;
+        float yWarn = mainWindow.getScaledHeight()/2;
+        float scale = 5.0f;
+        
+        AbstractGui.fill(matrices, 0, 0, mainWindow.getScaledWidth(), mainWindow.getScaledHeight(),
+                0xff0000+ ((int)(alpha*128)<<24));
+        
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(scale, scale, scale);
+        itemRenderer.renderItemAndEffectIntoGUI(itemStack, (int)((xWarn)/scale-8), (int)((yWarn)/scale-8));
+        // System.out.println("rendering at "+xWarn+"/"+yWarn+", scale="+scale+", alpha="+alpha);
+        RenderSystem.popMatrix();
+        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+    }    
     
     private RenderSize renderItems(MatrixStack stack, int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
         RenderSize result=new RenderSize(0, 0);

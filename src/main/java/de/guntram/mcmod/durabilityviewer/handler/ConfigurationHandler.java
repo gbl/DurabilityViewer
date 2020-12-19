@@ -10,6 +10,12 @@ import net.minecraft.util.text.TextFormatting;
 
 public class ConfigurationHandler implements ModConfigurationHandler
 {
+    private static final String[] warnModes = { 
+        "durabilityviewer.config.warnmode.none",
+        "durabilityviewer.config.warnmode.sound",
+        "durabilityviewer.config.warnmode.visual",
+        "durabilityviewer.config.warnmode.both",
+    };
     private static ConfigurationHandler instance;
     
     private Configuration config;
@@ -26,7 +32,8 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private boolean armorAroundHotbar;
     private boolean showChestIcon;
     private boolean showPercentValues;
-    
+    private int warnMode;
+
     public static ConfigurationHandler getInstance() {
         if (instance==null)
             instance=new ConfigurationHandler();
@@ -93,6 +100,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
         showChestIcon = config.getBoolean("durabilityviewer.config.showfreeslots", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showfreeslots");
         // showAllTrinkets = config.getBoolean("durabilityviewer.config.showalltrinkets", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showalltrinkets");
         showPercentValues = config.getBoolean("durabilityviewer.config.percentvalues", Configuration.CATEGORY_CLIENT, false, "durabilityviewer.config.tt.percentvalues");
+        warnMode = config.getSelection("durabilityviewer.config.warnmode", Configuration.CATEGORY_CLIENT, 1, warnModes, "durabilityviewer.config.tt.warnmode");
         
         tooltipColor=TextFormatting.fromColorIndex(color);
         if (config.hasChanged())
@@ -130,4 +138,5 @@ public class ConfigurationHandler implements ModConfigurationHandler
     public static boolean getShowChestIcon() { return getInstance().showChestIcon; }
 
     public static boolean getShowPercentValues() { return getInstance().showPercentValues; }
+    public static int getWarnMode() { return getInstance().warnMode; }
 }

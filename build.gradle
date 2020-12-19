@@ -18,7 +18,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "1.16.4-forge35.0.7-1.9"
+version = "1.16.4-forge35.0.7-1.10"
 group = "de.guntram.mcmod.DurabilityViewer" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "durabilityviewer"
 
