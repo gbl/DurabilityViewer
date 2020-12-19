@@ -14,6 +14,7 @@
     "durabilityviewer.config.showfreeslots": "freie Inventarslots zeigen",
     "durabilityviewer.config.showalltrinkets": "Alle Trinkets zeigen",
     "durabilityviewer.config.percentvalues": "Prozentwerte",
+    "durabilityviewer.config.warnmode": "Art der Warnung",
     "durabilityviewer.config.tt.corner": "Ecke in der angezeigt wird",
     "durabilityviewer.config.tt.armorhotbar": "Rüstung im Hotbar herum zeigen anstatt in der Ecke",
     "durabilityviewer.config.tt.tooltipcolor": "Minecraft Farbe 0..15",
@@ -25,8 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "Kiste mit Anzahl der freien Inventarslots anzeigen",
     "durabilityviewer.config.tt.showalltrinkets": "Wenn das Trinkets Mod installiert ist, auch Trinkets ohne Haltbarkeit/Schaden anzeigen",
     "durabilityviewer.config.tt.percentvalues": "Prozentwerte anstelle von absoluten Werten anzeigen",
+    "durabilityviewer.config.tt.warnmode": "Wie soll gewarnt werden, wenn ein Gegenstand fast kaputt ist",
     "key.categories.durabilityviewer": "Haltbarkeitsansicht",
     "key.durabilityviewer.showhide": "Haltbarkeit zeigen/verstecken",
     "tooltip.durability": "Haltbarkeit %s",
-    "durabilityviewer.subtitle.toolBreaking": "Gegenstand knirscht"
+    "durabilityviewer.subtitle.toolBreaking": "Gegenstand knirscht",
+    "durabilityviewer.config.warnmode.none": "Gar nicht",
+    "durabilityviewer.config.warnmode.sound": "Nur Ton",
+    "durabilityviewer.config.warnmode.visual": "Nur Visuell",
+    "durabilityviewer.config.warnmode.both": "Ton und Visuell"
 }

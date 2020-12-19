@@ -14,6 +14,7 @@
     "durabilityviewer.config.showfreeslots": "Toon beschikbare inventarisvakken",
     "durabilityviewer.config.showalltrinkets": "Toon alle juwelen",
     "durabilityviewer.config.percentvalues": "Percentages",
+    "durabilityviewer.config.warnmode": "Warning mode",
     "durabilityviewer.config.tt.corner": "Hoek 0 tot 3 - rechtsonder, linksonder, rechtsboven, linksboven",
     "durabilityviewer.config.tt.armorhotbar": "Geef armor rond de hotbar (in plaats van met gereedschap)",
     "durabilityviewer.config.tt.tooltipcolor": "Minecraft Kleur 0 .. 15",
@@ -25,8 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "Toon het borstpictogram met het aantal beschikbare inventarisvakken",
     "durabilityviewer.config.tt.showalltrinkets": "Als je de trinkets mod hebt, laat alle trinkets zien zelfs als ze geen duurzaamheid of schade hebben",
     "durabilityviewer.config.tt.percentvalues": "Toon percentages in plaats van absolute waarden",
+    "durabilityviewer.config.tt.warnmode": "How to warn when an item is about to break",
     "key.categories.durabilityviewer": "Duurzaamheid Viewer",
     "key.durabilityviewer.showhide": "Weergeven/verbergen duurzaamheid scherm",
     "tooltip.durability": "Duurzaamheid %s",
-    "durabilityviewer.subtitle.toolBreaking": "Item gaat breken"
+    "durabilityviewer.subtitle.toolBreaking": "Item gaat breken",
+    "durabilityviewer.config.warnmode.none": "None",
+    "durabilityviewer.config.warnmode.sound": "Sound only",
+    "durabilityviewer.config.warnmode.visual": "Visual only",
+    "durabilityviewer.config.warnmode.both": "Sound and visual"
 }

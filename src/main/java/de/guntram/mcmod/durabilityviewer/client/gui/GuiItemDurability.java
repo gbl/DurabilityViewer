@@ -2,6 +2,7 @@ package de.guntram.mcmod.durabilityviewer.client.gui;
 
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ColytraDamageIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.InventorySlotsIndicator;
@@ -15,6 +16,7 @@ import dev.emi.trinkets.api.TrinketsApi;
 import java.util.Collection;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
@@ -40,6 +42,9 @@ public class GuiItemDurability
     private static boolean visible;
     private final TextRenderer fontRenderer;
     private final ItemRenderer itemRenderer;
+    
+    private long lastWarningTime;
+    private ItemStack lastWarningItem;
     
     private static final int iconWidth=16;
     private static final int iconHeight=16;
@@ -143,7 +148,7 @@ public class GuiItemDurability
         }
 
         PlayerEntity player = (PlayerEntity) minecraft.player;
-        boolean needToWarn=false;
+        ItemStack needToWarn=null;
 
         
         ItemIndicator mainHand, offHand;
@@ -176,22 +181,27 @@ public class GuiItemDurability
             trinkets = new ItemIndicator[0];
         }
         
-        needToWarn|=mainHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.MAINHAND));
-        needToWarn|=offHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.OFFHAND));
-        needToWarn|=bootsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.FEET));
-        needToWarn|=pantsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.LEGS));
-        needToWarn|=chestWarner.checkBreaks(chestItem);
-        needToWarn|=helmetWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.HEAD));
-        needToWarn|=colytraWarner.checkBreaks(chestItem);
+        if (needToWarn == null && mainHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.MAINHAND))) needToWarn = player.getEquippedStack(EquipmentSlot.MAINHAND);
+        if (needToWarn == null && offHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.OFFHAND))) needToWarn = player.getEquippedStack(EquipmentSlot.OFFHAND);
+        if (needToWarn == null && bootsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.FEET))) needToWarn = player.getEquippedStack(EquipmentSlot.FEET);
+        if (needToWarn == null && pantsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.LEGS))) needToWarn = player.getEquippedStack(EquipmentSlot.LEGS);
+        if (needToWarn == null && chestWarner.checkBreaks(chestItem)) needToWarn = chestItem;
+        if (needToWarn == null && helmetWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.HEAD))) needToWarn = player.getEquippedStack(EquipmentSlot.HEAD);
+        if (needToWarn == null && colytraWarner.checkBreaks(chestItem)) needToWarn = chestItem;
         if (haveTrinketsApi) {
             Inventory inventory = TrinketsApi.getTrinketsInventory(player);
             LOGGER.debug("know about "+trinkets.length+" trinkets, invSize is "+inventory.size()+", have "+trinketWarners.length+" warners");
             for (int i=0; i<trinkets.length; i++) {
-                needToWarn |= trinketWarners[i].checkBreaks(inventory.getStack(i));
+                if (needToWarn == null && trinketWarners[i].checkBreaks(inventory.getStack(i))) needToWarn = inventory.getStack(i);
             }
         }
-        if (needToWarn)
-            ItemBreakingWarner.playWarningSound();
+        if (needToWarn!= null) {
+            if ((ConfigurationHandler.getWarnMode() & 1) == 1) {
+                ItemBreakingWarner.playWarningSound();
+            }
+            lastWarningTime = System.currentTimeMillis();
+            lastWarningItem = needToWarn;
+        }
         
         if (mainHand.getItemStack().getItem() instanceof RangedWeaponItem
         ||   offHand.getItemStack().getItem() instanceof RangedWeaponItem) {
@@ -276,6 +286,11 @@ public class GuiItemDurability
         }
         this.renderItems(stack, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
         this.renderItems(stack, xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);
+        
+        long timeSinceLastWarning = System.currentTimeMillis() - lastWarningTime;
+        if (timeSinceLastWarning < 1000 && (ConfigurationHandler.getWarnMode() & 2) == 2) {
+            renderItemBreakingOverlay(stack, lastWarningItem, timeSinceLastWarning);
+        }
     }
     
     private ItemIndicator damageOrEnergy(PlayerEntity player, EquipmentSlot slot) {
@@ -288,6 +303,24 @@ public class GuiItemDurability
             }
         }
         return new ItemDamageIndicator(stack);
+    }
+    
+    private void renderItemBreakingOverlay(MatrixStack matrices, ItemStack itemStack, long timeDelta) {
+        Window mainWindow = MinecraftClient.getInstance().getWindow();
+        float alpha = 1.0f-((float)timeDelta/1000.0f);
+        float xWarn = mainWindow.getScaledWidth()/2;
+        float yWarn = mainWindow.getScaledHeight()/2;
+        float scale = 5.0f;
+        
+        DrawableHelper.fill(matrices, 0, 0, mainWindow.getScaledWidth(), mainWindow.getScaledHeight(),
+                0xff0000+ ((int)(alpha*128)<<24));
+        
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(scale, scale, scale);
+        itemRenderer.renderGuiItemIcon(itemStack, (int)((xWarn)/scale-8), (int)((yWarn)/scale-8));
+        // System.out.println("rendering at "+xWarn+"/"+yWarn+", scale="+scale+", alpha="+alpha);
+        RenderSystem.popMatrix();
+        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
     
     public void afterRenderStatusEffects(MatrixStack stack, float partialTicks) {

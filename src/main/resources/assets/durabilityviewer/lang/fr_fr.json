@@ -14,6 +14,7 @@
     "durabilityviewer.config.showfreeslots": "Montrer les espaces libre de l'inventaire",
     "durabilityviewer.config.showalltrinkets": "Afficher tous les bibelots",
     "durabilityviewer.config.percentvalues": "Pourcentages",
+    "durabilityviewer.config.warnmode": "Warning mode",
     "durabilityviewer.config.tt.corner": "Coin 0 à 3 - en bas à droite, en bas à gauche, en haut à droite, en haut à gauche",
     "durabilityviewer.config.tt.armorhotbar": "Afficher l'armure autour de la barre d'accès rapide (au lieu d'être autour des outils)",
     "durabilityviewer.config.tt.tooltipcolor": "Couleur Minecraft 0 .. 15",
@@ -25,8 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "Afficher l'icône du coffre avec le nombre d'emplacements libres pour l'inventaire",
     "durabilityviewer.config.tt.showalltrinkets": "Si vous avez le mod bibelots, montrez tous les bibelots même s'ils n'ont pas de durabilité/endommagement",
     "durabilityviewer.config.tt.percentvalues": "Montrer les pourcentages au lieu des valeurs absolues",
+    "durabilityviewer.config.tt.warnmode": "How to warn when an item is about to break",
     "key.categories.durabilityviewer": "Visionneuse de durabilité",
     "key.durabilityviewer.showhide": "Afficher/masquer l'affichage de la durabilité",
     "tooltip.durability": "Durabilité %s",
-    "durabilityviewer.subtitle.toolBreaking": "Item qui va se briser"
+    "durabilityviewer.subtitle.toolBreaking": "Item qui va se briser",
+    "durabilityviewer.config.warnmode.none": "None",
+    "durabilityviewer.config.warnmode.sound": "Sound only",
+    "durabilityviewer.config.warnmode.visual": "Visual only",
+    "durabilityviewer.config.warnmode.both": "Sound and visual"
 }

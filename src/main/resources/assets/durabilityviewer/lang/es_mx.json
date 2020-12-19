@@ -14,6 +14,7 @@
     "durabilityviewer.config.showfreeslots": "Mostrar espacios libres de inventario",
     "durabilityviewer.config.showalltrinkets": "Mostrar todos las baratijas",
     "durabilityviewer.config.percentvalues": "Porcentajes",
+    "durabilityviewer.config.warnmode": "Warning mode",
     "durabilityviewer.config.tt.corner": "Esquina 0 a 3 - inferior derecha, inferior izquierda, superior derecha, superior izquierda",
     "durabilityviewer.config.tt.armorhotbar": "Procesar armadura alrededor de la barra de acceso (en lugar de con herramientas)",
     "durabilityviewer.config.tt.tooltipcolor": "Color de Minecraft 0 .. 15",
@@ -25,8 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "Muestra el icono del cofre con el número de espacios libres del inventario",
     "durabilityviewer.config.tt.showalltrinkets": "Si tienes el mod trinkets, muestra todos los trinkets incluso cuando no tienen durabilidad/daño",
     "durabilityviewer.config.tt.percentvalues": "Mostrar porcentajes en lugar de valores absolutos",
+    "durabilityviewer.config.tt.warnmode": "How to warn when an item is about to break",
     "key.categories.durabilityviewer": "Visor de Durabilidad",
     "key.durabilityviewer.showhide": "Mostrar / ocultar la durabilidad",
     "tooltip.durability": "Durabilidad %s",
-    "durabilityviewer.subtitle.toolBreaking": "Ítem a punto de romper"
+    "durabilityviewer.subtitle.toolBreaking": "Ítem a punto de romper",
+    "durabilityviewer.config.warnmode.none": "None",
+    "durabilityviewer.config.warnmode.sound": "Sound only",
+    "durabilityviewer.config.warnmode.visual": "Visual only",
+    "durabilityviewer.config.warnmode.both": "Sound and visual"
 }
