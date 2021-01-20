@@ -24,7 +24,7 @@ public abstract class PotionEffectsMixin {
 
     @Inject(method="render", at=@At(
             value="FIELD", 
-            target="Lnet/minecraft/client/options/GameOptions;debugEnabled:Z", 
+            target="Lnet/minecraft/client/option/GameOptions;debugEnabled:Z", 
             opcode = Opcodes.GETFIELD, args = {"log=false"}))
     
     private void beforeRenderDebugScreen(MatrixStack stack, float f, CallbackInfo ci) {

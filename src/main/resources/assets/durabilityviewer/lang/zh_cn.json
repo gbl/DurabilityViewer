@@ -14,7 +14,7 @@
     "durabilityviewer.config.showfreeslots": "显示背包剩余格数",
     "durabilityviewer.config.showalltrinkets": "显示所有工具",
     "durabilityviewer.config.percentvalues": "百分比",
-    "durabilityviewer.config.warnmode": "Warning mode",
+    "durabilityviewer.config.warnmode": "警告模式",
     "durabilityviewer.config.tt.corner": "位置0到3  右下，左下，右上，左上",
     "durabilityviewer.config.tt.armorhotbar": "在物品栏周围显示",
     "durabilityviewer.config.tt.tooltipcolor": "MC颜色0 .. 15",
@@ -26,13 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "显示你背包还有多少空位的图标",
     "durabilityviewer.config.tt.showalltrinkets": "如果打开此选项，装备即使没有掉耐久，也显示",
     "durabilityviewer.config.tt.percentvalues": "显示百分比而不是绝对值",
-    "durabilityviewer.config.tt.warnmode": "How to warn when an item is about to break",
+    "durabilityviewer.config.tt.warnmode": "如何在物品即将损坏时发出警告",
     "key.categories.durabilityviewer": "耐久指示器",
     "key.durabilityviewer.showhide": "显示/隐藏 耐久显示",
     "tooltip.durability": "耐久度 %s",
     "durabilityviewer.subtitle.toolBreaking": "物品即将损坏",
-    "durabilityviewer.config.warnmode.none": "None",
-    "durabilityviewer.config.warnmode.sound": "Sound only",
-    "durabilityviewer.config.warnmode.visual": "Visual only",
-    "durabilityviewer.config.warnmode.both": "Sound and visual"
+    "durabilityviewer.config.warnmode.none": "无",
+    "durabilityviewer.config.warnmode.sound": "仅声音",
+    "durabilityviewer.config.warnmode.visual": "仅视觉效果",
+    "durabilityviewer.config.warnmode.both": "声音和视觉效果"
 }

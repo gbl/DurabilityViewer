@@ -14,6 +14,7 @@
     "durabilityviewer.config.showfreeslots": "Kuva seljakoti vabu lahtreid",
     "durabilityviewer.config.showalltrinkets": "Kuva kõik trinkets-id",
     "durabilityviewer.config.percentvalues": "Protsendid",
+    "durabilityviewer.config.warnmode": "Hoiatuse režiim",
     "durabilityviewer.config.tt.corner": "Nurk 0-3 - all paremal, all vasakul, üleval paremal, üleval vasakul",
     "durabilityviewer.config.tt.armorhotbar": "Kuva rüü osi plokiriba juures (selle asemel, et kuvada tööriistadega koos)",
     "durabilityviewer.config.tt.tooltipcolor": "Minecrafti värv 0-15",
@@ -25,8 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "Kuva kirstu ikooni seljakoti vabade lahtrite arvuga",
     "durabilityviewer.config.tt.showalltrinkets": "Kui sul on trinkets-ite mod: kuva kõik trinketid, isegi kui neil puudub vastupidavus",
     "durabilityviewer.config.tt.percentvalues": "Kuva täpsete väärtuste asemel protsendid",
+    "durabilityviewer.config.tt.warnmode": "Kuidas hoiatada, kui ese hakkab purunema",
     "key.categories.durabilityviewer": "Durability Viewer",
     "key.durabilityviewer.showhide": "Kuva/peida vastupidavuse indikaator",
     "tooltip.durability": "Vastupidavus %s",
-    "durabilityviewer.subtitle.toolBreaking": "Ese hakkab purunema"
+    "durabilityviewer.subtitle.toolBreaking": "Ese hakkab purunema",
+    "durabilityviewer.config.warnmode.none": "Ära hoiata",
+    "durabilityviewer.config.warnmode.sound": "Ainult heliga",
+    "durabilityviewer.config.warnmode.visual": "Ainult visuaalselt",
+    "durabilityviewer.config.warnmode.both": "Heliga ja visuaalselt"
 }
