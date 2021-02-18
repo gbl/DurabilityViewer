@@ -31,8 +31,8 @@
     "key.durabilityviewer.showhide": "Показать/Скрыть прочность",
     "tooltip.durability": "Прочность %s",
     "durabilityviewer.subtitle.toolBreaking": "Предмет вот-вот сломается",
-    "durabilityviewer.config.warnmode.none": "None",
-    "durabilityviewer.config.warnmode.sound": "Sound only",
-    "durabilityviewer.config.warnmode.visual": "Visual only",
-    "durabilityviewer.config.warnmode.both": "Sound and visual"
+    "durabilityviewer.config.warnmode.none": "Ничего",
+    "durabilityviewer.config.warnmode.sound": "Только звук",
+    "durabilityviewer.config.warnmode.visual": "Только визуал",
+    "durabilityviewer.config.warnmode.both": "Звук и визуал"
 }
