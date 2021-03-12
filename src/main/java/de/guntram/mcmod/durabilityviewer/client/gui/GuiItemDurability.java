@@ -1,7 +1,6 @@
 package de.guntram.mcmod.durabilityviewer.client.gui;
 
 import com.google.common.collect.Ordering;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ColytraDamageIndicator;
@@ -254,7 +253,7 @@ public class GuiItemDurability
                 return;
         }
 
-        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         if (ConfigurationHandler.getArmorAroundHotbar()) {
             int leftOffset = -120;
@@ -315,12 +314,17 @@ public class GuiItemDurability
         DrawableHelper.fill(matrices, 0, 0, mainWindow.getScaledWidth(), mainWindow.getScaledHeight(),
                 0xff0000+ ((int)(alpha*128)<<24));
         
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(scale, scale, scale);
+        MatrixStack stack = RenderSystem.getModelViewStack();
+        stack.push();
+        stack.scale(scale, scale, scale);
+        RenderSystem.applyModelViewMatrix();
+        
         itemRenderer.renderGuiItemIcon(itemStack, (int)((xWarn)/scale-8), (int)((yWarn)/scale-8));
-        // System.out.println("rendering at "+xWarn+"/"+yWarn+", scale="+scale+", alpha="+alpha);
-        RenderSystem.popMatrix();
-        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        
+        stack.pop();
+        RenderSystem.applyModelViewMatrix();
+        
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
     
     public void afterRenderStatusEffects(MatrixStack stack, float partialTicks) {
