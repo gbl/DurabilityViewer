@@ -8,9 +8,9 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +27,7 @@ public abstract class TooltipMixin {
     @Shadow public abstract boolean isDamaged();
     @Shadow public abstract int getMaxDamage();
     @Shadow public abstract int getDamage();
-    @Shadow public abstract CompoundTag getTag();
+    @Shadow public abstract NbtCompound getTag();
     
 //    @Inject(method="getTooltip(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/client/util/ITooltipFlag;)Ljava/util/List",
     @Inject(method="getTooltip",            
@@ -50,26 +50,26 @@ public abstract class TooltipMixin {
         }
 
         if (Screen.hasAltDown()) {
-            CompoundTag tag=this.getTag();
+            NbtCompound tag=this.getTag();
             if (tag != null) {
-                addCompoundTag("", list, tag);
+                addNbtCompound("", list, tag);
             }
         }
     }
     
-    private void addCompoundTag(String prefix, List<Text>list, CompoundTag tag) {
+    private void addNbtCompound(String prefix, List<Text>list, NbtCompound tag) {
         TreeSet<String> sortedKeys = new TreeSet(tag.getKeys());
         for (String key: sortedKeys) {
-            Tag elem=tag.get(key);
+            NbtElement elem=tag.get(key);
             switch(elem.getType()) {
                 case 2: list.add(new LiteralText(prefix+key+": §2"+tag.getShort(key))); break;
                 case 3: list.add(new LiteralText(prefix+key+": §3"+tag.getInt(key))); break;
                 case 6: list.add(new LiteralText(prefix+key+": §6"+tag.getDouble(key))); break;
                 case 8: list.add(new LiteralText(prefix+key+": §8"+tag.getString(key))); break;
-                case 9: list.add(new LiteralText(prefix+key+": §9List, "+((ListTag)elem).size()+" items")); break;
+                case 9: list.add(new LiteralText(prefix+key+": §9List, "+((NbtList)elem).size()+" items")); break;
                 case 10:list.add(new LiteralText(prefix+key+": §aCompound"));
                         if (Screen.hasShiftDown()) {
-                            addCompoundTag(prefix+"    ", list, (CompoundTag)elem);
+                            addNbtCompound(prefix+"    ", list, (NbtCompound)elem);
                         }
                         break;
                 default:list.add(new LiteralText(prefix+key+": Type "+elem.getType())); break;
