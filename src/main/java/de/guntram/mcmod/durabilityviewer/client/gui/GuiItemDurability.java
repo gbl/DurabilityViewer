@@ -11,8 +11,11 @@ import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.TREnergyIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ColytraBreakingWarner;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
+import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -20,10 +23,10 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.RangedWeaponItem;
@@ -78,7 +81,7 @@ public class GuiItemDurability
             Class.forName("dev.emi.trinkets.api.TrinketsApi");
             LOGGER.info("Using trinkets in DurabilityViewer");
             haveTrinketsApi = true;
-            trinketWarners = new ItemBreakingWarner[TrinketsApi.getTrinketsInventory(minecraft.player).size()];
+            trinketWarners = new ItemBreakingWarner[getTrinketSlotCount(minecraft.player)];
             for (int i=0; i<trinketWarners.length; i++) {
                 trinketWarners[i]=new ItemBreakingWarner();
             }
@@ -140,15 +143,8 @@ public class GuiItemDurability
 
     public void onRenderGameOverlayPost(MatrixStack stack, float partialTicks) {
 
-        if (!visible
-        // ||  minecraft.player.abilities.creativeMode
-        ||  minecraft.options.debugEnabled) {
-            return;
-        }
-
         PlayerEntity player = (PlayerEntity) minecraft.player;
         ItemStack needToWarn=null;
-
         
         ItemIndicator mainHand, offHand;
         mainHand = damageOrEnergy(player, EquipmentSlot.MAINHAND);
@@ -167,19 +163,6 @@ public class GuiItemDurability
         ItemIndicator arrows = null;
         ItemIndicator invSlots = (ConfigurationHandler.getShowChestIcon() ? new InventorySlotsIndicator(minecraft.player.getInventory()) : null);
 
-        ItemIndicator[] trinkets = null;
-        if (haveTrinketsApi) {
-            Inventory inventory = TrinketsApi.getTrinketsInventory(player);
-            int itemCount = inventory.size();
-            trinkets = new ItemIndicator[itemCount];
-            for (int i=0; i<itemCount; i++) {
-                trinkets[i]=new ItemDamageIndicator(inventory.getStack(i), ConfigurationHandler.getShowAllTrinkets());
-                LOGGER.debug("trinket position "+i+" has item "+inventory.getStack(i).getItem().toString());
-            }
-        } else {
-            trinkets = new ItemIndicator[0];
-        }
-        
         if (needToWarn == null && mainHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.MAINHAND))) needToWarn = player.getEquippedStack(EquipmentSlot.MAINHAND);
         if (needToWarn == null && offHandWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.OFFHAND))) needToWarn = player.getEquippedStack(EquipmentSlot.OFFHAND);
         if (needToWarn == null && bootsWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.FEET))) needToWarn = player.getEquippedStack(EquipmentSlot.FEET);
@@ -187,13 +170,24 @@ public class GuiItemDurability
         if (needToWarn == null && chestWarner.checkBreaks(chestItem)) needToWarn = chestItem;
         if (needToWarn == null && helmetWarner.checkBreaks(player.getEquippedStack(EquipmentSlot.HEAD))) needToWarn = player.getEquippedStack(EquipmentSlot.HEAD);
         if (needToWarn == null && colytraWarner.checkBreaks(chestItem)) needToWarn = chestItem;
+
+        ItemIndicator[] trinkets = null;
         if (haveTrinketsApi) {
-            Inventory inventory = TrinketsApi.getTrinketsInventory(player);
-            LOGGER.debug("know about "+trinkets.length+" trinkets, invSize is "+inventory.size()+", have "+trinketWarners.length+" warners");
+            List<ItemStack> equipped = getTrinkets(player);
+            
+            trinkets = new ItemIndicator[equipped.size()];
+            LOGGER.debug("know about "+trinkets.length+" trinkets, invSize is "+equipped.size()+", have "+trinketWarners.length+" warners");
             for (int i=0; i<trinkets.length; i++) {
-                if (needToWarn == null && trinketWarners[i].checkBreaks(inventory.getStack(i))) needToWarn = inventory.getStack(i);
+                trinkets[i]=new ItemDamageIndicator(equipped.get(i), ConfigurationHandler.getShowAllTrinkets());
+                if (needToWarn == null && trinketWarners[i].checkBreaks(equipped.get(i))) {
+                    needToWarn = equipped.get(i);
+                }
+                LOGGER.debug("trinket position "+i+" has item "+equipped.get(i).getItem().toString());
             }
+        } else {
+            trinkets = new ItemIndicator[0];            
         }
+        
         if (needToWarn!= null) {
             if ((ConfigurationHandler.getWarnMode() & 1) == 1) {
                 ItemBreakingWarner.playWarningSound();
@@ -201,6 +195,20 @@ public class GuiItemDurability
             lastWarningTime = System.currentTimeMillis();
             lastWarningItem = needToWarn;
         }
+        
+        long timeSinceLastWarning = System.currentTimeMillis() - lastWarningTime;
+        if (timeSinceLastWarning < 1000 && (ConfigurationHandler.getWarnMode() & 2) == 2) {
+            renderItemBreakingOverlay(stack, lastWarningItem, timeSinceLastWarning);
+        }
+        
+        // Moved this check to down here, in order to play the 
+        // warning sound / do the visible 
+        if (!visible
+        // ||  minecraft.player.abilities.creativeMode
+        ||  minecraft.options.debugEnabled) {
+            return;
+        }
+
         
         if (mainHand.getItemStack().getItem() instanceof RangedWeaponItem
         ||   offHand.getItemStack().getItem() instanceof RangedWeaponItem) {
@@ -285,11 +293,6 @@ public class GuiItemDurability
         }
         this.renderItems(stack, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
         this.renderItems(stack, xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);
-        
-        long timeSinceLastWarning = System.currentTimeMillis() - lastWarningTime;
-        if (timeSinceLastWarning < 1000 && (ConfigurationHandler.getWarnMode() & 2) == 2) {
-            renderItemBreakingOverlay(stack, lastWarningItem, timeSinceLastWarning);
-        }
     }
     
     private ItemIndicator damageOrEnergy(PlayerEntity player, EquipmentSlot slot) {
@@ -375,5 +378,21 @@ public class GuiItemDurability
         if (result.width!=0)
             result.width+=iconWidth+spacing*2;
         return result;
+    }
+    
+    public int getTrinketSlotCount(LivingEntity player) {
+        Optional<TrinketComponent> component = TrinketsApi.getTrinketComponent(player);
+        if (component.isEmpty()) {
+            return 0;
+        }
+        return component.get().getEquipped(prdct -> true).size();
+    }
+    
+    public List<ItemStack> getTrinkets(LivingEntity player) {
+        Optional<TrinketComponent> component = TrinketsApi.getTrinketComponent(player);
+        if (component.isEmpty()) {
+            return null;
+        }
+        return component.get().getEquipped(prdct -> true).stream().map(pair -> pair.getRight()).toList();
     }
 }
