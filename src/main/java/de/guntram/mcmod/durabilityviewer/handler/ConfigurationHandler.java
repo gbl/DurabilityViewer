@@ -6,7 +6,7 @@ import de.guntram.mcmod.GBForgetools.ModConfigurationHandler;
 import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.client.gui.Corner;
 import java.io.File;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
 
 public class ConfigurationHandler implements ModConfigurationHandler
 {
@@ -19,7 +19,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private static ConfigurationHandler instance;
     
     private Configuration config;
-    private TextFormatting tooltipColor;
+    private ChatFormatting tooltipColor;
     private String configFileName;
     
     private int corner=0;
@@ -102,12 +102,12 @@ public class ConfigurationHandler implements ModConfigurationHandler
         showPercentValues = config.getBoolean("durabilityviewer.config.percentvalues", Configuration.CATEGORY_CLIENT, false, "durabilityviewer.config.tt.percentvalues");
         warnMode = config.getSelection("durabilityviewer.config.warnmode", Configuration.CATEGORY_CLIENT, 1, warnModes, "durabilityviewer.config.tt.warnmode");
         
-        tooltipColor=TextFormatting.fromColorIndex(color);
+        tooltipColor=ChatFormatting.getById(color);
         if (config.hasChanged())
             config.save();
     }
     
-    public static TextFormatting getTooltipColor() {
+    public static ChatFormatting getTooltipColor() {
         return getInstance().tooltipColor;
     }
     

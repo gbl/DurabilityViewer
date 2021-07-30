@@ -10,7 +10,7 @@ public class KeyInputEvent
 {
     @SubscribeEvent
     public void keyPressed(final InputEvent.KeyInputEvent e) {
-        if (KeyHandler.showHud.isPressed()) {
+        if (KeyHandler.showHud.consumeClick()) {
             if (e.getModifiers() == 0) {
                 GuiItemDurability.toggleVisibility();
             } else {

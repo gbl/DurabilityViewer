@@ -1,16 +1,18 @@
 package de.guntram.mcmod.GBForgetools.GuiElements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.guntram.mcmod.GBForgetools.IConfiguration;
 import de.guntram.mcmod.GBForgetools.Types.SliderValueConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.Mth;
 
-public class GuiSlider extends Widget {
-    
+public class GuiSlider extends AbstractWidget {
+
     private enum Type {INT, FLOAT, DOUBLE;}
     
     Type type;
@@ -21,10 +23,10 @@ public class GuiSlider extends Widget {
     
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public GuiSlider(SliderValueConsumer optionScreen, int x, int y, int width, int height, IConfiguration config, String option) {
-        super(x, y, width, height, new StringTextComponent("?"));
+        super(x, y, width, height, new TextComponent("?"));
         Object value=config.getValue(option);
         if (value instanceof Double) {
-            this.setMessage(new StringTextComponent(Double.toString((Double)value)));
+            this.setMessage(new TextComponent(Double.toString((Double)value)));
             this.min=(Double)config.getMin(option);
             this.max=(Double)config.getMax(option);
             this.defaultValue=(Double)config.getDefault(option);
@@ -32,14 +34,14 @@ public class GuiSlider extends Widget {
             type=Type.DOUBLE;
         }
         else if (value instanceof Float) {
-            this.setMessage(new StringTextComponent(Float.toString((Float)value)));
+            this.setMessage(new TextComponent(Float.toString((Float)value)));
             this.min=(Float)config.getMin(option);
             this.max=(Float)config.getMax(option);
             this.defaultValue=(Float)config.getDefault(option);
             sliderValue=((Float)value-min)/(max-min);
             type=Type.FLOAT;
         } else {
-            this.setMessage(new StringTextComponent(Integer.toString((Integer)value)));
+            this.setMessage(new TextComponent(Integer.toString((Integer)value)));
             this.min=(Integer)config.getMin(option);
             this.max=(Integer)config.getMax(option);
             this.defaultValue=(Integer)config.getDefault(option);
@@ -53,8 +55,8 @@ public class GuiSlider extends Widget {
     }
     
     public GuiSlider(SliderValueConsumer optionScreen, int x, int y, int width, int height, int val, int min, int max, String option) {
-        super(x, y, width, height, StringTextComponent.EMPTY);
-        this.setMessage(new StringTextComponent(""+val));
+        super(x, y, width, height, TextComponent.EMPTY);
+        this.setMessage(new TextComponent(""+val));
         this.min = min;
         this.max = max;
         this.sliderValue=(val-min)/(max-min);
@@ -72,13 +74,13 @@ public class GuiSlider extends Widget {
         this.sliderValue = (value-min)/(max-min);
         switch (type) {
             case DOUBLE:
-                this.setMessage(new StringTextComponent(Double.toString(value)));
+                this.setMessage(new TextComponent(Double.toString(value)));
                 break;
             case FLOAT:
-                this.setMessage(new StringTextComponent(Float.toString((float)value)));
+                this.setMessage(new TextComponent(Float.toString((float)value)));
                 break;
             case INT:
-                this.setMessage(new StringTextComponent(Integer.toString((int)value)));
+                this.setMessage(new TextComponent(Integer.toString((int)value)));
                 break;
         }
     }
@@ -97,38 +99,38 @@ public class GuiSlider extends Widget {
         switch (type) {
             case DOUBLE:
                 double doubleVal=value*(max-min)+min;
-                this.setMessage(new StringTextComponent(String.format("%.2f", doubleVal)));
+                this.setMessage(new TextComponent(String.format("%.2f", doubleVal)));
                 parent.onConfigChanging(configOption, doubleVal);
                 break;
             case FLOAT:
                 float floatVal=(float) (value*(max-min)+min);
-                this.setMessage(new StringTextComponent(String.format("%.2f", floatVal)));
+                this.setMessage(new TextComponent(String.format("%.2f", floatVal)));
                 parent.onConfigChanging(configOption, floatVal);
                 break;
             case INT:
                 int intVal=(int) (value*(max-min)+min+0.5);
-                this.setMessage(new StringTextComponent(String.format("%d", intVal)));
+                this.setMessage(new TextComponent(String.format("%d", intVal)));
                 parent.onConfigChanging(configOption, intVal);
                 break;
         }
     }
 
     @Override
-    protected void renderBg(MatrixStack stack, Minecraft mc, int mouseX, int mouseY)
+    protected void renderBg(PoseStack stack, Minecraft mc, int mouseX, int mouseY)
     {
         if (this.visible)
         {
             if (this.dragging)
             {
                 this.sliderValue = (double)((float)(mouseX - (this.x + 4)) / (float)(this.width - 8));
-                this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0D, 1.0D);
+                this.sliderValue = Mth.clamp(this.sliderValue, 0.0D, 1.0D);
                 updateValue(this.sliderValue);
                 if (parent.wasMouseReleased()) {
                     this.dragging = false;
                 }
             }
-            mc.getTextureManager().bindTexture(WIDGETS_LOCATION);
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             this.blit(stack, this.x + (int)(this.sliderValue * (double)(this.width - 8)), this.y, 0, 66, 4, 20);
             this.blit(stack, this.x + (int)(this.sliderValue * (double)(this.width - 8)) + 4, this.y, 196, 66, 4, 20);
         }
@@ -141,7 +143,7 @@ public class GuiSlider extends Widget {
     public final void onClick(double mouseX, double mouseY)
     {
         this.sliderValue = (mouseX - (double)(this.x + 4)) / (double)(this.width - 8);
-        this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0D, 1.0D);
+        this.sliderValue = Mth.clamp(this.sliderValue, 0.0D, 1.0D);
         updateValue(sliderValue);
         this.dragging = true;
         parent.setMouseReleased(false);
@@ -162,5 +164,9 @@ public class GuiSlider extends Widget {
         sliderValue=(defaultValue-min)/(max-min);
         updateValue(sliderValue);
         super.onFocusedChanged(b);
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput p_169152_) {
     }
 }

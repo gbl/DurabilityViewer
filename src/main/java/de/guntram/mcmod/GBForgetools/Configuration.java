@@ -23,7 +23,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.language.I18n;
+
 /**
  *
  * @author gbl
@@ -147,7 +148,7 @@ public class Configuration implements IConfiguration {
         }
         
         // Always let code given meta info override config file values
-        item.key=I18n.format(description);
+        item.key=I18n.get(description);
         item.minValue=minVal;
         item.maxValue=maxVal;
         item.toolTip=toolTip;

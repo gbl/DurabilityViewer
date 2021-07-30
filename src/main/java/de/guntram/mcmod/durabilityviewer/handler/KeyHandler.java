@@ -1,13 +1,13 @@
 package de.guntram.mcmod.durabilityviewer.handler;
 
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 public class KeyHandler
 {
-    public static KeyBinding showHud;
+    public static KeyMapping showHud;
     
     public static void init() {
-        ClientRegistry.registerKeyBinding(KeyHandler.showHud = new KeyBinding("key.durabilityviewer.showhide", 'H', "key.categories.durabilityviewer"));
+        ClientRegistry.registerKeyBinding(KeyHandler.showHud = new KeyMapping("key.durabilityviewer.showhide", 'H', "key.categories.durabilityviewer"));
     }
 }

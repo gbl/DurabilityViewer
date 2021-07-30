@@ -14,7 +14,7 @@
     "durabilityviewer.config.showfreeslots": "Pokaż wolne miejsca ekwipunku",
     "durabilityviewer.config.showalltrinkets": "Pokazuj wszystkie akcesoria",
     "durabilityviewer.config.percentvalues": "Procenty",
-    "durabilityviewer.config.warnmode": "Warning mode",
+    "durabilityviewer.config.warnmode": "Tryb ostrzegania",
     "durabilityviewer.config.tt.corner": "Róg od 0 do 3 - dolny prawy, dolny lewy, górny prawy, górny lewy",
     "durabilityviewer.config.tt.armorhotbar": "Pokazuj zbroję dookoła paska szybkiego wyboru (zamiast z narzędziami)",
     "durabilityviewer.config.tt.tooltipcolor": "Kolor Minecrafta 0 .. 15",
@@ -26,13 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "Pokazuj ikonę skrzyni z liczbą wolnych miejsc w ekwipunku",
     "durabilityviewer.config.tt.showalltrinkets": "Jeśli masz modyfikację Trinkets, pokazuj wszystkie akcesoria, nawet jeśli nie mają wytrzymałości/zniszczeń",
     "durabilityviewer.config.tt.percentvalues": "Pokaż procenty zamiast wartości bezwzględnych",
-    "durabilityviewer.config.tt.warnmode": "How to warn when an item is about to break",
+    "durabilityviewer.config.tt.warnmode": "Jak ostrzec kiedy przedmiot wkrótce się zniszczy",
     "key.categories.durabilityviewer": "Dozorca wytrzymałości",
     "key.durabilityviewer.showhide": "Pokaż/ukryj widok wytrzymałości",
     "tooltip.durability": "Wytrzymałość %s",
     "durabilityviewer.subtitle.toolBreaking": "Przedmiot bliski zniszczenia",
-    "durabilityviewer.config.warnmode.none": "None",
-    "durabilityviewer.config.warnmode.sound": "Sound only",
-    "durabilityviewer.config.warnmode.visual": "Visual only",
-    "durabilityviewer.config.warnmode.both": "Sound and visual"
+    "durabilityviewer.config.warnmode.none": "Brak",
+    "durabilityviewer.config.warnmode.sound": "Dźwiękowo",
+    "durabilityviewer.config.warnmode.visual": "Wizualnie",
+    "durabilityviewer.config.warnmode.both": "Dźwiękowo oraz wizualnie"
 }

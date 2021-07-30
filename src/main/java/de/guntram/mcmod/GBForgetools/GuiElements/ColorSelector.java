@@ -1,25 +1,21 @@
 package de.guntram.mcmod.GBForgetools.GuiElements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.guntram.mcmod.GBForgetools.GuiModOptions;
 import de.guntram.mcmod.GBForgetools.Types.ConfigurationMinecraftColor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.text.StringTextComponent;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.TextComponent;
 
 
-public class ColorSelector extends Widget {
+public class ColorSelector extends AbstractWidget {
 
     private ColorButton buttons[];
     private ConfigurationMinecraftColor currentColor;
     private String option;
-    private Widget element;
+    private AbstractWidget element;
     private GuiModOptions optionScreen;
 
     private int standardColors[] = { 
@@ -29,14 +25,14 @@ public class ColorSelector extends Widget {
         0xFF5555, 0xFF55FF, 0xFFFF55, 0xFFFFFF
     };
 
-    public ColorSelector(GuiModOptions optionScreen, StringTextComponent message) {
+    public ColorSelector(GuiModOptions optionScreen, TextComponent message) {
         super(0, 0, 120, 120, message);
         buttons = new ColorButton[16];
         this.optionScreen = optionScreen;
     }
 
     public void init() {
-        StringTextComponent buttonText = new StringTextComponent("");
+        TextComponent buttonText = new TextComponent("");
         this.x = (optionScreen.width - width) / 2;
         this.y = (optionScreen.height - height) / 2;
         for (int i=0; i<16; i++) {
@@ -59,7 +55,7 @@ public class ColorSelector extends Widget {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             // renderButton(stack, mouseX, mouseY, partialTicks);
             for (int i=0; i<16; i++) {
@@ -68,7 +64,7 @@ public class ColorSelector extends Widget {
         }
     }
 
-    public void setLink(String option, Widget element) {
+    public void setLink(String option, AbstractWidget element) {
         this.option = option;
         this.element = element;
     }
@@ -88,13 +84,17 @@ public class ColorSelector extends Widget {
         optionScreen.subscreenFinished();
     }
 
-    private class ColorButton extends Widget {
+    @Override
+    public void updateNarration(NarrationElementOutput p_169152_) {
+    }
+
+    private class ColorButton extends AbstractWidget {
 
         private final ColorSelector parent;
         private final int index;
         private final int color;
 
-        public ColorButton(ColorSelector parent, int x, int y, int width, int height, StringTextComponent message, int index, int color) {
+        public ColorButton(ColorSelector parent, int x, int y, int width, int height, TextComponent message, int index, int color) {
             super(x, y, width, height, message);
             this.index = index;
             this.color = color;
@@ -102,40 +102,20 @@ public class ColorSelector extends Widget {
         }
 
         @Override
-        protected void renderBg(MatrixStack stack, Minecraft mc, int mouseX, int mouseY) {
+        protected void renderBg(PoseStack stack, Minecraft mc, int mouseX, int mouseY) {
             if (this.visible) {
                 super.renderBg(stack, mc, mouseX, mouseY);
 
-                final Tessellator tessellator = Tessellator.getInstance();
-                final BufferBuilder bufferBuilder = tessellator.getBuffer();
-                float red = ((color >> 16)/255.0f);
-                float green = (((color >> 8) & 0xff)/255.0f);
-                float blue = (((color >> 0) & 0xff) /255.0f);
-
-                GlStateManager.disableTexture();
-
-                bufferBuilder.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
-                Matrix4f model = stack.getLast().getMatrix();
                 int x1=this.x+3;
                 int x2=this.x+this.width-3;
                 int y1=this.y+3;
                 int y2=this.y+this.height-3;
                 if (index == parent.getCurrentColor().colorIndex) {
-                    bufferBuilder.pos(model, x1, y1, 0.0f).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                    bufferBuilder.pos(model, x1, y2, 0.0f).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                    bufferBuilder.pos(model, x2, y2, 0.0f).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                    bufferBuilder.pos(model, x2, y1, 0.0f).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
-                    tessellator.draw();
-                    bufferBuilder.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
+                    
+                    GuiComponent.fill(stack, x1, y1, x2, y2, 0xffffffff);
                     x1++; y1++; x2--; y2--;
                 }
-                bufferBuilder.pos(model, x1, y1, 0.0f).color(red, green, blue, 1.0f).endVertex();
-                bufferBuilder.pos(model, x1, y2, 0.0f).color(red, green, blue, 1.0f).endVertex();
-                bufferBuilder.pos(model, x2, y2, 0.0f).color(red, green, blue, 1.0f).endVertex();
-                bufferBuilder.pos(model, x2, y1, 0.0f).color(red, green, blue, 1.0f).endVertex();
-                tessellator.draw();
-
-                GlStateManager.enableTexture();
+                GuiComponent.fill(stack, x1, y1, x2, y2, color | 0xff000000);
             }
         }
 
@@ -143,6 +123,10 @@ public class ColorSelector extends Widget {
         public void onClick(double mouseX, double mouseY) {
             // System.out.println("selected "+Integer.toHexString(color)+" from button "+this.index);
             parent.onColorSelected(this.index);
+        }
+
+        @Override
+        public void updateNarration(NarrationElementOutput p_169152_) {
         }
     }
 }

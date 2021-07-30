@@ -1,38 +1,35 @@
 package de.guntram.mcmod.GBForgetools.GuiElements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
+
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.guntram.mcmod.GBForgetools.GuiModOptions;
 import de.guntram.mcmod.GBForgetools.Types.ConfigurationTrueColor;
 import de.guntram.mcmod.GBForgetools.Types.SliderValueConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 
-public class ColorPicker extends Widget implements SliderValueConsumer {
+public class ColorPicker extends AbstractWidget implements SliderValueConsumer {
 
     private ColorDisplayAreaButton colorDisplay;
     private GuiSlider redSlider, greenSlider, blueSlider;
     private String option;
-    private Widget element;
+    private AbstractWidget element;
     private GuiModOptions optionScreen;
     private int currentColor;
 
-    public ColorPicker(GuiModOptions optionScreen, int initialRGB, ITextComponent message) {
+    public ColorPicker(GuiModOptions optionScreen, int initialRGB, Component message) {
         super(0, 0, 250, 100, message);
         this.currentColor = initialRGB;
         this.optionScreen = optionScreen;
     }
 
     public void init() {
-        ITextComponent buttonITextComponent = new StringTextComponent("");
+        TextComponent buttonITextComponent = new TextComponent("");
         this.x = (optionScreen.width - width) / 2;
         this.y = (optionScreen.height - height) / 2;
         colorDisplay = new ColorDisplayAreaButton(
@@ -57,11 +54,11 @@ public class ColorPicker extends Widget implements SliderValueConsumer {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
-            optionScreen.getFontRenderer().drawString(stack, "R", x+30, y+10, 0xff0000);
-            optionScreen.getFontRenderer().drawString(stack, "G", x+30, y+50, 0x00ff00);
-            optionScreen.getFontRenderer().drawString(stack, "B", x+30, y+90, 0x0000ff);
+            optionScreen.getFontRenderer().draw(stack, "R", x+30, y+10, 0xff0000);
+            optionScreen.getFontRenderer().draw(stack, "G", x+30, y+50, 0x00ff00);
+            optionScreen.getFontRenderer().draw(stack, "B", x+30, y+90, 0x0000ff);
             colorDisplay.render(stack, mouseX, mouseY, partialTicks);
             redSlider.render(stack, mouseX, mouseY, alpha);
             greenSlider.render(stack, mouseX, mouseY, alpha);
@@ -69,7 +66,7 @@ public class ColorPicker extends Widget implements SliderValueConsumer {
         }
     }
 
-    public void setLink(String option, Widget element) {
+    public void setLink(String option, AbstractWidget element) {
         this.option = option;
         this.element = element;
     }
@@ -117,12 +114,16 @@ public class ColorPicker extends Widget implements SliderValueConsumer {
         optionScreen.setMouseReleased(value);
     }
 
-    private class ColorDisplayAreaButton extends Widget {
+    @Override
+    public void updateNarration(NarrationElementOutput p_169152_) {
+    }
+
+    private class ColorDisplayAreaButton extends AbstractWidget {
 
         private final ColorPicker parent;
         private int rgb;
 
-        public ColorDisplayAreaButton(ColorPicker parent, int x, int y, int width, int height, ITextComponent message, int rgb) {
+        public ColorDisplayAreaButton(ColorPicker parent, int x, int y, int width, int height, Component message, int rgb) {
             super(x, y, width, height, message);
             this.rgb = rgb;
             this.parent = parent;
@@ -133,32 +134,14 @@ public class ColorPicker extends Widget implements SliderValueConsumer {
         }
 
         @Override
-        protected void renderBg(MatrixStack stack, Minecraft mc, int mouseX, int mouseY) {
+        protected void renderBg(PoseStack stack, Minecraft mc, int mouseX, int mouseY) {
             if (this.visible) {
-                // super.renderBg(stack, mc, mouseX, mouseY); no this renders an unusable texture
-
-                final Tessellator tessellator = Tessellator.getInstance();
-                final BufferBuilder bufferBuilder = tessellator.getBuffer();
-                float red = ((rgb >> 16)/255.0f);
-                float green = (((rgb >> 8) & 0xff)/255.0f);
-                float blue = (((rgb >> 0) & 0xff) /255.0f);
-
-                GlStateManager.disableTexture();
-
-                bufferBuilder.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
-                Matrix4f model = stack.getLast().getMatrix();
-                int x1=this.x;
-                int x2=this.x+this.width;
-                int y1=this.y;
-                int y2=this.y+this.height;
-                bufferBuilder.pos(model, x1, y1, 0.0f).color(red, green, blue, 1.0f).endVertex();
-                bufferBuilder.pos(model, x1, y2, 0.0f).color(red, green, blue, 1.0f).endVertex();
-                bufferBuilder.pos(model, x2, y2, 0.0f).color(red, green, blue, 1.0f).endVertex();
-                bufferBuilder.pos(model, x2, y1, 0.0f).color(red, green, blue, 1.0f).endVertex();
-                tessellator.draw();
-
-                GlStateManager.enableTexture();
+                GuiComponent.fill(stack, x, y, x+width, y+height, rgb | 0xff000000);
             }
+        }
+
+        @Override
+        public void updateNarration(NarrationElementOutput p_169152_) {
         }
     }
 }

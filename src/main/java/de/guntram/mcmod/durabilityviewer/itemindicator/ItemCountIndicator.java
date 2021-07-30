@@ -1,7 +1,7 @@
 package de.guntram.mcmod.durabilityviewer.itemindicator;
 
 import static de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator.color_white;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemCountIndicator implements ItemIndicator {
     final ItemStack stack;

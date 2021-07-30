@@ -1,9 +1,10 @@
 package de.guntram.mcmod.durabilityviewer.client.gui;
 
 import com.google.common.collect.Ordering;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.guntram.mcmod.durabilityviewer.DurabilityViewer;
 import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import de.guntram.mcmod.durabilityviewer.itemindicator.InventorySlotsIndicator;
@@ -12,32 +13,30 @@ import de.guntram.mcmod.durabilityviewer.itemindicator.ItemDamageIndicator;
 import de.guntram.mcmod.durabilityviewer.itemindicator.ItemIndicator;
 import de.guntram.mcmod.durabilityviewer.sound.ItemBreakingWarner;
 import java.util.Collection;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.IngameGui;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.BowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.Hand;
-import net.minecraft.util.HandSide;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 
-public class GuiItemDurability extends IngameGui
+public class GuiItemDurability extends Gui
 {
     private final Minecraft minecraft;
     private static boolean visible;
-    private final FontRenderer fontRenderer;
+    private final Font fontRenderer;
     private final ItemRenderer itemRenderer;
     
     private long lastWarningTime;
@@ -56,7 +55,7 @@ public class GuiItemDurability extends IngameGui
     public GuiItemDurability() {
         super(Minecraft.getInstance());
         minecraft = Minecraft.getInstance();
-        fontRenderer = minecraft.fontRenderer;
+        fontRenderer = minecraft.font;
         itemRenderer = minecraft.getItemRenderer();
         visible=true;
         
@@ -70,7 +69,7 @@ public class GuiItemDurability extends IngameGui
     
     private int getInventoryArrowCount() {
         int arrows = 0;
-        for (final ItemStack stack : minecraft.player.inventory.mainInventory) {
+        for (final ItemStack stack : minecraft.player.getInventory().items) {
             if (isArrow(stack)) {
                 arrows += stack.getCount();
             }
@@ -79,15 +78,15 @@ public class GuiItemDurability extends IngameGui
     }
     
     private ItemStack getFirstArrowStack() {
-        if (isArrow(minecraft.player.getHeldItem(Hand.OFF_HAND))) {
-            return minecraft.player.getHeldItem(Hand.OFF_HAND);
+        if (isArrow(minecraft.player.getItemInHand(InteractionHand.OFF_HAND))) {
+            return minecraft.player.getItemInHand(InteractionHand.OFF_HAND);
         }
-        if (isArrow(minecraft.player.getHeldItem(Hand.MAIN_HAND))) {
-            return minecraft.player.getHeldItem(Hand.MAIN_HAND);
+        if (isArrow(minecraft.player.getItemInHand(InteractionHand.MAIN_HAND))) {
+            return minecraft.player.getItemInHand(InteractionHand.MAIN_HAND);
         }
-        int size=minecraft.player.inventory.getSizeInventory();
+        int size=minecraft.player.getInventory().getContainerSize();
         for (int i = 0; i < size; ++i) {
-            final ItemStack itemstack = minecraft.player.inventory.getStackInSlot(i);
+            final ItemStack itemstack = minecraft.player.getInventory().getItem(i);
             if (this.isArrow(itemstack)) {
                 return itemstack;
             }
@@ -119,35 +118,34 @@ public class GuiItemDurability extends IngameGui
         // the title change that occurs when logging off gets through.
         String newTitle=DurabilityViewer.getAndResetChangedWindowTitle();
         if (newTitle!=null) {
-            glfwSetWindowTitle(minecraft.getMainWindow().getHandle(), newTitle);
+            glfwSetWindowTitle(minecraft.getWindow().getWindow(), newTitle);
         }
-
         
         if (!visible
         ||  event.isCanceled()
         // ||  minecraft.player.abilities.isCreativeMode
-        ||  event.getType()!=RenderGameOverlayEvent.ElementType.POTION_ICONS)
+        ||  event.getType()!=RenderGameOverlayEvent.ElementType.CHAT)
             return;
 
-        ClientPlayerEntity effectivePlayer = (ClientPlayerEntity) minecraft.player;
+        LocalPlayer effectivePlayer = minecraft.player;
         ItemStack needToWarn=null;
 
         // @TODO: remove duplicate code
-        ItemIndicator mainHand = new ItemDamageIndicator(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.MAINHAND));
-        ItemIndicator offHand = new ItemDamageIndicator(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.OFFHAND));
-        ItemIndicator boots = new ItemDamageIndicator(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.FEET));
-        ItemIndicator leggings = new ItemDamageIndicator(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.LEGS));
-        ItemIndicator chestplate = new ItemDamageIndicator(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.CHEST));
-        ItemIndicator helmet = new ItemDamageIndicator(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.HEAD));
+        ItemIndicator mainHand = new ItemDamageIndicator(effectivePlayer.getItemBySlot(EquipmentSlot.MAINHAND));
+        ItemIndicator offHand = new ItemDamageIndicator(effectivePlayer.getItemBySlot(EquipmentSlot.OFFHAND));
+        ItemIndicator boots = new ItemDamageIndicator(effectivePlayer.getItemBySlot(EquipmentSlot.FEET));
+        ItemIndicator leggings = new ItemDamageIndicator(effectivePlayer.getItemBySlot(EquipmentSlot.LEGS));
+        ItemIndicator chestplate = new ItemDamageIndicator(effectivePlayer.getItemBySlot(EquipmentSlot.CHEST));
+        ItemIndicator helmet = new ItemDamageIndicator(effectivePlayer.getItemBySlot(EquipmentSlot.HEAD));
         ItemIndicator arrows = null;
-        ItemIndicator invSlots = ConfigurationHandler.getShowChestIcon() ? new InventorySlotsIndicator(minecraft.player.inventory) : null;
+        ItemIndicator invSlots = ConfigurationHandler.getShowChestIcon() ? new InventorySlotsIndicator(minecraft.player.getInventory()) : null;
         
-        if (needToWarn == null && mainHandWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.MAINHAND))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
-        if (needToWarn == null && offHandWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.OFFHAND))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.OFFHAND);
-        if (needToWarn == null && bootsWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.FEET))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.FEET);
-        if (needToWarn == null && pantsWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.LEGS))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.LEGS);
-        if (needToWarn == null && chestWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.CHEST))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.CHEST);
-        if (needToWarn == null && helmetWarner.checkBreaks(effectivePlayer.getItemStackFromSlot(EquipmentSlotType.HEAD))) needToWarn = effectivePlayer.getItemStackFromSlot(EquipmentSlotType.HEAD);
+        if (needToWarn == null && mainHandWarner.checkBreaks(effectivePlayer.getItemBySlot(EquipmentSlot.MAINHAND))) needToWarn = effectivePlayer.getItemBySlot(EquipmentSlot.MAINHAND);
+        if (needToWarn == null && offHandWarner.checkBreaks(effectivePlayer.getItemBySlot(EquipmentSlot.OFFHAND))) needToWarn = effectivePlayer.getItemBySlot(EquipmentSlot.OFFHAND);
+        if (needToWarn == null && bootsWarner.checkBreaks(effectivePlayer.getItemBySlot(EquipmentSlot.FEET))) needToWarn = effectivePlayer.getItemBySlot(EquipmentSlot.FEET);
+        if (needToWarn == null && pantsWarner.checkBreaks(effectivePlayer.getItemBySlot(EquipmentSlot.LEGS))) needToWarn = effectivePlayer.getItemBySlot(EquipmentSlot.LEGS);
+        if (needToWarn == null && chestWarner.checkBreaks(effectivePlayer.getItemBySlot(EquipmentSlot.CHEST))) needToWarn = effectivePlayer.getItemBySlot(EquipmentSlot.CHEST);
+        if (needToWarn == null && helmetWarner.checkBreaks(effectivePlayer.getItemBySlot(EquipmentSlot.HEAD))) needToWarn = effectivePlayer.getItemBySlot(EquipmentSlot.HEAD);
         if (needToWarn!= null) {
             if ((ConfigurationHandler.getWarnMode() & 1) == 1) {
                 ItemBreakingWarner.playWarningSound();
@@ -159,8 +157,8 @@ public class GuiItemDurability extends IngameGui
         if (mainHand.getItemStack().getItem() instanceof BowItem || offHand.getItemStack().getItem() instanceof BowItem) {
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
         }
-        MainWindow mainWindow=Minecraft.getInstance().getMainWindow();
-        MatrixStack stack = event.getMatrixStack();
+        Window mainWindow=Minecraft.getInstance().getWindow();
+        PoseStack stack = event.getMatrixStack();
         
         RenderSize armorSize, toolsSize;
         armorSize=this.renderItems(stack, 0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
@@ -177,42 +175,42 @@ public class GuiItemDurability extends IngameGui
                 ypos=5;
                 break;
             case TOP_RIGHT:
-                xposArmor=mainWindow.getScaledWidth()-5-armorSize.width;
-                xposTools=mainWindow.getScaledWidth()-5-armorSize.width-toolsSize.width;
+                xposArmor=mainWindow.getGuiScaledWidth()-5-armorSize.width;
+                xposTools=mainWindow.getGuiScaledWidth()-5-armorSize.width-toolsSize.width;
                 ypos=60;   // below buff/debuff effects
                 break;
             case BOTTOM_LEFT:
                 xposArmor=5;
                 xposTools=5+armorSize.width;
-                ypos=mainWindow.getScaledHeight()-5-totalHeight;
+                ypos=mainWindow.getGuiScaledHeight()-5-totalHeight;
                 break;
             case BOTTOM_RIGHT:
-                xposArmor=mainWindow.getScaledWidth()-5-armorSize.width;
-                xposTools=mainWindow.getScaledWidth()-5-armorSize.width-toolsSize.width;
-                ypos=mainWindow.getScaledHeight()-5-totalHeight;
+                xposArmor=mainWindow.getGuiScaledWidth()-5-armorSize.width;
+                xposTools=mainWindow.getGuiScaledWidth()-5-armorSize.width-toolsSize.width;
+                ypos=mainWindow.getGuiScaledHeight()-5-totalHeight;
                 break;
             default:
                 return;
         }
 
-        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         if (ConfigurationHandler.getArmorAroundHotbar()) {
             int leftOffset = -120;
             int rightOffset = 100;
-            if (!effectivePlayer.getItemStackFromSlot(EquipmentSlotType.OFFHAND).isEmpty()) {
-                if (minecraft.gameSettings.mainHand == HandSide.RIGHT) {
+            if (!effectivePlayer.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty()) {
+                if (minecraft.options.mainHand == HumanoidArm.RIGHT) {
                     leftOffset -= 20;
                 } else {
                     rightOffset += 20;
                 }
             }
-            int helmetTextWidth = fontRenderer.getStringWidth(helmet.getDisplayValue());
-            int chestTextWidth = fontRenderer.getStringWidth(chestplate.getDisplayValue());
-            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - helmetTextWidth, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, helmetTextWidth+iconWidth+spacing, helmet);
-            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, chestTextWidth+iconWidth+spacing, chestplate);
-            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
-            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
+            int helmetTextWidth = fontRenderer.width(helmet.getDisplayValue());
+            int chestTextWidth = fontRenderer.width(chestplate.getDisplayValue());
+            this.renderItems(stack, mainWindow.getGuiScaledWidth()/2+leftOffset - helmetTextWidth, mainWindow.getGuiScaledHeight()-iconHeight*2-2, true, RenderPos.left, helmetTextWidth+iconWidth+spacing, helmet);
+            this.renderItems(stack, mainWindow.getGuiScaledWidth()/2+leftOffset - chestTextWidth, mainWindow.getGuiScaledHeight()-iconHeight-2, true, RenderPos.left, chestTextWidth+iconWidth+spacing, chestplate);
+            this.renderItems(stack, mainWindow.getGuiScaledWidth()/2+rightOffset, mainWindow.getGuiScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
+            this.renderItems(stack, mainWindow.getGuiScaledWidth()/2+rightOffset, mainWindow.getGuiScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
             if (ConfigurationHandler.getCorner().isRight()) {
                 xposTools += armorSize.width;
             } else {
@@ -227,16 +225,14 @@ public class GuiItemDurability extends IngameGui
             renderItemBreakingOverlay(stack, lastWarningItem, timeSinceLastWarning);
         }
 
-        RenderHelper.disableStandardItemLighting();
-        
         if (ConfigurationHandler.showEffectDuration()) {
             // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
-            Collection<EffectInstance> collection = minecraft.player.getActivePotionEffects();
+            Collection<MobEffectInstance> collection = minecraft.player.getActiveEffects();
             int posGood=0, posBad=0;
-            for (EffectInstance potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
-                if (potioneffect.doesShowParticles()) {
-                    Effect potion = potioneffect.getPotion();
-                    xpos=mainWindow.getScaledWidth();
+            for (MobEffectInstance potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
+                if (potioneffect.isVisible()) {
+                    MobEffect potion = potioneffect.getEffect();
+                    xpos=mainWindow.getGuiScaledWidth();
                     if (potion.isBeneficial()) {
                         posGood+=25; xpos-=posGood; ypos=15;
                     } else {
@@ -248,43 +244,48 @@ public class GuiItemDurability extends IngameGui
                         show=(duration/1200)+"m";
                     else
                         show=(duration/20)+"s";
-                    fontRenderer.drawString(event.getMatrixStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
+                    fontRenderer.draw(event.getMatrixStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
                 }
             }
         }
     }
     
-    private void renderItemBreakingOverlay(MatrixStack matrices, ItemStack itemStack, long timeDelta) {
-        MainWindow mainWindow=Minecraft.getInstance().getMainWindow();
+    private void renderItemBreakingOverlay(PoseStack matrices, ItemStack itemStack, long timeDelta) {
+        Window mainWindow=Minecraft.getInstance().getWindow();
         float alpha = 1.0f-((float)timeDelta/1000.0f);
-        float xWarn = mainWindow.getScaledWidth()/2;
-        float yWarn = mainWindow.getScaledHeight()/2;
+        float xWarn = mainWindow.getGuiScaledWidth()/2;
+        float yWarn = mainWindow.getGuiScaledHeight()/2;
         float scale = 5.0f;
         
-        AbstractGui.fill(matrices, 0, 0, mainWindow.getScaledWidth(), mainWindow.getScaledHeight(),
+        GuiComponent.fill(matrices, 0, 0, mainWindow.getGuiScaledWidth(), mainWindow.getGuiScaledHeight(),
                 0xff0000+ ((int)(alpha*128)<<24));
         
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(scale, scale, scale);
-        itemRenderer.renderItemAndEffectIntoGUI(itemStack, (int)((xWarn)/scale-8), (int)((yWarn)/scale-8));
-        // System.out.println("rendering at "+xWarn+"/"+yWarn+", scale="+scale+", alpha="+alpha);
-        RenderSystem.popMatrix();
-        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        PoseStack stack = RenderSystem.getModelViewStack();
+        stack.pushPose();
+        stack.scale(scale, scale, scale);
+        RenderSystem.applyModelViewMatrix();
+        
+        itemRenderer.renderGuiItem(itemStack, (int)((xWarn)/scale-8), (int)((yWarn)/scale-8));
+        
+        stack.popPose();
+        RenderSystem.applyModelViewMatrix();
+        
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     }    
     
-    private RenderSize renderItems(MatrixStack stack, int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
+    private RenderSize renderItems(PoseStack stack, int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
         RenderSize result=new RenderSize(0, 0);
         
         for (ItemIndicator item: items) {
             if (item != null && !item.isEmpty() && item.isItemStackDamageable()) {
                 String displayString=item.getDisplayValue();
-                int width=fontRenderer.getStringWidth(displayString);
+                int width=fontRenderer.width(displayString);
                 if (width>result.width)
                     result.width=width;
                 if (reallyDraw) {
                     int color=item.getDisplayColor();
-                    itemRenderer.renderItemAndEffectIntoGUI(item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
-                    fontRenderer.drawString(stack, displayString, numberPos != RenderPos.right? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.FONT_HEIGHT/2 + (numberPos==RenderPos.over ? 10  : 0), color);
+                    itemRenderer.renderAndDecorateItem(item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
+                    fontRenderer.draw(stack, displayString, numberPos != RenderPos.right? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.lineHeight/2 + (numberPos==RenderPos.over ? 10  : 0), color);
                 }
                 result.height+=16;
             }
