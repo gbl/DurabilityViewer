@@ -1,9 +1,9 @@
 # TL;DR
 
-- Get a version of gradle that's at least 4.10.2
+- Get a version of gradle that's at least 7.0.2
 - `git clone <repo>`
 - `git branch -r`  to see available branches
-- `git checkout fabric_1_16` to select your branch
+- `git checkout fabric_1_17` to select your branch
 - `git submodule init`
 - `git submodule update`
 - `/path/to/gradle build`
@@ -16,7 +16,7 @@ In particular, I don't want the gradle files to be duplicated into every single 
 
 # Prerequisites
 
-You need a gradle installation which does not come with the mod. At the time of this writing, the version of gradle used is 4.10.2. Gradle 6.5 has been tested to work too, so versions between those *should* as well.
+You need a gradle installation which does not come with the mod. At the time of this writing, the version of gradle used is 7.0.2. Gradle 7.1.1 has been tested to work too, so versions between those *should* as well.
 
 You might already have gradle installed, especially when you're running Linux - if so, make sure it's new enough. For example, Ubuntu 18.04 has gradle 4.4.1 which is not. Run `gradle -version` to check.
 
@@ -28,5 +28,5 @@ All my mods use the same repository of files that match MineCraft, Fabric, and c
 
 # Compiling the mod
 
-There are branches for the various versions of MineCraft that are supported by the mod. Run `git branch -r` to see which branches there are, then `git checkout branchname` without the `origin/` part, for example, `git checkout fabric_1_16`.
+There are branches for the various versions of MineCraft that are supported by the mod. Run `git branch -r` to see which branches there are, then `git checkout branchname` without the `origin/` part, for example, `git checkout fabric_1_17`.
 

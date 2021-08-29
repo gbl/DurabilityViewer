@@ -26,7 +26,7 @@
     "durabilityviewer.config.tt.showfreeslots": "Показывать значок сундука с количеством пустых ячеек инвентаря",
     "durabilityviewer.config.tt.showalltrinkets": "Если у вас установлен мод \"trinkets\", показывать все предметы из этого мода, даже если они полностью целые",
     "durabilityviewer.config.tt.percentvalues": "Показывать проценты вместо точных значений",
-    "durabilityviewer.config.tt.warnmode": "Как предупреждать, когда предмет скоро сломается",
+    "durabilityviewer.config.tt.warnmode": "Предупреждение при малой прочности предмета",
     "key.categories.durabilityviewer": "Просмотр прочности",
     "key.durabilityviewer.showhide": "Показать/Скрыть прочность",
     "tooltip.durability": "Прочность %s",
