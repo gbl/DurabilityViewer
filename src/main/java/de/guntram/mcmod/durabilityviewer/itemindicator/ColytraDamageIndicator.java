@@ -28,7 +28,7 @@ public class ColytraDamageIndicator extends ItemDamageIndicator {
     private int getDamage() {
         int damage;
         try {
-            damage = stack.getTag().getCompound("colytra:ElytraUpgrade").getCompound("tag").getInt("Damage");
+            damage = stack.getNbt().getCompound("colytra:ElytraUpgrade").getCompound("tag").getInt("Damage");
             return damage;
         } catch (Exception ex) {
             return 0;

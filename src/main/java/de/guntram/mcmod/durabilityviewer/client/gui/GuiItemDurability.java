@@ -152,7 +152,7 @@ public class GuiItemDurability
         
         ItemStack chestItem = player.getEquippedStack(EquipmentSlot.CHEST);
         ItemIndicator colytra = null;
-        if (chestItem != null && chestItem.getTag()!= null && chestItem.getTag().contains("colytra:ElytraUpgrade")) {
+        if (chestItem != null && chestItem.getNbt()!= null && chestItem.getNbt().contains("colytra:ElytraUpgrade")) {
             colytra = new ColytraDamageIndicator(chestItem);
         }
         
@@ -300,7 +300,7 @@ public class GuiItemDurability
         if (stack.isDamageable()) {
             return new ItemDamageIndicator(stack);
         } else if (haveTRCore) {
-            if (stack.getItem() instanceof EnergyHolder && stack.getTag()!=null && stack.getTag().contains("energy", 6)) {
+            if (stack.getItem() instanceof EnergyHolder && stack.getNbt()!=null && stack.getNbt().contains("energy", 6)) {
                 return new TREnergyIndicator(stack);
             }
         }

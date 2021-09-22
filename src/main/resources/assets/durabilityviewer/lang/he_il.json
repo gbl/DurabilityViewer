@@ -31,8 +31,8 @@
     "key.durabilityviewer.showhide": "Show/hide durability display",
     "tooltip.durability": "Durability %s",
     "durabilityviewer.subtitle.toolBreaking": "החפץ עומד להישבר",
-    "durabilityviewer.config.warnmode.none": "None",
-    "durabilityviewer.config.warnmode.sound": "Sound only",
+    "durabilityviewer.config.warnmode.none": "כלום",
+    "durabilityviewer.config.warnmode.sound": "צליל בלבד",
     "durabilityviewer.config.warnmode.visual": "Visual only",
     "durabilityviewer.config.warnmode.both": "Sound and visual"
 }

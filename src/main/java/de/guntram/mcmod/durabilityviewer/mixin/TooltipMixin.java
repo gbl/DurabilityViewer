@@ -27,7 +27,7 @@ public abstract class TooltipMixin {
     @Shadow public abstract boolean isDamaged();
     @Shadow public abstract int getMaxDamage();
     @Shadow public abstract int getDamage();
-    @Shadow public abstract NbtCompound getTag();
+    @Shadow public abstract NbtCompound getNbt();
     
 //    @Inject(method="getTooltip(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/client/util/ITooltipFlag;)Ljava/util/List",
     @Inject(method="getTooltip",            
@@ -50,7 +50,7 @@ public abstract class TooltipMixin {
         }
 
         if (Screen.hasAltDown()) {
-            NbtCompound tag=this.getTag();
+            NbtCompound tag=this.getNbt();
             if (tag != null) {
                 addNbtCompound("", list, tag);
             }

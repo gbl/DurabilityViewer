@@ -22,13 +22,13 @@ public class ColytraBreakingWarner extends ItemBreakingWarner {
     
     @Override
     public boolean checkBreaks(ItemStack stack) {
-        if (stack.getTag() == null  || !stack.getTag().contains("colytra:ElytraUpgrade")) {
+        if (stack.getNbt() == null  || !stack.getNbt().contains("colytra:ElytraUpgrade")) {
             return false;
         }
         
         int damage;
         try {
-            damage = stack.getTag().getCompound("colytra:ElytraUpgrade").getCompound("tag").getInt("Damage");
+            damage = stack.getNbt().getCompound("colytra:ElytraUpgrade").getCompound("tag").getInt("Damage");
         } catch (Exception ex) {
             return false;
         }
