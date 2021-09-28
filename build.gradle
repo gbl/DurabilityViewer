@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://files.minecraftforge.net/maven" }
         jcenter()
 	mavenCentral()
     }
@@ -18,7 +18,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "1.16.4-forge35.0.7-1.10"
+version = "1.16.4-forge35.0.7-1.10.1"
 group = "de.guntram.mcmod.DurabilityViewer" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "durabilityviewer"
 

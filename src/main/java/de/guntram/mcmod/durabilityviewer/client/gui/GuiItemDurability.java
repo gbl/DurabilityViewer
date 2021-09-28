@@ -122,11 +122,10 @@ public class GuiItemDurability extends IngameGui
             glfwSetWindowTitle(minecraft.getMainWindow().getHandle(), newTitle);
         }
 
-        
         if (!visible
         ||  event.isCanceled()
         // ||  minecraft.player.abilities.isCreativeMode
-        ||  event.getType()!=RenderGameOverlayEvent.ElementType.POTION_ICONS)
+        ||  event.getType()!=RenderGameOverlayEvent.ElementType.HOTBAR)
             return;
 
         ClientPlayerEntity effectivePlayer = (ClientPlayerEntity) minecraft.player;
@@ -228,30 +227,6 @@ public class GuiItemDurability extends IngameGui
         }
 
         RenderHelper.disableStandardItemLighting();
-        
-        if (ConfigurationHandler.showEffectDuration()) {
-            // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
-            Collection<EffectInstance> collection = minecraft.player.getActivePotionEffects();
-            int posGood=0, posBad=0;
-            for (EffectInstance potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
-                if (potioneffect.doesShowParticles()) {
-                    Effect potion = potioneffect.getPotion();
-                    xpos=mainWindow.getScaledWidth();
-                    if (potion.isBeneficial()) {
-                        posGood+=25; xpos-=posGood; ypos=15;
-                    } else {
-                        posBad+=25;  xpos-=posBad;  ypos=41;
-                    }
-                    int duration=potioneffect.getDuration();
-                    String show;
-                    if (duration > 1200)
-                        show=(duration/1200)+"m";
-                    else
-                        show=(duration/20)+"s";
-                    fontRenderer.drawString(event.getMatrixStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
-                }
-            }
-        }
     }
     
     private void renderItemBreakingOverlay(MatrixStack matrices, ItemStack itemStack, long timeDelta) {
@@ -270,6 +245,40 @@ public class GuiItemDurability extends IngameGui
         // System.out.println("rendering at "+xWarn+"/"+yWarn+", scale="+scale+", alpha="+alpha);
         RenderSystem.popMatrix();
         GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+    }    
+    
+    @SubscribeEvent(priority = EventPriority.NORMAL)
+    public void afterRenderStatusEffects(final RenderGameOverlayEvent.Post event) {
+        if (!visible
+        ||  event.isCanceled()
+        // ||  minecraft.player.abilities.isCreativeMode
+        ||  event.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS)
+            return;   
+        if (ConfigurationHandler.showEffectDuration()) {
+            // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
+            MainWindow mainWindow=Minecraft.getInstance().getMainWindow();
+            Collection<EffectInstance> collection = minecraft.player.getActivePotionEffects();
+            int posGood=0, posBad=0;
+            for (EffectInstance potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
+                if (potioneffect.doesShowParticles()) {
+                    Effect potion = potioneffect.getPotion();
+                    int xpos=mainWindow.getScaledWidth();
+                    int ypos;
+                    if (potion.isBeneficial()) {
+                        posGood+=25; xpos-=posGood; ypos=15;
+                    } else {
+                        posBad+=25;  xpos-=posBad;  ypos=41;
+                    }
+                    int duration=potioneffect.getDuration();
+                    String show;
+                    if (duration > 1200)
+                        show=(duration/1200)+"m";
+                    else
+                        show=(duration/20)+"s";
+                    fontRenderer.drawString(event.getMatrixStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
+                }
+            }
+        }
     }    
     
     private RenderSize renderItems(MatrixStack stack, int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
