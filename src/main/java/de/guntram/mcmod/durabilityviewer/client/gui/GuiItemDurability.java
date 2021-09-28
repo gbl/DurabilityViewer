@@ -28,6 +28,7 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
@@ -112,7 +113,7 @@ public class GuiItemDurability extends Gui
     }
     
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void onRender(final RenderGameOverlayEvent.Post event) {
+    public void onRender(final RenderGameOverlayEvent.PostLayer event) {
 
         // This needs to be done before everything else to make sure
         // the title change that occurs when logging off gets through.
@@ -124,7 +125,7 @@ public class GuiItemDurability extends Gui
         if (!visible
         ||  event.isCanceled()
         // ||  minecraft.player.abilities.isCreativeMode
-        ||  event.getType()!=RenderGameOverlayEvent.ElementType.CHAT)
+        ||  event.getOverlay()!=ForgeIngameGui.HOTBAR_ELEMENT)
             return;
 
         LocalPlayer effectivePlayer = minecraft.player;
@@ -224,30 +225,6 @@ public class GuiItemDurability extends Gui
         if (timeSinceLastWarning < 1000 && (ConfigurationHandler.getWarnMode() & 2) == 2) {
             renderItemBreakingOverlay(stack, lastWarningItem, timeSinceLastWarning);
         }
-
-        if (ConfigurationHandler.showEffectDuration()) {
-            // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
-            Collection<MobEffectInstance> collection = minecraft.player.getActiveEffects();
-            int posGood=0, posBad=0;
-            for (MobEffectInstance potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
-                if (potioneffect.isVisible()) {
-                    MobEffect potion = potioneffect.getEffect();
-                    xpos=mainWindow.getGuiScaledWidth();
-                    if (potion.isBeneficial()) {
-                        posGood+=25; xpos-=posGood; ypos=15;
-                    } else {
-                        posBad+=25;  xpos-=posBad;  ypos=41;
-                    }
-                    int duration=potioneffect.getDuration();
-                    String show;
-                    if (duration > 1200)
-                        show=(duration/1200)+"m";
-                    else
-                        show=(duration/20)+"s";
-                    fontRenderer.draw(event.getMatrixStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
-                }
-            }
-        }
     }
     
     private void renderItemBreakingOverlay(PoseStack matrices, ItemStack itemStack, long timeDelta) {
@@ -271,7 +248,43 @@ public class GuiItemDurability extends Gui
         RenderSystem.applyModelViewMatrix();
         
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-    }    
+    }
+    
+    @SubscribeEvent(priority = EventPriority.NORMAL)
+    public void afterRenderStatusEffects(final RenderGameOverlayEvent.PostLayer event) {
+
+        if (!visible
+        ||  event.isCanceled()
+        // ||  minecraft.player.abilities.isCreativeMode
+        ||  event.getOverlay()!=ForgeIngameGui.POTION_ICONS_ELEMENT)
+            return;
+        
+        if (ConfigurationHandler.showEffectDuration()) {
+            // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
+            Window mainWindow = minecraft.getWindow();
+            Collection<MobEffectInstance> collection = minecraft.player.getActiveEffects();
+            int posGood=0, posBad=0;
+            for (MobEffectInstance potioneffect : Ordering.natural().reverse().sortedCopy(collection)) {
+                if (potioneffect.isVisible()) {
+                    MobEffect potion = potioneffect.getEffect();
+                    int xpos=mainWindow.getGuiScaledWidth();
+                    int ypos;
+                    if (potion.isBeneficial()) {
+                        posGood+=25; xpos-=posGood; ypos=15;
+                    } else {
+                        posBad+=25;  xpos-=posBad;  ypos=41;
+                    }
+                    int duration=potioneffect.getDuration();
+                    String show;
+                    if (duration > 1200)
+                        show=(duration/1200)+"m";
+                    else
+                        show=(duration/20)+"s";
+                    fontRenderer.draw(event.getMatrixStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
+                }
+            }
+        }
+    }
     
     private RenderSize renderItems(PoseStack stack, int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
         RenderSize result=new RenderSize(0, 0);

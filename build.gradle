@@ -30,7 +30,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
 
-version = "1.17.1-forge37.0.13-1.10"
+version = "1.17.1-forge37.0.37-1.10"
 group = "de.guntram.mcmod.durabilityviewer" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "durabilityviewer"
 
@@ -42,7 +42,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.13'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.73'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
