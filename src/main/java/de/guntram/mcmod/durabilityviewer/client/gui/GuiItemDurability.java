@@ -176,6 +176,14 @@ public class GuiItemDurability
             List<ItemStack> equipped = getTrinkets(player);
             
             trinkets = new ItemIndicator[equipped.size()];
+            if (trinkets.length > trinketWarners.length) {
+                // Apparently this can happen when joining a server that defines 
+                // more trinkets than the client?
+                trinketWarners = new ItemBreakingWarner[trinkets.length];
+                for (int i=0; i<trinketWarners.length; i++) {
+                    trinketWarners[i]= new ItemBreakingWarner();
+                }
+            }
             LOGGER.debug("know about "+trinkets.length+" trinkets, invSize is "+equipped.size()+", have "+trinketWarners.length+" warners");
             for (int i=0; i<trinkets.length; i++) {
                 trinkets[i]=new ItemDamageIndicator(equipped.get(i), ConfigurationHandler.getShowAllTrinkets());
