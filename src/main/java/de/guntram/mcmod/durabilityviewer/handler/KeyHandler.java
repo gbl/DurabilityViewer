@@ -1,7 +1,7 @@
 package de.guntram.mcmod.durabilityviewer.handler;
 
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
+import net.minecraftforge.client.ClientRegistry;
 
 public class KeyHandler
 {
