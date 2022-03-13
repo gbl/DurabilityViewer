@@ -14,7 +14,7 @@
     "durabilityviewer.config.showfreeslots": "Прикажи бесплатна места за инвентар",
     "durabilityviewer.config.showalltrinkets": "Прикажи све ситнице",
     "durabilityviewer.config.percentvalues": "Проценти",
-    "durabilityviewer.config.warnmode": "Warning mode",
+    "durabilityviewer.config.warnmode": "Модус Упозорења\n",
     "durabilityviewer.config.tt.corner": "Угао од 0 до 3 - доњи десни, доњи леви, горњи десни, горњи леви",
     "durabilityviewer.config.tt.armorhotbar": "Рендер оклопа око хотбар-а (уместо алата)",
     "durabilityviewer.config.tt.tooltipcolor": "Минецрафт боја 0 .. 15",
@@ -26,13 +26,13 @@
     "durabilityviewer.config.tt.showfreeslots": "Покажите икону сандука са бројем слободних места за инвентар",
     "durabilityviewer.config.tt.showalltrinkets": "Ако имате мод од ситница, покажите све ситнице чак и ако немају трајност / оштећења",
     "durabilityviewer.config.tt.percentvalues": "Прикажите проценте уместо апсолутних вредности",
-    "durabilityviewer.config.tt.warnmode": "How to warn when an item is about to break",
+    "durabilityviewer.config.tt.warnmode": "Како упозорити када ће се итем покварити",
     "key.categories.durabilityviewer": "Трајност Виевер",
     "key.durabilityviewer.showhide": "Прикажи / сакриј приказ трајности",
     "tooltip.durability": "Трајност %s",
     "durabilityviewer.subtitle.toolBreaking": "Предмет ће се сломити",
-    "durabilityviewer.config.warnmode.none": "None",
-    "durabilityviewer.config.warnmode.sound": "Sound only",
-    "durabilityviewer.config.warnmode.visual": "Visual only",
-    "durabilityviewer.config.warnmode.both": "Sound and visual"
+    "durabilityviewer.config.warnmode.none": "Ништа",
+    "durabilityviewer.config.warnmode.sound": "Само звук",
+    "durabilityviewer.config.warnmode.visual": "Само Визуелно",
+    "durabilityviewer.config.warnmode.both": "Звук и Визуелно\n"
 }

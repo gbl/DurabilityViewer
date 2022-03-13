@@ -37,16 +37,19 @@ repositories {
 		name = "NerdHubMC"
 		url = "https://maven.abusedmaster.xyz/"
 	}
+	maven {
+		url = "file://tmp/mymavenrepo/"
+	}    
 }
 
 sourceCompatibility = 17
 targetCompatibility = 17
 
 ext.Versions = new Properties()
-Versions.load(file("Versionfiles/mcversion-1.18.properties").newReader())
+Versions.load(file("Versionfiles/mcversion-1.18.2.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
-ext.projectVersion = "1.10.2"
+ext.projectVersion = "1.10.3"
 
 version = "${Versions['minecraft_version']}-fabric${Versions['fabric_versiononly']}-${project.projectVersion}"
 
