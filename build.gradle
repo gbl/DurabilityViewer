@@ -1,12 +1,12 @@
 buildscript {
-    dependencies {
-        classpath 'de.guntram.mcmod:crowdin-translate:1.4+1.18-pre5'
-    }
+    //dependencies {
+    //    classpath 'de.guntram.mcmod:crowdin-translate:1.4+1.18-pre5'
+    //}
     repositories {
-	maven {
-        name = 'CrowdinTranslate source'
-		url = "https://minecraft.guntram.de/maven/"
-	}
+	//maven {
+    //    name = 'CrowdinTranslate source'
+	//	url = "https://minecraft.guntram.de/maven/"
+	//}
     }
 }
 plugins {
@@ -15,9 +15,9 @@ plugins {
 	id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
-apply plugin: 'de.guntram.mcmod.crowdin-translate'
-crowdintranslate.crowdinProjectName = 'durabilityviewer'
-crowdintranslate.verbose = false
+//apply plugin: 'de.guntram.mcmod.crowdin-translate'
+//crowdintranslate.crowdinProjectName = 'durabilityviewer'
+//crowdintranslate.verbose = false
 
 repositories {
 	maven {
@@ -43,7 +43,7 @@ sourceCompatibility = 17
 targetCompatibility = 17
 
 ext.Versions = new Properties()
-Versions.load(file("Versionfiles/mcversion-1.18.properties").newReader())
+Versions.load(file("Versionfiles/mcversion-1.18.2.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
 ext.projectVersion = "1.10.2"
@@ -69,8 +69,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${Versions['fabric_version']}"
     modImplementation "TechReborn:TechReborn-1.16:3.4.5+build.95"
     modImplementation "com.terraformersmc:modmenu:${Versions['modmenu_version']}"
-    modImplementation "de.guntram.mcmod:crowdin-translate:${Versions['crowdintranslate_version']}"
-    include    "de.guntram.mcmod:crowdin-translate:${Versions['crowdintranslate_version']}"
+    //modImplementation "de.guntram.mcmod:crowdin-translate:${Versions['crowdintranslate_version']}"
+    //include    "de.guntram.mcmod:crowdin-translate:${Versions['crowdintranslate_version']}"
     
     modImplementation "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     include    "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
@@ -91,7 +91,7 @@ jar {
 }
 
 processResources {
-	dependsOn downloadTranslations
+	//dependsOn downloadTranslations
 }
 
 import com.modrinth.minotaur.TaskModrinthUpload
