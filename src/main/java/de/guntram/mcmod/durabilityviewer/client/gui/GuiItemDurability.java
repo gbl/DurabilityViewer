@@ -275,7 +275,7 @@ public class GuiItemDurability
             int leftOffset = -120;
             int rightOffset = 100;
             if (!player.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty()) {
-                if (minecraft.options.mainArm == Arm.RIGHT) {
+                if (minecraft.options.getMainArm().getValue() == Arm.RIGHT) {
                     leftOffset -= 20;
                 } else {
                     rightOffset += 20;

@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,7 +38,7 @@ public abstract class TooltipMixin {
         
         if (!advanced.isAdvanced() && !this.isEmpty()) {
             if (this.isDamaged()) {
-                Text toolTip = new LiteralText(I18n.translate("tooltip.durability",
+                Text toolTip = Text.literal(I18n.translate("tooltip.durability",
                         (this.getMaxDamage()- this.getDamage())+
                         " / "+
                         this.getMaxDamage()))
@@ -62,17 +62,17 @@ public abstract class TooltipMixin {
         for (String key: sortedKeys) {
             NbtElement elem=tag.get(key);
             switch(elem.getType()) {
-                case 2: list.add(new LiteralText(prefix+key+": §2"+tag.getShort(key))); break;
-                case 3: list.add(new LiteralText(prefix+key+": §3"+tag.getInt(key))); break;
-                case 6: list.add(new LiteralText(prefix+key+": §6"+tag.getDouble(key))); break;
-                case 8: list.add(new LiteralText(prefix+key+": §8"+tag.getString(key))); break;
-                case 9: list.add(new LiteralText(prefix+key+": §9List, "+((NbtList)elem).size()+" items")); break;
-                case 10:list.add(new LiteralText(prefix+key+": §aCompound"));
+                case 2: list.add(Text.literal(prefix+key+": §2"+tag.getShort(key))); break;
+                case 3: list.add(Text.literal(prefix+key+": §3"+tag.getInt(key))); break;
+                case 6: list.add(Text.literal(prefix+key+": §6"+tag.getDouble(key))); break;
+                case 8: list.add(Text.literal(prefix+key+": §8"+tag.getString(key))); break;
+                case 9: list.add(Text.literal(prefix+key+": §9List, "+((NbtList)elem).size()+" items")); break;
+                case 10:list.add(Text.literal(prefix+key+": §aCompound"));
                         if (Screen.hasShiftDown()) {
                             addNbtCompound(prefix+"    ", list, (NbtCompound)elem);
                         }
                         break;
-                default:list.add(new LiteralText(prefix+key+": Type "+elem.getType())); break;
+                default:list.add(Text.literal(prefix+key+": Type "+elem.getType())); break;
             }
         }
     }
