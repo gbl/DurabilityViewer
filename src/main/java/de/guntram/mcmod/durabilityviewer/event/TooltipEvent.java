@@ -9,7 +9,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -28,7 +27,7 @@ public class TooltipEvent
 				itemStack.getMaxDamage()
                         );
                 if (!event.getToolTip().contains(toolTip)) {
-                    event.getToolTip().add(new TextComponent(toolTip));
+                    event.getToolTip().add(Component.literal(toolTip));
                 }
             }
         }
@@ -46,17 +45,17 @@ public class TooltipEvent
         for (String key: sortedKeys) {
             Tag elem=tag.get(key);
             switch(elem.getId()) {
-                case 2: list.add(new TextComponent(prefix+key+": §2"+tag.getShort(key))); break;
-                case 3: list.add(new TextComponent(prefix+key+": §3"+tag.getInt(key))); break;
-                case 6: list.add(new TextComponent(prefix+key+": §6"+tag.getDouble(key))); break;
-                case 8: list.add(new TextComponent(prefix+key+": §8"+tag.getString(key))); break;
-                case 9: list.add(new TextComponent(prefix+key+": §9List, "+((ListTag)elem).size()+" items")); break;
-                case 10:list.add(new TextComponent(prefix+key+": §aCompound"));
+                case 2: list.add(Component.literal(prefix+key+": §2"+tag.getShort(key))); break;
+                case 3: list.add(Component.literal(prefix+key+": §3"+tag.getInt(key))); break;
+                case 6: list.add(Component.literal(prefix+key+": §6"+tag.getDouble(key))); break;
+                case 8: list.add(Component.literal(prefix+key+": §8"+tag.getString(key))); break;
+                case 9: list.add(Component.literal(prefix+key+": §9List, "+((ListTag)elem).size()+" items")); break;
+                case 10:list.add(Component.literal(prefix+key+": §aCompound"));
                         if (Screen.hasShiftDown()) {      // hasShiftDown
                             addCompoundTag(prefix+"    ", list, (CompoundTag)elem);
                         }
                         break;
-                default:list.add(new TextComponent(prefix+key+": Type "+elem.getId())); break;
+                default:list.add(Component.literal(prefix+key+": Type "+elem.getId())); break;
             }
         }
     }    

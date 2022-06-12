@@ -54,7 +54,7 @@ public class GuiItemDurability extends Gui
     }
     
     public GuiItemDurability() {
-        super(Minecraft.getInstance());
+        super(Minecraft.getInstance(), Minecraft.getInstance().getItemRenderer());
         minecraft = Minecraft.getInstance();
         fontRenderer = minecraft.font;
         itemRenderer = minecraft.getItemRenderer();
@@ -159,7 +159,7 @@ public class GuiItemDurability extends Gui
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
         }
         Window mainWindow=Minecraft.getInstance().getWindow();
-        PoseStack stack = event.getMatrixStack();
+        PoseStack stack = event.getPoseStack();
         
         RenderSize armorSize, toolsSize;
         armorSize=this.renderItems(stack, 0, 0, false, RenderPos.left, 0, boots, leggings, chestplate, helmet);
@@ -200,7 +200,7 @@ public class GuiItemDurability extends Gui
             int leftOffset = -120;
             int rightOffset = 100;
             if (!effectivePlayer.getItemBySlot(EquipmentSlot.OFFHAND).isEmpty()) {
-                if (minecraft.options.mainHand == HumanoidArm.RIGHT) {
+                if (minecraft.options.mainHand().get() == HumanoidArm.RIGHT) {
                     leftOffset -= 20;
                 } else {
                     rightOffset += 20;
@@ -280,7 +280,7 @@ public class GuiItemDurability extends Gui
                         show=(duration/1200)+"m";
                     else
                         show=(duration/20)+"s";
-                    fontRenderer.draw(event.getMatrixStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
+                    fontRenderer.draw(event.getPoseStack(), show, xpos+2, ypos, ItemIndicator.color_yellow);        // draw
                 }
             }
         }

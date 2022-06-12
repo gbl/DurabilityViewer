@@ -10,8 +10,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-
+import net.minecraft.network.chat.MutableComponent;
 
 public class ColorPicker extends AbstractWidget implements SliderValueConsumer {
 
@@ -29,7 +28,7 @@ public class ColorPicker extends AbstractWidget implements SliderValueConsumer {
     }
 
     public void init() {
-        TextComponent buttonITextComponent = new TextComponent("");
+        MutableComponent buttonITextComponent = Component.literal("");
         this.x = (optionScreen.width - width) / 2;
         this.y = (optionScreen.height - height) / 2;
         colorDisplay = new ColorDisplayAreaButton(

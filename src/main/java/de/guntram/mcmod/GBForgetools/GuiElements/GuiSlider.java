@@ -8,7 +8,7 @@ import de.guntram.mcmod.GBForgetools.Types.SliderValueConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 public class GuiSlider extends AbstractWidget {
@@ -23,10 +23,10 @@ public class GuiSlider extends AbstractWidget {
     
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public GuiSlider(SliderValueConsumer optionScreen, int x, int y, int width, int height, IConfiguration config, String option) {
-        super(x, y, width, height, new TextComponent("?"));
+        super(x, y, width, height, Component.literal("?"));
         Object value=config.getValue(option);
         if (value instanceof Double) {
-            this.setMessage(new TextComponent(Double.toString((Double)value)));
+            this.setMessage(Component.literal(Double.toString((Double)value)));
             this.min=(Double)config.getMin(option);
             this.max=(Double)config.getMax(option);
             this.defaultValue=(Double)config.getDefault(option);
@@ -34,14 +34,14 @@ public class GuiSlider extends AbstractWidget {
             type=Type.DOUBLE;
         }
         else if (value instanceof Float) {
-            this.setMessage(new TextComponent(Float.toString((Float)value)));
+            this.setMessage(Component.literal(Float.toString((Float)value)));
             this.min=(Float)config.getMin(option);
             this.max=(Float)config.getMax(option);
             this.defaultValue=(Float)config.getDefault(option);
             sliderValue=((Float)value-min)/(max-min);
             type=Type.FLOAT;
         } else {
-            this.setMessage(new TextComponent(Integer.toString((Integer)value)));
+            this.setMessage(Component.literal(Integer.toString((Integer)value)));
             this.min=(Integer)config.getMin(option);
             this.max=(Integer)config.getMax(option);
             this.defaultValue=(Integer)config.getDefault(option);
@@ -55,8 +55,8 @@ public class GuiSlider extends AbstractWidget {
     }
     
     public GuiSlider(SliderValueConsumer optionScreen, int x, int y, int width, int height, int val, int min, int max, String option) {
-        super(x, y, width, height, TextComponent.EMPTY);
-        this.setMessage(new TextComponent(""+val));
+        super(x, y, width, height, Component.empty());
+        this.setMessage(Component.literal(""+val));
         this.min = min;
         this.max = max;
         this.sliderValue=(val-min)/(max-min);
@@ -74,13 +74,13 @@ public class GuiSlider extends AbstractWidget {
         this.sliderValue = (value-min)/(max-min);
         switch (type) {
             case DOUBLE:
-                this.setMessage(new TextComponent(Double.toString(value)));
+                this.setMessage(Component.literal(Double.toString(value)));
                 break;
             case FLOAT:
-                this.setMessage(new TextComponent(Float.toString((float)value)));
+                this.setMessage(Component.literal(Float.toString((float)value)));
                 break;
             case INT:
-                this.setMessage(new TextComponent(Integer.toString((int)value)));
+                this.setMessage(Component.literal(Integer.toString((int)value)));
                 break;
         }
     }
@@ -99,17 +99,17 @@ public class GuiSlider extends AbstractWidget {
         switch (type) {
             case DOUBLE:
                 double doubleVal=value*(max-min)+min;
-                this.setMessage(new TextComponent(String.format("%.2f", doubleVal)));
+                this.setMessage(Component.literal(String.format("%.2f", doubleVal)));
                 parent.onConfigChanging(configOption, doubleVal);
                 break;
             case FLOAT:
                 float floatVal=(float) (value*(max-min)+min);
-                this.setMessage(new TextComponent(String.format("%.2f", floatVal)));
+                this.setMessage(Component.literal(String.format("%.2f", floatVal)));
                 parent.onConfigChanging(configOption, floatVal);
                 break;
             case INT:
                 int intVal=(int) (value*(max-min)+min+0.5);
-                this.setMessage(new TextComponent(String.format("%d", intVal)));
+                this.setMessage(Component.literal(String.format("%d", intVal)));
                 parent.onConfigChanging(configOption, intVal);
                 break;
         }

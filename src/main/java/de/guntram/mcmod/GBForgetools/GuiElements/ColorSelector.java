@@ -7,8 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class ColorSelector extends AbstractWidget {
 
@@ -25,14 +25,14 @@ public class ColorSelector extends AbstractWidget {
         0xFF5555, 0xFF55FF, 0xFFFF55, 0xFFFFFF
     };
 
-    public ColorSelector(GuiModOptions optionScreen, TextComponent message) {
+    public ColorSelector(GuiModOptions optionScreen, MutableComponent message) {
         super(0, 0, 120, 120, message);
         buttons = new ColorButton[16];
         this.optionScreen = optionScreen;
     }
 
     public void init() {
-        TextComponent buttonText = new TextComponent("");
+        MutableComponent buttonText = Component.literal("");
         this.x = (optionScreen.width - width) / 2;
         this.y = (optionScreen.height - height) / 2;
         for (int i=0; i<16; i++) {
@@ -94,7 +94,7 @@ public class ColorSelector extends AbstractWidget {
         private final int index;
         private final int color;
 
-        public ColorButton(ColorSelector parent, int x, int y, int width, int height, TextComponent message, int index, int color) {
+        public ColorButton(ColorSelector parent, int x, int y, int width, int height, MutableComponent message, int index, int color) {
             super(x, y, width, height, message);
             this.index = index;
             this.color = color;
