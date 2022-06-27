@@ -11,6 +11,7 @@
     "durabilityviewer.config.mindurability": "Sound below durability",
     "durabilityviewer.config.setwindowtitle": "Set window title",
     "durabilityviewer.config.showdamagepercent": "Percent to show damage",
+    "durabilityviewer.config.hidedamagepercent": "Percent to hide icons",
     "durabilityviewer.config.showfreeslots": "Show free inventory slots",
     "durabilityviewer.config.showalltrinkets": "Show all trinkets",
     "durabilityviewer.config.percentvalues": "Percentages",
