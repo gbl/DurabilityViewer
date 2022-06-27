@@ -29,6 +29,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private int minDurability = 100;
     private boolean showPlayerServerName;
     private int showDamageOverPercent;
+    private int hideDamageOverPercent;
     private boolean armorAroundHotbar;
     private boolean showChestIcon;
     private boolean showAllTrinkets;
@@ -99,6 +100,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
         minDurability = config.getInt("durabilityviewer.config.mindurability", Configuration.CATEGORY_CLIENT, minDurability, 1, 1500, "durabilityviewer.config.tt.mindurability");
         showPlayerServerName = config.getBoolean("durabilityviewer.config.setwindowtitle", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.setwindowtitle");
         showDamageOverPercent = config.getInt("durabilityviewer.config.showdamagepercent", Configuration.CATEGORY_CLIENT, 80, 0, 100, "durabilityviewer.config.tt.showdamagepercent");
+        hideDamageOverPercent = config.getInt("durabilityviewer.config.hidedamagepercent", Configuration.CATEGORY_CLIENT, 100, 0, 100, "durabilityviewer.config.tt.hidedamagepercent");
         showChestIcon = config.getBoolean("durabilityviewer.config.showfreeslots", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showfreeslots");
         showAllTrinkets = config.getBoolean("durabilityviewer.config.showalltrinkets", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showalltrinkets");
         showPercentValues = config.getBoolean("durabilityviewer.config.percentvalues", Configuration.CATEGORY_CLIENT, false, "durabilityviewer.config.tt.percentvalues");
@@ -140,6 +142,10 @@ public class ConfigurationHandler implements ModConfigurationHandler
     
     public static int showDamageOverPercent() {
         return getInstance().showDamageOverPercent;
+    }
+
+    public static int hideDamageOverPercent() {
+        return getInstance().hideDamageOverPercent;
     }
     
     public static boolean getArmorAroundHotbar() {

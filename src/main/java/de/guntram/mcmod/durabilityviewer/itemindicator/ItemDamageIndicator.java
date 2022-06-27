@@ -29,7 +29,7 @@ public class ItemDamageIndicator implements ItemIndicator {
         int cur=max-dam;
 
         int shown;
-        if (cur > max*ConfigurationHandler.showDamageOverPercent()/100) {
+        if (cur > max * ConfigurationHandler.showDamageOverPercent()/100) {
             shown=-dam;
         } else {
             shown=cur;
@@ -59,7 +59,7 @@ public class ItemDamageIndicator implements ItemIndicator {
     
     @Override
     public boolean isEmpty() {
-        return stack.isEmpty();
+        return stack.isEmpty() || (stack.getDamage() > stack.getMaxDamage() * ConfigurationHandler.hideDamageOverPercent()/100);
     }
 
     @Override
