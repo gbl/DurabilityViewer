@@ -196,7 +196,7 @@ public class GuiItemDurability
             trinkets = new ItemIndicator[0];            
         }
         
-        if (needToWarn!= null) {
+        if (needToWarn != null) {
             if ((ConfigurationHandler.getWarnMode() & 1) == 1) {
                 ItemBreakingWarner.playWarningSound();
             }
@@ -218,8 +218,11 @@ public class GuiItemDurability
         }
 
         
-        if (mainHand.getItemStack().getItem() instanceof RangedWeaponItem
-        ||   offHand.getItemStack().getItem() instanceof RangedWeaponItem) {
+        if (
+            ConfigurationHandler.getShowArrowIcon &&
+            ( mainHand.getItemStack().getItem() instanceof RangedWeaponItem
+            || offHand.getItemStack().getItem() instanceof RangedWeaponItem )
+        ) {
             arrows=new ItemCountIndicator(getFirstArrowStack(), getInventoryArrowCount());
         }
 

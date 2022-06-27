@@ -102,6 +102,8 @@ public class ConfigurationHandler implements ModConfigurationHandler
         showDamageOverPercent = config.getInt("durabilityviewer.config.showdamagepercent", Configuration.CATEGORY_CLIENT, 80, 0, 100, "durabilityviewer.config.tt.showdamagepercent");
         hideDamageOverPercent = config.getInt("durabilityviewer.config.hidedamagepercent", Configuration.CATEGORY_CLIENT, 100, 0, 100, "durabilityviewer.config.tt.hidedamagepercent");
         showChestIcon = config.getBoolean("durabilityviewer.config.showfreeslots", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showfreeslots");
+        showArmorIcons = config.getBoolean("durabilityviewer.config.showarmoricons", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showfreeslots");
+        showToolIcon = config.getBoolean("durabilityviewer.config.showtoolicon", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showfreeslots");
         showAllTrinkets = config.getBoolean("durabilityviewer.config.showalltrinkets", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showalltrinkets");
         showPercentValues = config.getBoolean("durabilityviewer.config.percentvalues", Configuration.CATEGORY_CLIENT, false, "durabilityviewer.config.tt.percentvalues");
         warnMode = config.getSelection("durabilityviewer.config.warnmode", Configuration.CATEGORY_CLIENT, 1, warnModes, "durabilityviewer.config.tt.warnmode");
@@ -153,6 +155,8 @@ public class ConfigurationHandler implements ModConfigurationHandler
     }
 
     public static boolean getShowChestIcon() { return getInstance().showChestIcon; }
+    public static boolean getShowArmorIcons() { return getInstance().showArmorIcons; }
+    public static boolean getShowToolIcon() { return getInstance().showToolIcon; }
     
     public static boolean getShowAllTrinkets() { return getInstance().showAllTrinkets; }
     
