@@ -32,6 +32,8 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private int hideDamageOverPercent;
     private boolean armorAroundHotbar;
     private boolean showChestIcon;
+    private boolean showArmorIcons;
+    private boolean showToolIcon;
     private boolean showAllTrinkets;
     private boolean showPercentValues;
     private int warnMode;

@@ -219,7 +219,7 @@ public class GuiItemDurability
 
         
         if (
-            ConfigurationHandler.getShowArrowIcon &&
+            ConfigurationHandler.getShowToolIcon &&
             ( mainHand.getItemStack().getItem() instanceof RangedWeaponItem
             || offHand.getItemStack().getItem() instanceof RangedWeaponItem )
         ) {
@@ -286,23 +286,23 @@ public class GuiItemDurability
             }
             int helmetTextWidth = fontRenderer.getWidth(helmet.getDisplayValue());
             int chestTextWidth = fontRenderer.getWidth(chestplate.getDisplayValue());
-            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - helmetTextWidth, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, helmetTextWidth+iconWidth+spacing, helmet);
-            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, chestTextWidth+iconWidth+spacing, chestplate);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - helmetTextWidth, mainWindow.getScaledHeight()-iconHeight*2-2, ConfigurationHandler.getShowArmorIcons, RenderPos.left, helmetTextWidth+iconWidth+spacing, helmet);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth, mainWindow.getScaledHeight()-iconHeight-2, ConfigurationHandler.getShowArmorIcons, RenderPos.left, chestTextWidth+iconWidth+spacing, chestplate);
             if (colytra != null) {
                 int colytraTextWidth = fontRenderer.getWidth(colytra.getDisplayValue());
                 this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth - colytraTextWidth - iconWidth, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, colytraTextWidth+iconWidth+spacing, colytra);
             }
-            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
-            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, ConfigurationHandler.getShowArmorIcons, RenderPos.right, armorSize.width, leggings);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, ConfigurationHandler.getShowArmorIcons, RenderPos.right, armorSize.width, boots);
             if (ConfigurationHandler.getCorner().isRight()) {
                 xposTools += armorSize.width;
             } else {
                 xposTools -= armorSize.width;
             }
         } else {
-            this.renderItems(stack, xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, colytra, leggings, boots);
+            this.renderItems(stack, xposArmor, ypos, ConfigurationHandler.getShowArmorIcons, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, colytra, leggings, boots);
         }
-        this.renderItems(stack, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
+        this.renderItems(stack, xposTools, ypos, ConfigurationHandler.getShowToolIcon, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
         this.renderItems(stack, xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);
     }
     
