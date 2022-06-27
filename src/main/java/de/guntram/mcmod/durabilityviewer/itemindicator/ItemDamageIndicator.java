@@ -59,7 +59,7 @@ public class ItemDamageIndicator implements ItemIndicator {
     
     @Override
     public boolean isEmpty() {
-        return stack.isEmpty() || (stack.getDamage() > stack.getMaxDamage() * ConfigurationHandler.hideDamageOverPercent()/100);
+        return stack.isEmpty() || (stack.getMaxDamage() - stack.getDamage() > stack.getMaxDamage() * ConfigurationHandler.hideDamageOverPercent()/100);
     }
 
     @Override
