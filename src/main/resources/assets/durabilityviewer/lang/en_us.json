@@ -14,7 +14,7 @@
     "durabilityviewer.config.hidedamagepercent": "Percent to hide icons",
     "durabilityviewer.config.showfreeslots": "Show free inventory slots",
     "durabilityviewer.config.showarmoricons": "Show durability of armor",
-    "durabilityviewer.config.showtoolicon": "Show tools and arrows when applicable",
+    "durabilityviewer.config.showtoolicon": "Show tools and arrows",
     "durabilityviewer.config.showalltrinkets": "Show all trinkets",
     "durabilityviewer.config.percentvalues": "Percentages",
     "durabilityviewer.config.warnmode": "Warning mode",
