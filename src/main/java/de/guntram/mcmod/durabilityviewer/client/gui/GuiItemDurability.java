@@ -1,7 +1,6 @@
 package de.guntram.mcmod.durabilityviewer.client.gui;
 
 import com.google.common.collect.Ordering;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,8 +26,8 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
@@ -113,7 +112,7 @@ public class GuiItemDurability extends Gui
     }
     
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void onRender(final RenderGameOverlayEvent.PostLayer event) {
+    public void onRender(final RenderGuiOverlayEvent.Post event) {
 
         // This needs to be done before everything else to make sure
         // the title change that occurs when logging off gets through.
@@ -125,7 +124,7 @@ public class GuiItemDurability extends Gui
         if (!visible
         ||  event.isCanceled()
         // ||  minecraft.player.abilities.isCreativeMode
-        ||  event.getOverlay()!=ForgeIngameGui.HOTBAR_ELEMENT)
+        ||  !(event.getOverlay().equals(VanillaGuiOverlay.HOTBAR.type())))
             return;
 
         LocalPlayer effectivePlayer = minecraft.player;
@@ -251,12 +250,12 @@ public class GuiItemDurability extends Gui
     }
     
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void afterRenderStatusEffects(final RenderGameOverlayEvent.PostLayer event) {
+    public void afterRenderStatusEffects(final RenderGuiOverlayEvent.Post event) {
 
         if (!visible
         ||  event.isCanceled()
         // ||  minecraft.player.abilities.isCreativeMode
-        ||  event.getOverlay()!=ForgeIngameGui.POTION_ICONS_ELEMENT)
+        ||  !(event.getOverlay().equals(VanillaGuiOverlay.POTION_ICONS.type())))
             return;
         
         if (ConfigurationHandler.showEffectDuration()) {

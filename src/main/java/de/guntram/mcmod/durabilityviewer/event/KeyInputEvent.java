@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class KeyInputEvent
 {
     @SubscribeEvent
-    public void keyPressed(final InputEvent.KeyInputEvent e) {
+    public void keyPressed(final InputEvent.Key e) {
         if (KeyHandler.showHud.consumeClick()) {
             if (e.getModifiers() == 0) {
                 GuiItemDurability.toggleVisibility();
