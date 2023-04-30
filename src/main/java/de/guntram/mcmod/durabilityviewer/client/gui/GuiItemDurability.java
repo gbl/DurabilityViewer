@@ -33,7 +33,7 @@ import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.util.Arm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import team.reborn.energy.EnergyHolder;
+//import team.reborn.energy.EnergyHolder;
 
 
 public class GuiItemDurability
@@ -307,11 +307,12 @@ public class GuiItemDurability
         ItemStack stack = player.getEquippedStack(slot);
         if (stack.isDamageable()) {
             return new ItemDamageIndicator(stack);
-        } else if (haveTRCore) {
-            if (stack.getItem() instanceof EnergyHolder && stack.getNbt()!=null && stack.getNbt().contains("energy", 6)) {
-                return new TREnergyIndicator(stack);
-            }
         }
+//        else if (haveTRCore) {
+//            if (stack.getItem() instanceof EnergyHolder && stack.getNbt()!=null && stack.getNbt().contains("energy", 6)) {
+//                return new TREnergyIndicator(stack);
+//            }
+//        }
         return new ItemDamageIndicator(stack);
     }
     
@@ -324,16 +325,13 @@ public class GuiItemDurability
         
         DrawableHelper.fill(matrices, 0, 0, mainWindow.getScaledWidth(), mainWindow.getScaledHeight(),
                 0xff0000+ ((int)(alpha*128)<<24));
+
+        matrices.push();
+        matrices.scale(scale, scale, scale);
         
-        MatrixStack stack = RenderSystem.getModelViewStack();
-        stack.push();
-        stack.scale(scale, scale, scale);
-        RenderSystem.applyModelViewMatrix();
-        
-        itemRenderer.renderGuiItemIcon(itemStack, (int)((xWarn)/scale-8), (int)((yWarn)/scale-8));
-        
-        stack.pop();
-        RenderSystem.applyModelViewMatrix();
+        itemRenderer.renderGuiItemIcon(matrices, itemStack, (int)((xWarn)/scale-8), (int)((yWarn)/scale-8));
+
+        matrices.pop();
         
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
@@ -377,7 +375,7 @@ public class GuiItemDurability
                     result.width=width;
                 if (reallyDraw) {
                     int color=item.getDisplayColor();
-                    itemRenderer.renderGuiItemIcon(item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
+                    itemRenderer.renderGuiItemIcon(stack, item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
                     fontRenderer.draw(stack, displayString, numberPos != RenderPos.right ? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.fontHeight/2 + (numberPos==RenderPos.over ? 10  : 0), color);
                 }
                 result.height+=16;

@@ -10,6 +10,8 @@ public class MMConfigurationHandler implements ModMenuApi
 {
     @Override
     public ConfigScreenFactory getModConfigScreenFactory() {
-        return screen -> new GuiModOptions(screen, DurabilityViewer.MODNAME, ConfigurationProvider.getHandler(DurabilityViewer.MODNAME));
+        // TODO: re-enable this once GBfabrictools is updated to 1.19.4
+//        return screen -> new GuiModOptions(screen, DurabilityViewer.MODNAME, ConfigurationProvider.getHandler(DurabilityViewer.MODNAME));
+        return null;
     }
 }

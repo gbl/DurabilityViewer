@@ -42,7 +42,7 @@ sourceCompatibility = 17
 targetCompatibility = 17
 
 ext.Versions = new Properties()
-Versions.load(file("Versionfiles/mcversion-1.19.3.properties").newReader())
+Versions.load(file("Versionfiles/mcversion-1.19.4.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
 ext.projectVersion = "1.10.3"
@@ -66,15 +66,15 @@ dependencies {
     mappings   "net.fabricmc:yarn:${Versions['yarn_mappings']}:v2"
     modImplementation "net.fabricmc:fabric-loader:${Versions['loader_version']}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${Versions['fabric_version']}"
-    modImplementation "TechReborn:TechReborn-1.16:3.4.5+build.95"
-    modImplementation "com.terraformersmc:modmenu:${Versions['modmenu_version']}"
+//     modImplementation "TechReborn:TechReborn-1.16:3.4.5+build.95"
+    modImplementation "com.terraformersmc:modmenu:6.2.2"
     modImplementation "de.guntram.mcmod:crowdin-translate:${Versions['crowdintranslate_version']}"
     include    "de.guntram.mcmod:crowdin-translate:${Versions['crowdintranslate_version']}"
     
     modImplementation "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     include    "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     
-	modImplementation "dev.emi:trinkets:3.0.0"
+	modImplementation "dev.emi:trinkets:3.6.0"
 }
 
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
