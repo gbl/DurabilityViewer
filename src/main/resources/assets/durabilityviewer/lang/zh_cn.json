@@ -32,7 +32,7 @@
     "tooltip.durability": "耐久度 %s",
     "durabilityviewer.subtitle.toolBreaking": "物品即将损坏",
     "durabilityviewer.config.warnmode.none": "无",
-    "durabilityviewer.config.warnmode.sound": "仅声音",
-    "durabilityviewer.config.warnmode.visual": "仅视觉效果",
+    "durabilityviewer.config.warnmode.sound": "只播放声音",
+    "durabilityviewer.config.warnmode.visual": "仅可视化",
     "durabilityviewer.config.warnmode.both": "声音和视觉效果"
 }

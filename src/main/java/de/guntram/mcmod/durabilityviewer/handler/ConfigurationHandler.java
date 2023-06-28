@@ -94,7 +94,7 @@ public class ConfigurationHandler implements ModConfigurationHandler
                 }, 
                 "durabilityviewer.config.tt.corner");
         armorAroundHotbar=config.getBoolean("durabilityviewer.config.armorhotbar", Configuration.CATEGORY_CLIENT, armorAroundHotbar, "durabilityviewer.config.tt.armorhotbar");
-        color=config.getInt("durabilityviewer.config.tooltipcolor", Configuration.CATEGORY_CLIENT, color, 0, 15, "durabilityviewer.config.tt.tooltipcolor");
+        color=config.getIndexedColor("durabilityviewer.config.tooltipcolor", Configuration.CATEGORY_CLIENT, color, "durabilityviewer.config.tt.tooltipcolor");
         effectDuration=config.getBoolean("durabilityviewer.config.effectduration", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.effectduration");
         minPercent = config.getInt("durabilityviewer.config.minpercent", Configuration.CATEGORY_CLIENT, minPercent, 1, 100, "durabilityviewer.config.tt.minpercent");
         minDurability = config.getInt("durabilityviewer.config.mindurability", Configuration.CATEGORY_CLIENT, minDurability, 1, 1500, "durabilityviewer.config.tt.mindurability");
