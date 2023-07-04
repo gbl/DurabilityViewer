@@ -43,7 +43,7 @@ sourceCompatibility = 17
 targetCompatibility = 17
 
 ext.Versions = new Properties()
-Versions.load(file("Versionfiles/mcversion-1.20.properties").newReader())
+Versions.load(file("Versionfiles/mcversion-1.19.4.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
 ext.projectVersion = "1.10.4"
@@ -71,7 +71,9 @@ dependencies {
     modImplementation "com.terraformersmc:modmenu:${Versions['modmenu_version']}"
     modImplementation "de.guntram.mcmod:crowdin-translate:${Versions['crowdintranslate_version']}"
     include    "de.guntram.mcmod:crowdin-translate:${Versions['crowdintranslate_version']}"
-    
+
+    compileOnly files('RoughlyEnoughItems-6.0.262-alpha-fabric.jar');
+    //modImplementation files('GBfabrictools-1.4+1.19.4.jar');
     modImplementation "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     include    "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     
