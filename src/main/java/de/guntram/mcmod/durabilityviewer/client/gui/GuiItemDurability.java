@@ -315,14 +315,14 @@ public class GuiItemDurability
         return new ItemDamageIndicator(stack);
     }
     
-    private void renderItemBreakingOverlay(MatrixStack matricies, ItemStack itemStack, long timeDelta) {
+    private void renderItemBreakingOverlay(MatrixStack matrices, ItemStack itemStack, long timeDelta) {
         Window mainWindow = MinecraftClient.getInstance().getWindow();
         float alpha = 1.0f-((float)timeDelta/1000.0f);
         float xWarn = mainWindow.getScaledWidth()/2;
         float yWarn = mainWindow.getScaledHeight()/2;
         float scale = 5.0f;
         
-        DrawableHelper.fill(matricies, 0, 0, mainWindow.getScaledWidth(), mainWindow.getScaledHeight(),
+        DrawableHelper.fill(matrices, 0, 0, mainWindow.getScaledWidth(), mainWindow.getScaledHeight(),
                 0xff0000+ ((int)(alpha*128)<<24));
         
         MatrixStack stack = RenderSystem.getModelViewStack();
