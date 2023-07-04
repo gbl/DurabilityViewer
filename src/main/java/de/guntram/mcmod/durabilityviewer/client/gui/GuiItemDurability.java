@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
@@ -141,7 +141,7 @@ public class GuiItemDurability
         left, over, right;
     }
 
-    public void onRenderGameOverlayPost(DrawContext context, float partialTicks) {
+    public void onRenderGameOverlayPost(MatrixStack stack, float partialTicks) {
 
         PlayerEntity player = (PlayerEntity) minecraft.player;
         ItemStack needToWarn=null;
@@ -206,7 +206,7 @@ public class GuiItemDurability
         
         long timeSinceLastWarning = System.currentTimeMillis() - lastWarningTime;
         if (timeSinceLastWarning < 1000 && (ConfigurationHandler.getWarnMode() & 2) == 2) {
-            renderItemBreakingOverlay(context, lastWarningItem, timeSinceLastWarning);
+            renderItemBreakingOverlay(stack, lastWarningItem, timeSinceLastWarning);
         }
         
         // Moved this check to down here, in order to play the 
@@ -228,10 +228,10 @@ public class GuiItemDurability
         if (ConfigurationHandler.getArmorAroundHotbar()) {
             armorSize = new RenderSize(0, 0);
         } else {
-            armorSize=this.renderItems(context, 0, 0, false, RenderPos.left, 0, boots, leggings, colytra, chestplate, helmet);
+            armorSize=this.renderItems(stack, 0, 0, false, RenderPos.left, 0, boots, leggings, colytra, chestplate, helmet);
         }
-        toolsSize=this.renderItems(context, 0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
-        trinketsSize = this.renderItems(context, 0, 0, false, RenderPos.left, 0, trinkets);
+        toolsSize=this.renderItems(stack, 0, 0, false, RenderPos.right, 0, invSlots, mainHand, offHand, arrows);
+        trinketsSize = this.renderItems(stack, 0, 0, false, RenderPos.left, 0, trinkets);
         
         int totalHeight=(toolsSize.height > armorSize.height ? toolsSize.height : armorSize.height);
         if (trinketsSize.height > totalHeight) { totalHeight = trinketsSize.height; }
@@ -283,24 +283,24 @@ public class GuiItemDurability
             }
             int helmetTextWidth = fontRenderer.getWidth(helmet.getDisplayValue());
             int chestTextWidth = fontRenderer.getWidth(chestplate.getDisplayValue());
-            this.renderItems(context, mainWindow.getScaledWidth()/2+leftOffset - helmetTextWidth, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, helmetTextWidth+iconWidth+spacing, helmet);
-            this.renderItems(context, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, chestTextWidth+iconWidth+spacing, chestplate);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - helmetTextWidth, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.left, helmetTextWidth+iconWidth+spacing, helmet);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, chestTextWidth+iconWidth+spacing, chestplate);
             if (colytra != null) {
                 int colytraTextWidth = fontRenderer.getWidth(colytra.getDisplayValue());
-                this.renderItems(context, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth - colytraTextWidth - iconWidth, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, colytraTextWidth+iconWidth+spacing, colytra);
+                this.renderItems(stack, mainWindow.getScaledWidth()/2+leftOffset - chestTextWidth - colytraTextWidth - iconWidth, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.left, colytraTextWidth+iconWidth+spacing, colytra);
             }
-            this.renderItems(context, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
-            this.renderItems(context, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight*2-2, true, RenderPos.right, armorSize.width, leggings);
+            this.renderItems(stack, mainWindow.getScaledWidth()/2+rightOffset, mainWindow.getScaledHeight()-iconHeight-2, true, RenderPos.right, armorSize.width, boots);
             if (ConfigurationHandler.getCorner().isRight()) {
                 xposTools += armorSize.width;
             } else {
                 xposTools -= armorSize.width;
             }
         } else {
-            this.renderItems(context, xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, colytra, leggings, boots);
+            this.renderItems(stack, xposArmor, ypos, true, ConfigurationHandler.getCorner().isLeft() ? RenderPos.left : RenderPos.right, armorSize.width, helmet, chestplate, colytra, leggings, boots);
         }
-        this.renderItems(context, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
-        this.renderItems(context, xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);
+        this.renderItems(stack, xposTools, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, toolsSize.width, invSlots, mainHand, offHand, arrows);
+        this.renderItems(stack, xposTrinkets, ypos, true, ConfigurationHandler.getCorner().isRight() ? RenderPos.right : RenderPos.left, trinketsSize.width, trinkets);
     }
     
     private ItemIndicator damageOrEnergy(PlayerEntity player, EquipmentSlot slot) {
@@ -315,14 +315,14 @@ public class GuiItemDurability
         return new ItemDamageIndicator(stack);
     }
     
-    private void renderItemBreakingOverlay(DrawContext context, ItemStack itemStack, long timeDelta) {
+    private void renderItemBreakingOverlay(MatrixStack matricies, ItemStack itemStack, long timeDelta) {
         Window mainWindow = MinecraftClient.getInstance().getWindow();
         float alpha = 1.0f-((float)timeDelta/1000.0f);
         float xWarn = mainWindow.getScaledWidth()/2;
         float yWarn = mainWindow.getScaledHeight()/2;
         float scale = 5.0f;
         
-        context.fill(0, 0, mainWindow.getScaledWidth(), mainWindow.getScaledHeight(),
+        DrawableHelper.fill(matricies, 0, 0, mainWindow.getScaledWidth(), mainWindow.getScaledHeight(),
                 0xff0000+ ((int)(alpha*128)<<24));
         
         MatrixStack stack = RenderSystem.getModelViewStack();
@@ -330,7 +330,7 @@ public class GuiItemDurability
         stack.scale(scale, scale, scale);
         RenderSystem.applyModelViewMatrix();
 
-        context.drawItem(itemStack, (int)((xWarn)/scale-8), (int)((yWarn)/scale-8));
+        itemRenderer.renderGuiItemIcon(stack, itemStack, (int)((xWarn)/scale-8), (int)((yWarn)/scale-8));
 
         stack.pop();
         RenderSystem.applyModelViewMatrix();
@@ -338,7 +338,7 @@ public class GuiItemDurability
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
     
-    public void afterRenderStatusEffects(DrawContext context, float partialTicks) {
+    public void afterRenderStatusEffects(MatrixStack stack, float partialTicks) {
         if (ConfigurationHandler.showEffectDuration()) {
             // a lot of this is copied from net/minecraft/client/gui/GuiIngame.java
             Window mainWindow = MinecraftClient.getInstance().getWindow();
@@ -360,13 +360,13 @@ public class GuiItemDurability
                         show=(duration/1200)+"m";
                     else
                         show=(duration/20)+"s";
-                    context.drawTextWithShadow(fontRenderer, show, xpos+2, ypos, ItemIndicator.color_yellow);
+                    fontRenderer.draw(stack, show, xpos+2, ypos, ItemIndicator.color_yellow);
                 }
             }
         }
     }
     
-    private RenderSize renderItems(DrawContext context, int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
+    private RenderSize renderItems(MatrixStack stack, int xpos, int ypos, boolean reallyDraw, RenderPos numberPos, int maxWidth, ItemIndicator... items) {
         RenderSize result=new RenderSize(0, 0);
         
         for (ItemIndicator item: items) {
@@ -377,8 +377,8 @@ public class GuiItemDurability
                     result.width=width;
                 if (reallyDraw) {
                     int color=item.getDisplayColor();
-                    context.drawItem(item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
-                    context.drawTextWithShadow(fontRenderer, displayString, numberPos != RenderPos.right ? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.fontHeight/2 + (numberPos==RenderPos.over ? 10  : 0), color);
+                    itemRenderer.renderGuiItemIcon(stack, item.getItemStack(), numberPos == RenderPos.left ? xpos+maxWidth-iconWidth-spacing : xpos, ypos+result.height);
+                    fontRenderer.draw(stack, displayString, numberPos != RenderPos.right ? xpos : xpos+iconWidth+spacing, ypos+result.height+fontRenderer.fontHeight/2 + (numberPos==RenderPos.over ? 10  : 0), color);
                 }
                 result.height+=16;
             }
