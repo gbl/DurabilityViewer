@@ -10,7 +10,7 @@ buildscript {
     }
 }
 plugins {
-	id 'fabric-loom' version '1.2-SNAPSHOT'
+	id 'fabric-loom' version '1.3-SNAPSHOT'
 	id "com.modrinth.minotaur" version "2.+"
 	id "com.matthewprenger.cursegradle" version "1.4.0"
 }
@@ -34,7 +34,7 @@ repositories {
         }
 	maven {
 		name = "Ladysnake Libs"
-		url = "https://ladysnake.jfrog.io/artifactory/mods"
+		url = "https://maven.ladysnake.org/releases"
 	}
         maven { url "https://maven.shedaniel.me/" }
 }
@@ -43,10 +43,10 @@ sourceCompatibility = 17
 targetCompatibility = 17
 
 ext.Versions = new Properties()
-Versions.load(file("Versionfiles/mcversion-1.20.properties").newReader())
+Versions.load(file("Versionfiles/mcversion-1.20.2.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
-ext.projectVersion = "1.10.4"
+ext.projectVersion = "1.10.5"
 
 version = "${Versions['minecraft_version']}-fabric${Versions['fabric_versiononly']}-${project.projectVersion}"
 
