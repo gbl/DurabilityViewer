@@ -80,8 +80,9 @@ public class GuiItemDurability
         try {
             Class.forName("dev.emi.trinkets.api.TrinketsApi");
             LOGGER.info("Using trinkets in DurabilityViewer");
-            haveTrinketsApi = true;
-            trinketWarners = new ItemBreakingWarner[getTrinketSlotCount(minecraft.player)];
+            int slotCount = getTrinketSlotCount(minecraft.player);
+            haveTrinketsApi = (slotCount > 0);
+            trinketWarners = new ItemBreakingWarner[slotCount];
             for (int i=0; i<trinketWarners.length; i++) {
                 trinketWarners[i]=new ItemBreakingWarner();
             }
@@ -393,8 +394,7 @@ public class GuiItemDurability
         if (component.isEmpty()) {
             return 0;
         }
-        // return component.get().getEquipped(prdct -> true).size();
-        return 0;
+        return component.get().getEquipped(prdct -> true).size();
     }
     
     public List<ItemStack> getTrinkets(LivingEntity player) {
@@ -402,7 +402,6 @@ public class GuiItemDurability
         if (component.isEmpty()) {
             return null;
         }
-        // return component.get().getEquipped(prdct -> true).stream().map(pair -> pair.getRight()).toList();
-        return null;
+        return component.get().getEquipped(prdct -> true).stream().map(pair -> pair.getRight()).toList();
     }
 }
