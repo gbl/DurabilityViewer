@@ -213,7 +213,7 @@ public class GuiItemDurability
         // warning sound / do the visible 
         if (!visible
         // ||  minecraft.player.abilities.creativeMode
-        ||  minecraft.options.debugEnabled) {
+        ||  minecraft.getDebugHud().shouldShowDebugHud()) {
             return;
         }
 
