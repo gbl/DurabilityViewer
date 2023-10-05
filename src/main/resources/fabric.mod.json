@@ -17,7 +17,8 @@
       	"mixins.durabilityviewer.json"
     ],
     "depends": {
-        "fabric": "*"
+        "fabric-api": "*",
+        "cloth-config": "*"
     },
     "recommends": {
         "modmenu" : "*"

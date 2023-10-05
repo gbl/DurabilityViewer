@@ -9,6 +9,8 @@ import de.guntram.mcmod.durabilityviewer.handler.ConfigurationHandler;
 import net.minecraft.item.ItemStack;
 import team.reborn.energy.EnergyHolder;
 
+import static me.shedaniel.math.Color.HSBtoRGB;
+
 /**
  *
  * @author gbl
@@ -33,7 +35,7 @@ public class TREnergyIndicator implements ItemIndicator {
         if (stack.getNbt() != null) {
             energy = stack.getNbt().getDouble("energy");
         }
-        if (ConfigurationHandler.getShowPercentValues() && maxEnergy > 0) {
+        if (maxEnergy > 0 && energy / maxEnergy > (float) ConfigurationHandler.getShowPercentValueThreshold()/100) {
             return String.format("§o%.1f%%", energy / maxEnergy * 100);
         }
         if (energy > 10_000_000) {
@@ -48,6 +50,8 @@ public class TREnergyIndicator implements ItemIndicator {
     @Override
     public int getDisplayColor() {
         double energy = stack.getNbt().getDouble("energy");
+        if (ConfigurationHandler.getUseGradientColor())
+            return HSBtoRGB((float) (((maxEnergy - energy) / (float)maxEnergy)/3f), 1f, 1f);
         if (energy > maxEnergy * 0.2) {
             return color_green;
         } else if (energy > maxEnergy * 0.1) {

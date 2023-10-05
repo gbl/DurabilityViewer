@@ -46,7 +46,7 @@ ext.Versions = new Properties()
 Versions.load(file("Versionfiles/mcversion-1.20.2.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
-ext.projectVersion = "1.10.5"
+ext.projectVersion = "1.11.0"
 
 version = "${Versions['minecraft_version']}-fabric${Versions['fabric_versiononly']}-${project.projectVersion}"
 
@@ -77,8 +77,8 @@ dependencies {
     
     modImplementation "dev.emi:trinkets:3.7.0"
     // these two are only needed due to a bug in the trinkets build.gradle, remove them later -- 20230629
-    modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.0")
-    modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.0")
+    modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.3.0")
+    modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.3.0")
 }
 
 java {

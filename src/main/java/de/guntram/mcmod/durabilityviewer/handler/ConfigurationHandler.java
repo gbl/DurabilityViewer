@@ -31,9 +31,10 @@ public class ConfigurationHandler implements ModConfigurationHandler
     private int showDamageOverPercent;
     private int hideDamageOverPercent;
     private boolean armorAroundHotbar;
+    private boolean useGradientColor;
     private boolean showChestIcon;
     private boolean showAllTrinkets;
-    private boolean showPercentValues;
+    private int showPercentValueThreshold;
     private int warnMode;
 
     public static ConfigurationHandler getInstance() {
@@ -84,7 +85,8 @@ public class ConfigurationHandler implements ModConfigurationHandler
         config.migrate("Show all trinkets", "durabilityviewer.config.showalltrinkets");
         config.migrate("Armor around hotbar", "durabilityviewer.config.armorhotbar");
         config.migrate("Show chest icon", "durabilityviewer.config.showfreeslots");
-        
+        config.migrate("durabilityviewer.config.percentvalues", "durabilityviewer.config.percentvaluethreshold");
+
         corner=config.getSelection("durabilityviewer.config.corner", Configuration.CATEGORY_CLIENT, corner,
                 new String[] {
                     "durabilityviewer.config.bottom_right",
@@ -101,9 +103,10 @@ public class ConfigurationHandler implements ModConfigurationHandler
         showPlayerServerName = config.getBoolean("durabilityviewer.config.setwindowtitle", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.setwindowtitle");
         showDamageOverPercent = config.getInt("durabilityviewer.config.showdamagepercent", Configuration.CATEGORY_CLIENT, 80, 0, 100, "durabilityviewer.config.tt.showdamagepercent");
         hideDamageOverPercent = config.getInt("durabilityviewer.config.hidedamagepercent", Configuration.CATEGORY_CLIENT, 100, 0, 100, "durabilityviewer.config.tt.hidedamagepercent");
+        showPercentValueThreshold = config.getInt("durabilityviewer.config.percentvaluethreshold", Configuration.CATEGORY_CLIENT, 10, 0, 100, "durabilityviewer.config.tt.percentvaluethreshold");
+        useGradientColor = config.getBoolean("durabilityviewer.config.usegradientcolor", Configuration.CATEGORY_CLIENT, false, "durabilityviewer.config.tt.usegradientcolor");
         showChestIcon = config.getBoolean("durabilityviewer.config.showfreeslots", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showfreeslots");
         showAllTrinkets = config.getBoolean("durabilityviewer.config.showalltrinkets", Configuration.CATEGORY_CLIENT, true, "durabilityviewer.config.tt.showalltrinkets");
-        showPercentValues = config.getBoolean("durabilityviewer.config.percentvalues", Configuration.CATEGORY_CLIENT, false, "durabilityviewer.config.tt.percentvalues");
         warnMode = config.getSelection("durabilityviewer.config.warnmode", Configuration.CATEGORY_CLIENT, 1, warnModes, "durabilityviewer.config.tt.warnmode");
 
         tooltipColor=Formatting.byColorIndex(color);
@@ -152,11 +155,13 @@ public class ConfigurationHandler implements ModConfigurationHandler
         return getInstance().armorAroundHotbar;
     }
 
+    public static boolean getUseGradientColor() { return getInstance().useGradientColor; }
+
     public static boolean getShowChestIcon() { return getInstance().showChestIcon; }
     
     public static boolean getShowAllTrinkets() { return getInstance().showAllTrinkets; }
     
-    public static boolean getShowPercentValues() { return getInstance().showPercentValues; }
+    public static int getShowPercentValueThreshold() { return getInstance().showPercentValueThreshold; }
     
     public static int getWarnMode() { return getInstance().warnMode; }
 }
