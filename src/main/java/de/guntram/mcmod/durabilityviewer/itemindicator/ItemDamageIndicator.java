@@ -34,7 +34,7 @@ public class ItemDamageIndicator implements ItemIndicator {
         } else {
             shown=cur;
         }
-        if (ConfigurationHandler.getShowPercentValues()) {
+        if (cur > max * ConfigurationHandler.getShowPercentValueThreshold()/100) {
             return String.format("%.1f%%", shown * 100.0 / max);
         }
         return String.valueOf(shown);
@@ -48,6 +48,8 @@ public class ItemDamageIndicator implements ItemIndicator {
     }
     
     public static int calculateDisplayColor(int max, int cur) {
+        if (ConfigurationHandler.getUseGradientColor())
+            return HSBtoRGB(((max - cur) / (float)max)/3f, 1f, 1f);
         if (cur < max/5)
             return color_green;
         if (cur > max*9/10 && cur>max-100)
