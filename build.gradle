@@ -43,7 +43,7 @@ sourceCompatibility = 17
 targetCompatibility = 17
 
 ext.Versions = new Properties()
-Versions.load(file("Versionfiles/mcversion-1.20.2.properties").newReader())
+Versions.load(file("Versionfiles/mcversion-1.20.4.properties").newReader())
 
 archivesBaseName = "durabilityviewer"
 ext.projectVersion = "1.10.5"
@@ -75,10 +75,10 @@ dependencies {
     modImplementation "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     include    "de.guntram.mcmod:GBfabrictools:${Versions['gbfabrictools_version']}"
     
-    modImplementation "dev.emi:trinkets:3.7.0"
+    modImplementation "dev.emi:trinkets:3.8.0"
     // these two are only needed due to a bug in the trinkets build.gradle, remove them later -- 20230629
-    modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.0")
-    modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.0")
+    modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.3.0")
+    modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.3.0")
 }
 
 java {
